@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Activate Praecheck</title>
+  <meta name="description" content="Activate your Praecheck personal licence and download your offline licence file.">
+  <meta name="theme-color" content="#111426">
+
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../styles.css">
+
+  <style>
+    .activation-wrap {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .activation-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+      margin-bottom: 20px;
+    }
+
+    .field label {
+      font-weight: 800;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      font: inherit;
+      background: #fff;
+      color: var(--ink);
+    }
+
+    .field small {
+      color: var(--muted);
+    }
+
+    .activation-card button {
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .status {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      display: none;
+    }
+
+    .status.show {
+      display: block;
+    }
+
+    .status.error {
+      background: #fff1f2;
+      border: 1px solid #efc4c8;
+      color: #842b34;
+    }
+
+    .status.success {
+      background: #eef9f3;
+      border: 1px solid #c9ead8;
+      color: #246c48;
+    }
+
+    .privacy-note {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="../index.html">
+      <span class="logo">P</span>
+      <span>Praecheck</span>
+    </a>
+
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="../index.html#features">Features</a>
+      <a href="../index.html#how">How it works</a>
+      <a href="../index.html#pricing">Pricing</a>
+      <a href="../contact.html">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="legal-hero">
+    <div class="container activation-wrap">
+      <div class="kicker">Licence activation</div>
+      <h1>Activate Praecheck</h1>
+      <p class="lead">
+        Enter your Paddle purchase details and the installation code shown by
+        Praecheck to create your offline licence file.
+      </p>
+    </div>
+  </section>
+
+  <section style="padding-top:20px">
+    <div class="container activation-wrap">
+      <div class="activation-card">
+
+        <form id="activation-form">
+          <div class="field">
+            <label for="email">Purchase email</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              autocomplete="email"
+              required
+            >
+            <small>Use the email address used for your Paddle purchase.</small>
+          </div>
+
+          <div class="field">
+            <label for="purchaseReference">Paddle purchase reference</label>
+            <input
+              id="purchaseReference"
+              name="purchaseReference"
+              type="text"
+              autocomplete="off"
+              required
+            >
+            <small>
+              Enter your Paddle transaction ID (txn_...) or invoice number.
+            </small>
+          </div>
+
+          <div class="field">
+            <label for="installationId">Praecheck installation code</label>
+            <input
+              id="installationId"
+              name="installationId"
+              type="text"
+              autocomplete="off"
+              spellcheck="false"
+              required
+            >
+            <small>
+              Enter the installation code displayed by Praecheck on this device.
+            </small>
+          </div>
+
+          <button class="btn btn-primary" id="activate-button" type="submit">
+            Create licence file
+          </button>
+        </form>
+
+        <div id="status" class="status" role="status" aria-live="polite"></div>
+
+        <div class="note privacy-note">
+          Activation sends your purchase email, Paddle purchase reference and
+          Praecheck installation code to the Praecheck licensing service.
+          Praecheck assessment results are not uploaded.
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <strong>Praecheck</strong><br>
+      <span>Android data exposure assessment</span><br>
+      <span>© <span id="year"></span> Praescius Ltd</span>
+    </div>
+
+    <div class="footer-links">
+      <a href="../privacy.html">Privacy</a>
+      <a href="../terms.html">Terms</a>
+      <a href="../refunds.html">Refunds</a>
+      <a href="../contact.html">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const endpoint =
+    "https://praecheck-licensing.cool-sky-248d.workers.dev/activate";
+
+  const form = document.getElementById("activation-form");
+  const button = document.getElementById("activate-button");
+  const status = document.getElementById("status");
+
+  document.getElementById("year").textContent =
+    String(new Date().getFullYear());
+
+  function showStatus(message, type) {
+    status.textContent = message;
+    status.className = "status show " + type;
+  }
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    button.disabled = true;
+    button.textContent = "Creating licence…";
+    status.className = "status";
+    status.textContent = "";
+
+    try {
+      const payload = {
+        email: document.getElementById("email").value.trim(),
+        purchaseReference:
+          document.getElementById("purchaseReference").value.trim(),
+        installationId:
+          document.getElementById("installationId").value.trim()
+      };
+
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      });
+
+      let data;
+      try {
+        data = await response.json();
+      } catch {
+        throw new Error("The licensing service returned an unreadable response.");
+      }
+
+      if (!response.ok || !data.ok) {
+        throw new Error(
+          data.error || "The licence could not be created."
+        );
+      }
+
+      if (!data.licence || !data.filename) {
+        throw new Error(
+          "The licensing service did not return a licence file."
+        );
+      }
+
+      const blob = new Blob(
+        [data.licence],
+        { type: "application/octet-stream" }
+      );
+
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+
+      link.href = url;
+      link.download = data.filename;
+
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+      showStatus(
+        "Licence created successfully. Your .pcl file should now be downloading.",
+        "success"
+      );
+
+    } catch (error) {
+      showStatus(
+        error.message || "The licence could not be created.",
+        "error"
+      );
+    } finally {
+      button.disabled = false;
+      button.textContent = "Create licence file";
+    }
+  });
+})();
+</script>
+</body>
+</html>
