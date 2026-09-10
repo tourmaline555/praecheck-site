@@ -200,6 +200,13 @@
   const button = document.getElementById("activate-button");
   const status = document.getElementById("status");
 
+  const params = new URLSearchParams(window.location.search);
+  const purchaseReference = params.get("purchaseReference");
+
+  if (purchaseReference) {
+  document.getElementById("purchaseReference").value = purchaseReference;
+  }
+
   document.getElementById("year").textContent =
     String(new Date().getFullYear());
 
