@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Praecheck Sandbox Checkout</title>
+
+  <link rel="stylesheet" href="../styles.css">
+
+  <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
+
+  <script>
+    Paddle.Environment.set("sandbox");
+
+    Paddle.Initialize({
+      token: "test_609063568e11f20416b4129f0ed",
+
+      eventCallback: function(event) {
+        if (
+          event.name === "checkout.completed" &&
+          event.data &&
+          event.data.transaction_id
+        ) {
+          window.location.href =
+            "/activate/?purchaseReference=" +
+            encodeURIComponent(event.data.transaction_id);
+        }
+      }
+    });
+
+    function buyPraecheck() {
+      Paddle.Checkout.open({
+        items: [
+          {
+            priceId: "pri_01m26hn45wjyd9t22wv9dfsh5h",
+            quantity: 1
+          }
+        ]
+      });
+    }
+  </script>
+</head>
+
+<body>
+  <main>
+    <section class="legal-hero">
+      <div class="container" style="max-width:720px">
+        <div class="kicker">Sandbox test only</div>
+        <h1>Praecheck test checkout</h1>
+
+        <p class="lead">
+          This page uses Paddle Sandbox. No real payment will be taken.
+        </p>
+
+        <button class="btn btn-primary" type="button" onclick="buyPraecheck()">
+          Test £14.99 checkout
+        </button>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
