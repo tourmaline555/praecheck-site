@@ -3,61 +3,169 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="robots" content="noindex,nofollow">
   <title>Praecheck Sandbox Checkout</title>
-
+  <meta name="description" content="Sandbox checkout for Praecheck Personal and Praecheck Power.">
+  <meta name="theme-color" content="#111426">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../styles.css">
-
   <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
+  <style>
+    .checkout-hero{padding:64px 0 34px}
+    .checkout-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;margin-top:30px}
+    .checkout-card{background:var(--panel);border:1px solid var(--line);border-radius:24px;padding:28px;box-shadow:var(--shadow);display:flex;flex-direction:column}
+    .checkout-card.power{border-color:#cfc1f3;background:linear-gradient(155deg,#f4f0ff 0%,#fff 58%)}
+    .checkout-card h2{font-size:1.65rem;margin:6px 0 6px}
+    .checkout-price{font-size:2.55rem;font-weight:900;letter-spacing:-.04em;line-height:1.1;margin:10px 0 4px}
+    .checkout-price small{font-size:.92rem;color:var(--muted);font-weight:700;letter-spacing:0}
+    .checkout-card .btn{margin-top:auto;width:100%}
+    .sandbox-pill{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:#fff3cd;border:1px solid #edd78f;color:#725b00;font-weight:800;font-size:.82rem}
+    .status{margin-top:18px;padding:13px 15px;border:1px solid var(--line);border-radius:14px;background:#fff;color:var(--muted);font-size:.92rem}
+    .status.error{border-color:#efc3c7;background:#fff7f8;color:#8a2830}
+    .fineprint{font-size:.88rem;color:var(--muted);margin-top:22px}
+    @media(max-width:760px){.checkout-grid{grid-template-columns:1fr}.checkout-hero{padding-top:42px}}
+  </style>
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="../index.html"><span class="logo">P</span><span>Praecheck</span></a>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="../index.html">Home</a>
+      <a href="../index.html#pricing">Pricing</a>
+      <a href="../activate/">Activate</a>
+    </nav>
+    <a class="btn mobile-menu" href="../index.html">Home</a>
+  </div>
+</header>
 
-  <script>
+<main>
+  <section class="checkout-hero">
+    <div class="container">
+      <span class="sandbox-pill">Paddle Sandbox · No real payment</span>
+      <div class="section-head" style="margin-top:20px">
+        <div class="kicker">Licence test checkout</div>
+        <h1 style="font-size:clamp(2.5rem,5vw,4.6rem);margin-bottom:18px">Choose your Praecheck licence.</h1>
+        <p>Use this page only for sandbox testing. Both licences provide the same Praecheck assessment features; Power increases the personal-device allowance.</p>
+      </div>
+
+      <div class="checkout-grid">
+        <article class="checkout-card">
+          <div class="kicker">Personal</div>
+          <h2>Praecheck Personal</h2>
+          <div class="checkout-price">£14.99 <small>one-time</small></div>
+          <p class="muted">For up to 2 personal devices.</p>
+          <ul class="ticklist">
+            <li>Up to 2 activated devices</li>
+            <li>Offline Android exposure assessment</li>
+            <li>Assessment history and change comparison</li>
+            <li>12 months of Praecheck updates</li>
+          </ul>
+          <button class="btn btn-dark buy-button" type="button" data-plan="personal">Test Personal checkout</button>
+        </article>
+
+        <article class="checkout-card power">
+          <div class="kicker">Power</div>
+          <h2>Praecheck Power</h2>
+          <div class="checkout-price">£29.99 <small>one-time</small></div>
+          <p class="muted">For up to 10 personal devices.</p>
+          <ul class="ticklist">
+            <li>Up to 10 activated devices</li>
+            <li>Offline Android exposure assessment</li>
+            <li>Assessment history and change comparison</li>
+            <li>12 months of Praecheck updates</li>
+          </ul>
+          <button class="btn btn-primary buy-button" type="button" data-plan="power">Test Power checkout</button>
+        </article>
+      </div>
+
+      <div id="checkout-status" class="status" role="status" aria-live="polite">
+        Sandbox checkout is ready. After a successful test purchase you will be sent to the activation page with the Paddle transaction reference filled in.
+      </div>
+
+      <p class="fineprint">Sandbox test card: 4242 4242 4242 4242, any future expiry date, security code 100. Do not use real payment details on this page.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div><strong>Praecheck</strong><br><span>Sandbox licence checkout</span></div>
+    <div class="footer-links"><a href="../activate/">Activate</a><a href="../index.html">Home</a></div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  const CLIENT_TOKEN = "test_609063568e11f20416b4129f0ed";
+  const PERSONAL_PRICE_ID = "pri_01m26hn45wjyd9t22wv9dfsh5h";
+  const POWER_PRICE_ID = "pri_01m284q26199y2xpewv6rebzp3";
+
+  const status = document.getElementById("checkout-status");
+  const buttons = Array.from(document.querySelectorAll(".buy-button"));
+
+  function setStatus(message, isError) {
+    status.textContent = message;
+    status.classList.toggle("error", Boolean(isError));
+  }
+
+  function priceFor(plan) {
+    if (plan === "personal") return PERSONAL_PRICE_ID;
+    if (plan === "power") return POWER_PRICE_ID;
+    throw new Error("Unknown Praecheck licence tier.");
+  }
+
+  try {
     Paddle.Environment.set("sandbox");
-
     Paddle.Initialize({
-      token: "test_609063568e11f20416b4129f0ed",
+      token: CLIENT_TOKEN,
+      eventCallback: function (event) {
+        if (!event || event.name !== "checkout.completed") return;
 
-      eventCallback: function(event) {
-        if (
-          event.name === "checkout.completed" &&
-          event.data &&
-          event.data.transaction_id
-        ) {
-          window.location.href =
-            "/activate/?purchaseReference=" +
-            encodeURIComponent(event.data.transaction_id);
+        const transactionId = event.data && event.data.transaction_id;
+        if (!transactionId || !/^txn_[a-z0-9]+$/i.test(transactionId)) {
+          setStatus("Payment completed, but the transaction reference was unavailable. Open the Paddle sandbox transaction and copy its txn_ reference into the activation page.", true);
+          return;
         }
+
+        setStatus("Payment completed. Opening Praecheck activation…", false);
+        window.location.assign("../activate/?purchaseReference=" + encodeURIComponent(transactionId));
       }
     });
+  } catch (error) {
+    console.error(error);
+    setStatus("Paddle Sandbox could not be initialized. Check the browser console and the sandbox client-side token.", true);
+    buttons.forEach(function (button) { button.disabled = true; });
+    return;
+  }
 
-    function buyPraecheck() {
+  buttons.forEach(function (button) {
+    button.addEventListener("click", function () {
+      const plan = button.dataset.plan;
+      let priceId;
+      try {
+        priceId = priceFor(plan);
+      } catch (error) {
+        setStatus(error.message, true);
+        return;
+      }
+
+      setStatus("Opening " + (plan === "power" ? "Power" : "Personal") + " sandbox checkout…", false);
+
       Paddle.Checkout.open({
         items: [
-          {
-            priceId: "pri_01m26hn45wjyd9t22wv9dfsh5h",
-            quantity: 1
-          }
-        ]
+          { priceId: priceId, quantity: 1 }
+        ],
+        settings: {
+          displayMode: "overlay",
+          theme: "light",
+          variant: "one-page"
+        }
       });
-    }
-  </script>
-</head>
-
-<body>
-  <main>
-    <section class="legal-hero">
-      <div class="container" style="max-width:720px">
-        <div class="kicker">Sandbox test only</div>
-        <h1>Praecheck test checkout</h1>
-
-        <p class="lead">
-          This page uses Paddle Sandbox. No real payment will be taken.
-        </p>
-
-        <button class="btn btn-primary" type="button" onclick="buyPraecheck()">
-          Test £14.99 checkout
-        </button>
-      </div>
-    </section>
-  </main>
+    });
+  });
+})();
+</script>
 </body>
 </html>
