@@ -17,12 +17,12 @@
   <div class="container nav">
     <a class="brand" href="/" aria-label="Praecheck home"><span class="logo">P</span><span>Praecheck</span></a>
     <nav class="nav-links" aria-label="Main navigation">
-      <a href="#features">What it checks</a>
-      <a href="#how">How it works</a>
-      <a href="#app-preview">See the app</a>
-      <a href="#privacy">Privacy by design</a>
-      <a href="#pricing">Pricing</a>
-      <a href="#faq">FAQ</a>
+      <a href="#features">Assessment scope</a>
+      <a href="#how">Method</a>
+      <a href="#app-preview">Interface</a>
+      <a href="#privacy">Privacy architecture</a>
+      <a href="#pricing">Licensing</a>
+      <a href="#faq">Technical notes</a>
       <a class="nav-cta" href="/download/">Download</a>
     </nav>
     <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu">
@@ -31,13 +31,13 @@
   </div>
   <nav class="mobile-nav" id="mobile-nav" aria-label="Mobile navigation">
     <div class="container mobile-nav-inner">
-      <a href="#features">What it checks</a>
-      <a href="#how">How it works</a>
-      <a href="#app-preview">See the app</a>
-      <a href="#privacy">Privacy by design</a>
-      <a href="#pricing">Pricing</a>
+      <a href="#features">Assessment scope</a>
+      <a href="#how">Method</a>
+      <a href="#app-preview">Interface</a>
+      <a href="#privacy">Privacy architecture</a>
+      <a href="#pricing">Licensing</a>
       <a href="/download/">Download</a>
-      <a href="#faq">FAQ</a>
+      <a href="#faq">Technical notes</a>
       <a href="contact.html">Contact</a>
     </div>
   </nav>
@@ -48,19 +48,18 @@
     <div class="container hero-grid">
       <div class="hero-copy">
         <div class="eyebrow">Android data exposure assessment</div>
-        <h1>Understand your <span>data exposure.</span> See what changes.</h1>
-        <p class="lead">Praecheck assesses Android settings, app permissions, connectivity and installed-app characteristics to highlight areas that may increase personal data exposure or correlation potential.</p>
-        <p class="hero-secondary">Make changes, reassess your phone and see what improved, what remains and what has returned.</p>
+        <h1>Assess Android <span>data exposure.</span> Track change over time.</h1>
+        <p class="lead">Praecheck performs a local assessment of Android configuration, granted permissions, connectivity and installed-app characteristics. Findings are prioritised with evidence context, and compatible assessments can be compared over time.</p>
+        <p class="hero-secondary">Core exposure and optional app-correlation analysis are kept separate so observed device state is not conflated with inferred correlation potential.</p>
         <div class="actions hero-actions">
-          <a class="btn btn-primary" href="#how">See how Praecheck works</a>
-          <a class="btn" href="#app-preview">See the app</a>
+          <a class="btn btn-primary" href="#features">Review assessment scope</a>
+          <a class="btn" href="#app-preview">Inspect interface</a>
         </div>
-        <div class="hero-links"><a href="/download/">Download Android app</a><span>·</span><a href="#pricing">View pricing</a></div>
-        <div class="trustline">Local · Offline · Reassessable · Independent</div>
+        <div class="hero-links"><a href="/download/">Download current release</a><span>·</span><a href="#pricing">Licence options</a></div>
+        <div class="trustline">Local processing · No INTERNET permission · Evidence-aware · Version-aware</div>
       </div>
 
-      <div class="hero-product-shot" aria-label="Actual Praecheck assessment screen">
-        <div class="product-shot-label">Actual app screen · v0.9.3</div>
+      <div class="hero-product-shot" aria-label="Praecheck assessment interface">
         <div class="product-shot-frame">
           <img src="assets/praecheck-overview.webp" alt="Praecheck assessment snapshot showing device role, Core score and App correlation score" width="680" height="1473" fetchpriority="high" decoding="async">
         </div>
@@ -71,20 +70,20 @@
   <section id="app-preview" class="app-preview-section">
     <div class="container">
       <div class="section-head app-preview-head">
-        <div class="kicker">Inside Praecheck</div>
-        <h2>Real screens. Clear priorities. Practical next steps.</h2>
-        <p>These are actual Praecheck v0.9.3 screens. The app keeps the interface deliberately direct: understand the exposure, see why it matters, decide what to change, then reassess.</p>
+        <div class="kicker">Assessment interface</div>
+        <h2>Evidence, prioritisation and reassessment in one workflow.</h2>
+        <p>Praecheck is structured around the assessment lifecycle: establish current exposure, distinguish observed state from items requiring verification, review evidence and remediation, then compare later assessments under a compatible model.</p>
       </div>
 
-      <div class="screen-gallery" aria-label="Actual Praecheck app screens">
+      <div class="screen-gallery" aria-label="Praecheck assessment interface screens">
         <article class="screen-showcase">
           <div class="screen-frame">
             <img src="assets/praecheck-actions.webp" alt="Praecheck Actions screen showing the exposure queue and prioritised findings" width="680" height="1473" loading="lazy" decoding="async">
           </div>
           <div class="screen-caption">
-            <span class="screen-label">Prioritised actions</span>
-            <h3>Start with the exposure that matters most.</h3>
-            <p>The Actions view separates exposure from checks that still need verification, then puts higher-priority findings first with a recommended action.</p>
+            <span class="screen-label">Prioritisation queue</span>
+            <h3>Exposure and verification are handled separately.</h3>
+            <p>The Actions view separates prioritised exposure findings from checks requiring user verification. Severity, score contribution and recommended action are presented together.</p>
           </div>
         </article>
 
@@ -93,9 +92,9 @@
             <img src="assets/praecheck-finding-detail.webp" alt="Praecheck finding detail showing recommended action, why the finding matters, evidence and confidence" width="680" height="1473" loading="lazy" decoding="async">
           </div>
           <div class="screen-caption">
-            <span class="screen-label">Finding detail</span>
-            <h3>See the reason, evidence and action together.</h3>
-            <p>Praecheck explains why a finding matters, shows the evidence and confidence behind it, and gives a practical route into the relevant Android settings.</p>
+            <span class="screen-label">Finding evidence</span>
+            <h3>Evidence and remediation remain explicit.</h3>
+            <p>Finding detail records the rationale, evidence source, confidence and relevant remediation, including direct access to Android settings where supported.</p>
           </div>
         </article>
 
@@ -104,9 +103,9 @@
             <img src="assets/praecheck-app-correlation.webp" alt="Praecheck screen showing App correlation exposure and the option to run deeper app correlation analysis" width="680" height="1473" loading="lazy" decoding="async">
           </div>
           <div class="screen-caption">
-            <span class="screen-label">App correlation analysis</span>
-            <h3>Go deeper into installed-app correlation potential.</h3>
-            <p>The optional App analysis has its own exposure index, separate from the Core score, so broader inferred correlation surface does not distort observed device exposure.</p>
+            <span class="screen-label">App-correlation analysis</span>
+            <h3>Inferred correlation is scored independently.</h3>
+            <p>Optional static app analysis uses a distinct exposure index so inferred correlation surface remains separate from the Core assessment of observed or currently granted exposure.</p>
           </div>
         </article>
 
@@ -115,14 +114,13 @@
             <img src="assets/praecheck-history.webp" alt="Praecheck History screen showing dated assessments, device roles, Core scores and App correlation scores" width="680" height="1473" loading="lazy" decoding="async">
           </div>
           <div class="screen-caption">
-            <span class="screen-label">History & change tracking</span>
-            <h3>Build a local picture of how your phone changes.</h3>
-            <p>Keep a bounded on-device assessment history with device role, app version, Core and App scores, plus new, returned, resolved and unchanged findings.</p>
+            <span class="screen-label">Longitudinal history</span>
+            <h3>Compatible assessments can be compared over time.</h3>
+            <p>Local history records device role, app and assessment-model versions, Core and App scores, and new, returned, resolved and unchanged findings.</p>
           </div>
         </article>
       </div>
 
-      <div class="screen-gallery-note">Screens shown are from Praecheck v0.9.3 on Android. Results vary with device state, installed apps and the assessment selected.</div>
     </div>
   </section>
 
@@ -134,12 +132,12 @@
         <p>Praecheck separates what it can observe from app declarations, inferred capability and checks Android restricts from ordinary apps.</p>
       </div>
       <div class="grid-3">
-        <article class="feature"><div class="feature-icon">01</div><h3>Apps & permissions</h3><p>Sensitive permissions, background location and combinations of access that may increase exposure.</p></article>
-        <article class="feature"><div class="feature-icon">02</div><h3>Network & DNS</h3><p>Relevant network state, active VPN state and Private DNS configuration available to the assessment.</p></article>
-        <article class="feature"><div class="feature-icon">03</div><h3>Bluetooth & nearby</h3><p>Nearby-device permissions and bonded-device relationships that can reveal association and context.</p></article>
-        <article class="feature"><div class="feature-icon">04</div><h3>Installed-app characteristics</h3><p>Locally available app metadata such as target API levels, declarations and configuration signals.</p></article>
-        <article class="feature"><div class="feature-icon">05</div><h3>App correlation analysis</h3><p>Optional analysis of recognised characteristics and useful data combinations that may increase correlation potential.</p></article>
-        <article class="feature"><div class="feature-icon">06</div><h3>Changes over time</h3><p>New, resolved, unchanged and returned findings across compatible assessments, stored locally.</p></article>
+        <article class="feature"><div class="feature-icon">01</div><h3>Apps & permissions</h3><p>Granted sensitive permissions, background location and combinations of access associated with higher exposure.</p></article>
+        <article class="feature"><div class="feature-icon">02</div><h3>Network & DNS</h3><p>Locally visible network state, active VPN state and Private DNS configuration relevant to the assessment.</p></article>
+        <article class="feature"><div class="feature-icon">03</div><h3>Bluetooth & nearby</h3><p>Nearby-device permissions and bonded-device relationships that contribute association and contextual exposure.</p></article>
+        <article class="feature"><div class="feature-icon">04</div><h3>Installed-app characteristics</h3><p>Locally available application metadata including target API levels, declarations and configuration signals.</p></article>
+        <article class="feature"><div class="feature-icon">05</div><h3>App correlation analysis</h3><p>Optional static analysis of recognised app characteristics and data combinations that may increase correlation potential.</p></article>
+        <article class="feature"><div class="feature-icon">06</div><h3>Changes over time</h3><p>New, resolved, unchanged and returned findings across compatible assessments, with model-version context.</p></article>
       </div>
     </div>
   </section>
@@ -147,32 +145,32 @@
   <section class="band" id="how">
     <div class="container">
       <div class="section-head">
-        <div class="kicker">How it works</div>
-        <h2>Assess. Understand. Act. Reassess.</h2>
-        <p>Praecheck turns locally available Android state into prioritised findings, then helps you see whether your changes made a difference.</p>
+        <div class="kicker">Method</div>
+        <h2>A repeatable, evidence-aware assessment process.</h2>
+        <p>Praecheck records current state, prioritises supported exposure findings, identifies checks requiring verification, and preserves the context needed for later comparison.</p>
       </div>
       <div class="steps">
-        <div class="step"><div class="step-num">1</div><h3>Assess</h3><p>Run Praecheck on your Android device. Assessment happens locally.</p></div>
-        <div class="step"><div class="step-num">2</div><h3>Understand</h3><p>Review prioritised findings with evidence, context and practical explanations.</p></div>
-        <div class="step"><div class="step-num">3</div><h3>Act</h3><p>Change permissions or settings you decide you no longer need.</p></div>
-        <div class="step"><div class="step-num">4</div><h3>Reassess</h3><p>Run Praecheck again and compare compatible assessments to see what changed.</p></div>
+        <div class="step"><div class="step-num">1</div><h3>Establish state</h3><p>Collect the Android state and app metadata available to the local assessment.</p></div>
+        <div class="step"><div class="step-num">2</div><h3>Prioritise</h3><p>Separate current exposure from verification items and rank supported findings.</p></div>
+        <div class="step"><div class="step-num">3</div><h3>Review evidence</h3><p>Inspect rationale, confidence, evidence and remediation for each relevant finding.</p></div>
+        <div class="step"><div class="step-num">4</div><h3>Reassess</h3><p>Compare a later compatible assessment and distinguish device change from model change.</p></div>
       </div>
-      <div class="section-action"><a class="btn btn-light" href="/download/">Download Praecheck</a></div>
+      <div class="section-action"><a class="btn btn-light" href="/download/">Download current release</a></div>
     </div>
   </section>
 
   <section class="continuous-section">
     <div class="container">
       <div class="section-head">
-        <div class="kicker">Why run it more than once?</div>
-        <h2>Your phone changes. Your exposure can change with it.</h2>
-        <p>Apps are installed and removed. Permissions change. Android updates. Networks change. Praecheck helps you reassess after meaningful changes rather than treating one assessment as permanent.</p>
+        <div class="kicker">Longitudinal assessment</div>
+        <h2>Change is treated as assessment data.</h2>
+        <p>Compatible assessments can be compared locally to identify new, resolved, unchanged and returned findings. When the assessment model changes, Praecheck starts a new comparison baseline rather than attributing model changes to the device.</p>
       </div>
       <div class="grid-4 value-grid">
-        <article class="feature"><div class="feature-icon">Δ</div><h3>Changes since last assessment</h3><p>See what appeared, disappeared or stayed the same under a compatible assessment model.</p></article>
-        <article class="feature"><div class="feature-icon">↻</div><h3>Returned findings</h3><p>Spot a finding that was resolved previously and later reappears.</p></article>
-        <article class="feature"><div class="feature-icon">H</div><h3>Local assessment history</h3><p>Keep a bounded on-device history of up to 50 assessments.</p></article>
-        <article class="feature"><div class="feature-icon">60</div><h3>Recheck planning</h3><p>Choose a local 30, 60 or 90-day reassessment interval.</p></article>
+        <article class="feature"><div class="feature-icon">Δ</div><h3>Compatible comparison</h3><p>Compare score movement and finding state only when assessments use a compatible model.</p></article>
+        <article class="feature"><div class="feature-icon">↻</div><h3>Regression detection</h3><p>Identify a finding that was previously resolved and later returns.</p></article>
+        <article class="feature"><div class="feature-icon">H</div><h3>Bounded local history</h3><p>Retain up to 50 assessments on-device with version and role context.</p></article>
+        <article class="feature"><div class="feature-icon">60</div><h3>Reassessment interval</h3><p>Record a local 30, 60 or 90-day recheck plan without background monitoring.</p></article>
       </div>
     </div>
   </section>
@@ -180,16 +178,16 @@
   <section class="privacy-band" id="privacy">
     <div class="container privacy-grid">
       <div class="privacy-copy">
-        <div class="kicker">Privacy by design</div>
-        <h2>Your assessment stays on your device.</h2>
-        <div class="privacy-proof">No Android <strong>INTERNET</strong> permission.</div>
-        <p>Praecheck's production Android app performs its assessment locally. Assessment results and local history are not uploaded to a Praecheck account or cloud scanning service.</p>
+        <div class="kicker">Privacy architecture</div>
+        <h2>Assessment processing remains on the handset.</h2>
+        <div class="privacy-proof">Production APK: no Android <strong>INTERNET</strong> permission</div>
+        <p>The production Android application performs its assessment locally and does not request Android's INTERNET permission. Assessment results, comparison history and role context are not uploaded to a Praecheck account or remote scanning service.</p>
         <p class="privacy-clarifier">Praecheck is a data exposure assessment tool. It is not antivirus and does not claim to detect malware, spyware or compromise.</p>
       </div>
       <div class="privacy-cards">
-        <article><span>L</span><div><h3>Local</h3><p>Assessment logic runs on the handset using locally available Android state.</p></div></article>
-        <article><span>O</span><div><h3>Offline</h3><p>The assessment does not depend on a remote scan service or cloud account.</p></div></article>
-        <article><span>I</span><div><h3>Independent</h3><p>Findings are not influenced by advertising or affiliate relationships.</p></div></article>
+        <article><span>L</span><div><h3>Local processing</h3><p>Assessment logic executes on the handset against locally available Android state.</p></div></article>
+        <article><span>O</span><div><h3>Offline assessment</h3><p>The assessment does not depend on a cloud account, remote scan engine or network lookup.</p></div></article>
+        <article><span>I</span><div><h3>Independent criteria</h3><p>Assessment findings are not driven by advertising, affiliate placement or sponsored ranking.</p></div></article>
       </div>
     </div>
   </section>
@@ -197,15 +195,15 @@
   <section class="use-cases">
     <div class="container">
       <div class="section-head">
-        <div class="kicker">Device roles</div>
-        <h2>Useful whether you have one Android phone or several.</h2>
-        <p>Device roles add context to your local assessment history without silently changing the Core score.</p>
+        <div class="kicker">Assessment context</div>
+        <h2>Record device purpose without changing the score.</h2>
+        <p>Device roles add operational context to local assessment history. They do not modify Core scoring or silently re-weight findings.</p>
       </div>
       <div class="grid-4 role-grid">
-        <article class="role-card"><span>Everyday</span><h3>Your main phone</h3><p>Understand permissions and exposure on the Android device you use every day.</p></article>
-        <article class="role-card"><span>Banking</span><h3>Sensitive-use phone</h3><p>Keep a separate history for a device you deliberately use for a narrower purpose.</p></article>
-        <article class="role-card"><span>Travel</span><h3>Travel phone</h3><p>Reassess when apps, connectivity or permissions change around travel.</p></article>
-        <article class="role-card"><span>Privacy-focused</span><h3>Tighter configuration</h3><p>Check the effect of removing unnecessary access or changing Android privacy settings.</p></article>
+        <article class="role-card"><span>Everyday</span><h3>General-use device</h3><p>Maintain a baseline for a primary personal Android device.</p></article>
+        <article class="role-card"><span>Banking</span><h3>Financial-use context</h3><p>Separate assessment history for a device used for a narrower, sensitive purpose.</p></article>
+        <article class="role-card"><span>Work</span><h3>Work context</h3><p>Record professional-use context without changing the underlying exposure model.</p></article>
+        <article class="role-card"><span>Travel</span><h3>Travel context</h3><p>Compare assessments around changes in apps, permissions and connectivity.</p></article>
       </div>
     </div>
   </section>
@@ -213,15 +211,15 @@
   <section id="pricing" class="pricing-section">
     <div class="container">
       <div class="section-head pricing-intro">
-        <div class="kicker">Simple pricing</div>
-        <h2>Choose the licence that fits your devices.</h2>
-        <p>Personal and Power include the same Praecheck assessment, history, comparison and reassessment features. Power simply increases the personal-device allowance.</p>
+        <div class="kicker">Licensing</div>
+        <h2>Personal-use licensing by device allowance.</h2>
+        <p>Personal and Power provide the same assessment capabilities. The distinction is the number of personal devices that can be activated under the licence.</p>
       </div>
       <div class="pricing-plans">
         <article class="plan-card personal">
           <div class="plan-card-head"><div class="plan-title">Praecheck Personal</div><div class="plan-badge">1–2 devices</div></div>
           <div class="plan-price"><strong>£14.99</strong><span>one-time</span></div>
-          <div class="plan-summary">For an individual or a main phone plus one spare.</div>
+          <div class="plan-summary">For one primary Android device and one additional personal device.</div>
           <ul class="ticklist">
             <li>Full Android data exposure assessment</li>
             <li>Prioritised Core findings and optional app analysis</li>
@@ -231,12 +229,12 @@
             <li>CSV export for your own records</li>
             <li>12 months of Praecheck updates</li>
           </ul>
-          <button class="btn buy-button" type="button" data-plan="personal">Buy Personal — £14.99</button>
+          <button class="btn buy-button" type="button" data-plan="personal">Purchase Personal — £14.99</button>
         </article>
         <article class="plan-card power">
           <div class="plan-card-head"><div class="plan-title">Praecheck Power</div><div class="plan-badge">Up to 10 devices</div></div>
           <div class="plan-price"><strong>£29.99</strong><span>one-time</span></div>
-          <div class="plan-summary">For households, spare phones, travel phones and multiple personal devices.</div>
+          <div class="plan-summary">For users maintaining several personal Android devices or role-specific handsets.</div>
           <ul class="ticklist">
             <li>Everything included in Praecheck Personal</li>
             <li>Licence activation on up to 10 personal devices</li>
@@ -245,7 +243,7 @@
             <li>12 months of Praecheck updates</li>
             <li>Personal-use licence</li>
           </ul>
-          <button class="btn buy-button" type="button" data-plan="power">Buy Power — £29.99</button>
+          <button class="btn buy-button" type="button" data-plan="power">Purchase Power — £29.99</button>
         </article>
       </div>
       <div id="checkout-status" class="note plan-note" role="status" aria-live="polite">Secure payment is processed by Paddle. After payment, you will be sent to Praecheck activation to download your signed offline licence file. Your installed version continues to work after the included 12-month update period. Power increases the personal-device allowance; it is not a business, consultant or resale licence.</div>
@@ -254,24 +252,24 @@
 
   <section class="download-cta">
     <div class="container download-panel">
-      <div><div class="kicker">Ready to assess your Android phone?</div><h2>Download Praecheck.</h2><p>Use the official signed Android APK and activate it with your offline Praecheck licence.</p></div>
-      <div class="download-actions"><a class="btn btn-primary" href="/download/">Download Android app</a><a class="btn" href="/download/#install">Installation & activation guide</a></div>
+      <div><div class="kicker">Distribution</div><h2>Signed Android release.</h2><p>Praecheck is distributed directly as a signed APK. A SHA-256 checksum is published separately, and licence validation is performed offline in the application.</p></div>
+      <div class="download-actions"><a class="btn btn-primary" href="/download/">Download current release</a><a class="btn" href="/download/#install">Installation and activation</a></div>
       <div class="download-meta">Signed production APK · SHA-256 checksum available · Offline licence verification</div>
     </div>
   </section>
 
   <section id="faq">
     <div class="container">
-      <div class="section-head"><div class="kicker">FAQ</div><h2>Useful things to know.</h2></div>
+      <div class="section-head"><div class="kicker">Technical notes</div><h2>Scope, scoring and licensing.</h2></div>
       <div class="faq">
-        <details><summary>What does Praecheck actually do?</summary><p>Praecheck reviews locally available Android settings, app permissions, connectivity and installed-app characteristics to identify areas that may increase personal data exposure or correlation potential. It then provides prioritised findings and practical actions.</p></details>
-        <details><summary>Does Praecheck send my assessment anywhere?</summary><p>No. The production Android app is designed to perform its assessment locally and does not request Android's INTERNET permission. Assessment results and history are stored on the device.</p></details>
-        <details><summary>Is Praecheck antivirus or spyware detection?</summary><p>No. Praecheck is a data exposure assessment tool. It does not claim to detect malware, spyware, surveillance actors or compromise.</p></details>
+        <details><summary>What is the assessment scope?</summary><p>Praecheck reviews locally available Android settings, app permissions, connectivity and installed-app characteristics to identify areas that may increase personal data exposure or correlation potential. It then provides prioritised findings and practical actions.</p></details>
+        <details><summary>Does the production app transmit assessment data?</summary><p>No. The production Android app is designed to perform its assessment locally and does not request Android's INTERNET permission. Assessment results and history are stored on the device.</p></details>
+        <details><summary>Is Praecheck a malware, spyware or compromise detector?</summary><p>No. Praecheck is a data exposure assessment tool. It does not claim to detect malware, spyware, surveillance actors or compromise.</p></details>
         <details><summary>What do the Core and App scores mean?</summary><p>Core prioritises current device exposure from supported checks. The optional App score represents correlation potential from installed-app characteristics and recognised indicators. Neither score is evidence that a phone has been compromised.</p></details>
-        <details><summary>Why should I reassess my phone?</summary><p>Your exposure profile can change when you install or remove apps, change permissions, update Android, travel, change networks or use the device differently. Praecheck can compare compatible local assessments to show what changed.</p></details>
-        <details><summary>What happens to my assessment history?</summary><p>Assessment history, device role and recheck preferences are stored locally on the Android device. Praecheck keeps a bounded history of up to 50 assessments.</p></details>
-        <details><summary>What's the difference between Personal and Power?</summary><p>Both include the same Praecheck features. Personal allows activation on up to 2 personal devices; Power allows activation on up to 10 personal devices. Power does not add business, consultant or resale rights.</p></details>
-        <details><summary>How do I install and activate Praecheck?</summary><p>Download the signed APK from the official Praecheck download page, install it on Android, purchase a licence, then use the activation page with the Installation ID shown in Praecheck and your Paddle purchase reference to obtain the signed offline .pcl licence.</p></details>
+        <details><summary>Why are repeated assessments useful?</summary><p>Your exposure profile can change when you install or remove apps, change permissions, update Android, travel, change networks or use the device differently. Praecheck can compare compatible local assessments to show what changed.</p></details>
+        <details><summary>How is assessment history retained?</summary><p>Assessment history, device role and recheck preferences are stored locally on the Android device. Praecheck keeps a bounded history of up to 50 assessments.</p></details>
+        <details><summary>How do Personal and Power licences differ?</summary><p>Both include the same Praecheck features. Personal allows activation on up to 2 personal devices; Power allows activation on up to 10 personal devices. Power does not add business, consultant or resale rights.</p></details>
+        <details><summary>How is Praecheck distributed and activated?</summary><p>Download the signed APK from the official Praecheck download page, install it on Android, purchase a licence, then use the activation page with the Installation ID shown in Praecheck and your Paddle purchase reference to obtain the signed offline .pcl licence.</p></details>
       </div>
     </div>
   </section>
