@@ -59,20 +59,10 @@
         <div class="trustline">Local · Offline · Reassessable · Independent</div>
       </div>
 
-      <div class="hero-card" aria-label="Illustrative Praecheck assessment summary">
-        <div class="preview-label">Example interface</div>
-        <div class="hero-card-top">
-          <div><div class="hero-card-title">Latest assessment</div><div class="muted">Everyday phone</div></div>
-          <div class="badge">AMBER</div>
-        </div>
-        <div class="score-grid">
-          <div class="score"><small>CORE</small><strong class="amber">49 / 100</strong><span class="muted">Current exposure</span></div>
-          <div class="score"><small>APP</small><strong class="red">72 / 100</strong><span class="muted">Correlation potential</span></div>
-        </div>
-        <div class="mini-findings">
-          <div class="mini-row"><span>Background location</span><strong>Observed</strong></div>
-          <div class="mini-row"><span>Nearby / Bluetooth access</span><strong>Observed</strong></div>
-          <div class="mini-row"><span>Private DNS</span><strong>Review</strong></div>
+      <div class="hero-product-shot" aria-label="Actual Praecheck assessment screen">
+        <div class="product-shot-label">Actual app screen · v0.9.3</div>
+        <div class="product-shot-frame">
+          <img src="assets/praecheck-overview.webp" alt="Praecheck assessment snapshot showing device role, Core score and App correlation score" width="680" height="1473" fetchpriority="high" decoding="async">
         </div>
       </div>
     </div>
@@ -80,79 +70,59 @@
 
   <section id="app-preview" class="app-preview-section">
     <div class="container">
-      <div class="section-head">
-        <div class="kicker">See Praecheck in action</div>
-        <h2>See what Praecheck actually shows you.</h2>
-        <p>Praecheck turns technical Android state into prioritised findings you can understand and act on. These interface examples illustrate the assessment views available in v0.9.3.</p>
+      <div class="section-head app-preview-head">
+        <div class="kicker">Inside Praecheck</div>
+        <h2>Real screens. Clear priorities. Practical next steps.</h2>
+        <p>These are actual Praecheck v0.9.3 screens. The app keeps the interface deliberately direct: understand the exposure, see why it matters, decide what to change, then reassess.</p>
       </div>
 
-      <div class="phone-gallery" aria-label="Praecheck interface examples">
-        <article class="phone-demo">
-          <div class="phone-shell">
-            <div class="phone-top"><span class="phone-pill"></span><span>Praecheck</span><span class="phone-dot"></span></div>
-            <div class="phone-screen">
-              <div class="screen-kicker">Assessment summary</div>
-              <div class="screen-title-row"><strong>Everyday phone</strong><span class="status amber-status">AMBER</span></div>
-              <div class="screen-score-row"><div><small>CORE</small><b>49</b><span>/100</span></div><div><small>APP</small><b class="danger">72</b><span>/100</span></div></div>
-              <div class="screen-subtitle">Top priorities</div>
-              <div class="screen-item"><span class="finding-dot high"></span><div><strong>Background location</strong><small>Granted to 2 apps</small></div><span>›</span></div>
-              <div class="screen-item"><span class="finding-dot med"></span><div><strong>Nearby device access</strong><small>Review bonded relationships</small></div><span>›</span></div>
-              <div class="screen-item"><span class="finding-dot low"></span><div><strong>Private DNS</strong><small>Automatic</small></div><span>›</span></div>
-            </div>
+      <div class="screen-gallery" aria-label="Actual Praecheck app screens">
+        <article class="screen-showcase">
+          <div class="screen-frame">
+            <img src="assets/praecheck-actions.webp" alt="Praecheck Actions screen showing the exposure queue and prioritised findings" width="680" height="1473" loading="lazy" decoding="async">
           </div>
-          <div class="demo-copy"><h3>Your assessment at a glance</h3><p>See current Core exposure and optional app-correlation results without digging through Android settings yourself.</p></div>
+          <div class="screen-caption">
+            <span class="screen-label">Prioritised actions</span>
+            <h3>Start with the exposure that matters most.</h3>
+            <p>The Actions view separates exposure from checks that still need verification, then puts higher-priority findings first with a recommended action.</p>
+          </div>
         </article>
 
-        <article class="phone-demo">
-          <div class="phone-shell">
-            <div class="phone-top"><span class="phone-pill"></span><span>Praecheck</span><span class="phone-dot"></span></div>
-            <div class="phone-screen">
-              <div class="screen-kicker">Changes since last assessment</div>
-              <div class="screen-title-row"><strong>3 changes</strong><span class="status improved">IMPROVED</span></div>
-              <div class="change-summary"><div><b>-2</b><small>resolved</small></div><div><b>+1</b><small>new</small></div><div><b>0</b><small>returned</small></div></div>
-              <div class="screen-subtitle">Since 30 Aug</div>
-              <div class="change-item resolved"><span>✓</span><div><strong>Precise location removed</strong><small>Resolved</small></div></div>
-              <div class="change-item resolved"><span>✓</span><div><strong>Bluetooth permission reduced</strong><small>Resolved</small></div></div>
-              <div class="change-item new"><span>+</span><div><strong>New app capability</strong><small>Review</small></div></div>
-            </div>
+        <article class="screen-showcase">
+          <div class="screen-frame">
+            <img src="assets/praecheck-finding-detail.webp" alt="Praecheck finding detail showing recommended action, why the finding matters, evidence and confidence" width="680" height="1473" loading="lazy" decoding="async">
           </div>
-          <div class="demo-copy"><h3>See what changed</h3><p>Compare compatible assessments to see new findings, resolved findings and issues that return later.</p></div>
+          <div class="screen-caption">
+            <span class="screen-label">Finding detail</span>
+            <h3>See the reason, evidence and action together.</h3>
+            <p>Praecheck explains why a finding matters, shows the evidence and confidence behind it, and gives a practical route into the relevant Android settings.</p>
+          </div>
         </article>
 
-        <article class="phone-demo">
-          <div class="phone-shell">
-            <div class="phone-top"><span class="phone-pill"></span><span>Praecheck</span><span class="phone-dot"></span></div>
-            <div class="phone-screen">
-              <div class="screen-kicker">Finding detail</div>
-              <div class="finding-header"><span class="finding-severity">PRIORITY</span><h4>Background location access</h4></div>
-              <div class="evidence-box"><small>EVIDENCE</small><strong>Observed permission state</strong><p>Two installed apps currently have background location access.</p></div>
-              <div class="screen-subtitle">Why it matters</div>
-              <p class="screen-copy">Persistent location access can increase the amount of contextual information available to an app.</p>
-              <div class="screen-subtitle">Practical action</div>
-              <div class="action-box">Review whether each app still needs background location and reduce access where appropriate.</div>
-            </div>
+        <article class="screen-showcase">
+          <div class="screen-frame">
+            <img src="assets/praecheck-app-correlation.webp" alt="Praecheck screen showing App correlation exposure and the option to run deeper app correlation analysis" width="680" height="1473" loading="lazy" decoding="async">
           </div>
-          <div class="demo-copy"><h3>Know what deserves attention</h3><p>Findings include evidence context and practical remediation rather than simply showing a score.</p></div>
+          <div class="screen-caption">
+            <span class="screen-label">App correlation analysis</span>
+            <h3>Go deeper into installed-app correlation potential.</h3>
+            <p>The optional App analysis has its own exposure index, separate from the Core score, so broader inferred correlation surface does not distort observed device exposure.</p>
+          </div>
         </article>
 
-        <article class="phone-demo">
-          <div class="phone-shell">
-            <div class="phone-top"><span class="phone-pill"></span><span>Praecheck</span><span class="phone-dot"></span></div>
-            <div class="phone-screen">
-              <div class="screen-kicker">Assessment history</div>
-              <div class="screen-title-row"><strong>Recheck plan</strong><span class="status plan">60 DAYS</span></div>
-              <div class="timeline">
-                <div class="timeline-row"><span class="timeline-dot"></span><div><strong>Today</strong><small>Core 49 · App 72</small></div><b>Current</b></div>
-                <div class="timeline-row"><span class="timeline-dot"></span><div><strong>30 Aug</strong><small>Core 54 · App 76</small></div><b>-5</b></div>
-                <div class="timeline-row"><span class="timeline-dot"></span><div><strong>04 Aug</strong><small>Fresh baseline</small></div><b>v0.9.3</b></div>
-              </div>
-              <div class="role-box"><small>DEVICE ROLE</small><strong>Everyday</strong><span>Change role ›</span></div>
-            </div>
+        <article class="screen-showcase">
+          <div class="screen-frame">
+            <img src="assets/praecheck-history.webp" alt="Praecheck History screen showing dated assessments, device roles, Core scores and App correlation scores" width="680" height="1473" loading="lazy" decoding="async">
           </div>
-          <div class="demo-copy"><h3>Build a local history</h3><p>Keep previous assessments on the device and choose a 30, 60 or 90-day reassessment interval.</p></div>
+          <div class="screen-caption">
+            <span class="screen-label">History & change tracking</span>
+            <h3>Build a local picture of how your phone changes.</h3>
+            <p>Keep a bounded on-device assessment history with device role, app version, Core and App scores, plus new, returned, resolved and unchanged findings.</p>
+          </div>
         </article>
       </div>
-      <p class="example-note">Interface examples are illustrative of Praecheck v0.9.3 features; exact wording and layout can vary by device and assessment state.</p>
+
+      <div class="screen-gallery-note">Screens shown are from Praecheck v0.9.3 on Android. Results vary with device state, installed apps and the assessment selected.</div>
     </div>
   </section>
 
