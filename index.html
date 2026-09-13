@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Praecheck — Android data exposure assessment</title>
-  <meta name="description" content="Offline Android data exposure assessment that helps you understand device settings, permissions, connectivity and installed-app characteristics — then reassess and compare what changed.">
+  <meta name="description" content="Offline Android data exposure assessment with independent Core exposure, Data correlation exposure and Known software risks domains, plus local history and reassessment.">
   <meta name="theme-color" content="#111426">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
@@ -50,13 +50,13 @@
         <div class="eyebrow">Android data exposure assessment</div>
         <h1>Assess Android <span>data exposure.</span> Track change over time.</h1>
         <p class="lead">Praecheck performs a local assessment of Android configuration, granted permissions, connectivity and installed-app characteristics. Findings are prioritised with evidence context, and compatible assessments can be compared over time.</p>
-        <p class="hero-secondary">Core exposure and optional app-correlation analysis are kept separate so observed device state is not conflated with inferred correlation potential.</p>
+        <p class="hero-secondary">Praecheck keeps three assessment domains independent: Core exposure for observed/current Android state and granted access; Data correlation exposure for app/SDK capabilities and potential profiling or enrichment value; and Known software risks for exact embedded component versions matched against offline security advisories.</p>
         <div class="actions hero-actions">
           <a class="btn btn-primary" href="#features">Review assessment scope</a>
           <a class="btn" href="#app-preview">Inspect interface</a>
         </div>
         <div class="hero-links"><a href="/download/">Download current release</a><span>·</span><a href="#pricing">Licence options</a></div>
-        <div class="trustline">Local processing · No INTERNET permission · Evidence-aware · Version-aware</div>
+        <div class="trustline">Local processing · No INTERNET permission · Three independent domains · Evidence-aware · Version-aware</div>
       </div>
 
       <div class="hero-product-shot" aria-label="Praecheck assessment interface">
@@ -103,9 +103,9 @@
             <img src="assets/praecheck-app-correlation.webp" alt="Praecheck screen showing App correlation exposure and the option to run deeper app correlation analysis" width="680" height="1473" loading="lazy" decoding="async">
           </div>
           <div class="screen-caption">
-            <span class="screen-label">App-correlation analysis</span>
-            <h3>Inferred correlation is scored independently.</h3>
-            <p>Optional static app analysis uses a distinct exposure index so inferred correlation surface remains separate from the Core assessment of observed or currently granted exposure.</p>
+            <span class="screen-label">Data correlation exposure</span>
+            <h3>Correlation potential is assessed independently.</h3>
+            <p>Static app and SDK analysis considers capabilities, possible association, profiling and enrichment value, including potential commercial or bulk-dataset usefulness if data were actually collected. It does not claim that a specific app collected, transmitted, sold or shared data without evidence.</p>
           </div>
         </article>
 
@@ -116,7 +116,7 @@
           <div class="screen-caption">
             <span class="screen-label">Longitudinal history</span>
             <h3>Compatible assessments can be compared over time.</h3>
-            <p>Local history records device role, app and assessment-model versions, Core and App scores, and new, returned, resolved and unchanged findings.</p>
+            <p>Local history records device role, app and assessment-model versions, the independent assessment-domain results, and new, returned, resolved and unchanged findings.</p>
           </div>
         </article>
       </div>
@@ -136,8 +136,9 @@
         <article class="feature"><div class="feature-icon">02</div><h3>Network & DNS</h3><p>Locally visible network state, active VPN state and Private DNS configuration relevant to the assessment.</p></article>
         <article class="feature"><div class="feature-icon">03</div><h3>Bluetooth & nearby</h3><p>Nearby-device permissions and bonded-device relationships that contribute association and contextual exposure.</p></article>
         <article class="feature"><div class="feature-icon">04</div><h3>Installed-app characteristics</h3><p>Locally available application metadata including target API levels, declarations and configuration signals.</p></article>
-        <article class="feature"><div class="feature-icon">05</div><h3>App correlation analysis</h3><p>Optional static analysis of recognised app characteristics and data combinations that may increase correlation potential.</p></article>
-        <article class="feature"><div class="feature-icon">06</div><h3>Changes over time</h3><p>New, resolved, unchanged and returned findings across compatible assessments, with model-version context.</p></article>
+        <article class="feature"><div class="feature-icon">05</div><h3>Data correlation exposure</h3><p>App and SDK capabilities, possible association, profiling and enrichment value, and potential commercial or bulk-dataset usefulness if relevant data were actually collected.</p></article>
+        <article class="feature"><div class="feature-icon">06</div><h3>Known software risks</h3><p>Exact embedded component versions matched against the bundled offline advisory catalogue, with reachability and exploitation not assumed from static package inspection alone.</p></article>
+<article class="feature"><div class="feature-icon">07</div><h3>Changes over time</h3><p>New, resolved, unchanged and returned findings across compatible assessments, with model-version context.</p></article>
       </div>
     </div>
   </section>
@@ -222,7 +223,7 @@
           <div class="plan-summary">For one primary Android device and one additional personal device.</div>
           <ul class="ticklist">
             <li>Full Android data exposure assessment</li>
-            <li>Prioritised Core findings and optional app analysis</li>
+            <li>Core exposure, Data correlation exposure and Known software risks</li>
             <li>Changes, history and regression detection</li>
             <li>30 / 60 / 90-day recheck planning</li>
             <li>Device roles and version-aware comparisons</li>
@@ -260,12 +261,12 @@
 
   <section id="faq">
     <div class="container">
-      <div class="section-head"><div class="kicker">Technical notes</div><h2>Scope, scoring and licensing.</h2></div>
+      <div class="section-head"><div class="kicker">Technical notes</div><h2>Scope, independent domains and licensing.</h2></div>
       <div class="faq">
-        <details><summary>What is the assessment scope?</summary><p>Praecheck reviews locally available Android settings, app permissions, connectivity and installed-app characteristics to identify areas that may increase personal data exposure or correlation potential. It then provides prioritised findings and practical actions.</p></details>
+        <details><summary>What is the assessment scope?</summary><p>Praecheck evaluates three independent domains: Core exposure from observed/current Android state and granted access; Data correlation exposure from app/SDK capabilities and potential association, profiling or enrichment value; and Known software risks from exact embedded component versions matched against offline security advisories. Findings include evidence context and practical actions where appropriate.</p></details>
         <details><summary>Does the production app transmit assessment data?</summary><p>No. The production Android app is designed to perform its assessment locally and does not request Android's INTERNET permission. Assessment results and history are stored on the device.</p></details>
         <details><summary>Is Praecheck a malware, spyware or compromise detector?</summary><p>No. Praecheck is a data exposure assessment tool. It does not claim to detect malware, spyware, surveillance actors or compromise.</p></details>
-        <details><summary>What do the Core and App scores mean?</summary><p>Core prioritises current device exposure from supported checks. The optional App score represents correlation potential from installed-app characteristics and recognised indicators. Neither score is evidence that a phone has been compromised.</p></details>
+        <details><summary>What do the three assessment domains mean?</summary><p>Core exposure prioritises observed/current Android state and granted access. Data correlation exposure separately assesses app/SDK capabilities and the potential usefulness of data combinations for association, profiling or enrichment if the data were actually collected. Known software risks separately identifies exact embedded component versions that match the offline advisory catalogue. The domains are independent and are not evidence that a phone is compromised or that a specific app sold, shared or transmitted data.</p></details>
         <details><summary>Why are repeated assessments useful?</summary><p>Your exposure profile can change when you install or remove apps, change permissions, update Android, travel, change networks or use the device differently. Praecheck can compare compatible local assessments to show what changed.</p></details>
         <details><summary>How is assessment history retained?</summary><p>Assessment history, device role and recheck preferences are stored locally on the Android device. Praecheck keeps a bounded history of up to 50 assessments.</p></details>
         <details><summary>How do Personal and Power licences differ?</summary><p>Both include the same Praecheck features. Personal allows activation on up to 2 personal devices; Power allows activation on up to 10 personal devices. Power does not add business, consultant or resale rights.</p></details>
