@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>Praecheck — Google Play reviewer activation</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink:#181528;
+      --muted:#615d70;
+      --line:#ddd9ea;
+      --panel:#ffffff;
+      --bg:#f6f4fa;
+      --purple:#5d3fd3;
+      --purple2:#4528b5;
+      --ok:#146c43;
+      --bad:#a11d2f;
+    }
+    * { box-sizing:border-box; }
+    body {
+      margin:0; font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:var(--bg); color:var(--ink);
+    }
+    main { max-width:760px; margin:0 auto; padding:42px 20px 70px; }
+    .brand { font-weight:800; letter-spacing:.01em; color:var(--purple2); font-size:1.1rem; }
+    h1 { font-size:clamp(1.8rem,5vw,2.7rem); line-height:1.08; margin:.65rem 0 1rem; }
+    p { line-height:1.6; }
+    .lead { color:var(--muted); font-size:1.05rem; }
+    .card {
+      background:var(--panel); border:1px solid var(--line); border-radius:18px;
+      padding:24px; margin-top:24px; box-shadow:0 7px 28px rgba(41,28,82,.06);
+    }
+    label { display:block; font-weight:700; margin:18px 0 7px; }
+    input {
+      width:100%; padding:13px 14px; border-radius:10px; border:1px solid #bdb7ce;
+      font:inherit; background:#fff; color:var(--ink);
+    }
+    input:focus { outline:3px solid rgba(93,63,211,.16); border-color:var(--purple); }
+    button {
+      margin-top:20px; border:0; border-radius:10px; padding:13px 18px;
+      background:var(--purple); color:#fff; font-weight:800; font:inherit; cursor:pointer;
+    }
+    button:hover { background:var(--purple2); }
+    button:disabled { opacity:.55; cursor:wait; }
+    .status { margin-top:16px; padding:12px 14px; border-radius:10px; display:none; }
+    .status.ok { display:block; background:#e8f5ee; color:var(--ok); }
+    .status.bad { display:block; background:#fbeaec; color:var(--bad); }
+    .small { color:var(--muted); font-size:.92rem; }
+    code { background:#efedf5; padding:.12rem .35rem; border-radius:5px; }
+    ol { padding-left:1.35rem; }
+    li { margin:.5rem 0; line-height:1.5; }
+  </style>
+</head>
+<body>
+<main>
+  <div class="brand">PRAESCIUS LTD · PRAECHECK</div>
+  <h1>Google Play reviewer activation</h1>
+  <p class="lead">
+    This page is for authorised Google Play review of Praecheck. It issues a free,
+    installation-bound review licence. No payment or Paddle transaction is required.
+  </p>
+
+  <section class="card">
+    <form id="review-form" novalidate>
+      <label for="installation">Praecheck Installation Code</label>
+      <input id="installation" name="installation" autocomplete="off" autocapitalize="characters"
+             spellcheck="false" placeholder="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX" required>
+
+      <label for="reviewerCode">Google reviewer code</label>
+      <input id="reviewerCode" name="reviewerCode" type="password" autocomplete="off"
+             spellcheck="false" required>
+
+      <button id="submit" type="submit">Generate review licence</button>
+      <div id="status" class="status" role="status" aria-live="polite"></div>
+    </form>
+  </section>
+
+  <section class="card">
+    <strong>After downloading the licence</strong>
+    <ol>
+      <li>Return to Praecheck.</li>
+      <li>Tap <strong>Import Praecheck licence</strong>.</li>
+      <li>Select the downloaded <code>.pcl</code> file.</li>
+      <li>The review licence unlocks the full app on that installation.</li>
+    </ol>
+    <p class="small">
+      Praecheck itself verifies the signed licence offline. The production Android app
+      does not require Android INTERNET permission for assessment or licence verification.
+    </p>
+  </section>
+</main>
+
+<script>
+(() => {
+  "use strict";
+
+  // Existing Praecheck licensing Worker, with the reviewer-only route added.
+  const REVIEW_API =
+    "https://praecheck-licensing.cool-sky-248d.workers.dev/reviewer-activate";
+
+  const form = document.getElementById("review-form");
+  const install = document.getElementById("installation");
+  const reviewerCode = document.getElementById("reviewerCode");
+  const button = document.getElementById("submit");
+  const status = document.getElementById("status");
+
+  function setStatus(kind, text) {
+    status.className = "status " + kind;
+    status.textContent = text;
+  }
+
+  function normaliseInstallationCode(value) {
+    return value.trim().toUpperCase();
+  }
+
+  function validInstallationCode(value) {
+    return /^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/.test(value);
+  }
+
+  function filenameFromDisposition(header) {
+    if (!header) return "Praecheck-Google-Review.pcl";
+    const m = /filename="?([^"]+)"?/i.exec(header);
+    return m ? m[1] : "Praecheck-Google-Review.pcl";
+  }
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    status.className = "status";
+    status.textContent = "";
+
+    const installationCode = normaliseInstallationCode(install.value);
+    const code = reviewerCode.value;
+
+    if (!validInstallationCode(installationCode)) {
+      setStatus("bad", "Enter the Installation Code exactly as shown in Praecheck.");
+      return;
+    }
+    if (!code) {
+      setStatus("bad", "Enter the reviewer code supplied in Google Play Console.");
+      return;
+    }
+
+    button.disabled = true;
+    button.textContent = "Generating…";
+
+    try {
+      const response = await fetch(REVIEW_API, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        cache: "no-store",
+        body: JSON.stringify({ installationCode, reviewerCode: code })
+      });
+
+      if (!response.ok) {
+        let message = "Reviewer activation failed.";
+        try {
+          const data = await response.json();
+          if (data && typeof data.error === "string") message = data.error;
+        } catch (_) {}
+        throw new Error(message);
+      }
+
+      const blob = await response.blob();
+      const filename = filenameFromDisposition(response.headers.get("Content-Disposition"));
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+      reviewerCode.value = "";
+      setStatus("ok", "Review licence generated. Import the downloaded .pcl file into Praecheck.");
+    } catch (err) {
+      setStatus("bad", err && err.message ? err.message : "Reviewer activation failed.");
+    } finally {
+      button.disabled = false;
+      button.textContent = "Generate review licence";
+    }
+  });
+})();
+</script>
+</body>
+</html>
