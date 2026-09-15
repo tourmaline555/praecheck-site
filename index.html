@@ -10,7 +10,6 @@
   <link rel="stylesheet" href="styles.css">
   <script defer src="site-config.js"></script>
   <script defer src="site.js"></script>
-  <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
 </head>
 <body>
 <header class="site-header">
@@ -230,7 +229,7 @@
             <li>CSV export for your own records</li>
             <li>12 months of Praecheck updates</li>
           </ul>
-          <button class="btn buy-button" type="button" data-plan="personal">Purchase Personal — £14.99</button>
+          <button class="btn buy-button" type="button" data-plan="personal" disabled>Purchase Personal — temporarily unavailable</button>
         </article>
         <article class="plan-card power">
           <div class="plan-card-head"><div class="plan-title">Praecheck Power</div><div class="plan-badge">Up to 10 devices</div></div>
@@ -244,10 +243,10 @@
             <li>12 months of Praecheck updates</li>
             <li>Personal-use licence</li>
           </ul>
-          <button class="btn buy-button" type="button" data-plan="power">Purchase Power — £29.99</button>
+          <button class="btn buy-button" type="button" data-plan="power" disabled>Purchase Power — temporarily unavailable</button>
         </article>
       </div>
-      <div id="checkout-status" class="note plan-note" role="status" aria-live="polite">Secure payment is processed by Paddle. After payment, you will be sent to Praecheck activation to download your signed offline licence file. Your installed version continues to work after the included 12-month update period. Power increases the personal-device allowance; it is not a business, consultant or resale licence.</div>
+      <div id="checkout-status" class="note plan-note" role="status" aria-live="polite">Direct web purchasing is temporarily unavailable while we update Praecheck payment processing. The signed Android release remains available for download. Existing valid licences continue to operate offline, subject to their existing terms.</div>
     </div>
   </section>
 
@@ -270,7 +269,7 @@
         <details><summary>Why are repeated assessments useful?</summary><p>Your exposure profile can change when you install or remove apps, change permissions, update Android, travel, change networks or use the device differently. Praecheck can compare compatible local assessments to show what changed.</p></details>
         <details><summary>How is assessment history retained?</summary><p>Assessment history, device role and recheck preferences are stored locally on the Android device. Praecheck keeps a bounded history of up to 50 assessments.</p></details>
         <details><summary>How do Personal and Power licences differ?</summary><p>Both include the same Praecheck features. Personal allows activation on up to 2 personal devices; Power allows activation on up to 10 personal devices. Power does not add business, consultant or resale rights.</p></details>
-        <details><summary>How is Praecheck distributed and activated?</summary><p>Download the signed APK from the official Praecheck download page, install it on Android, purchase a licence, then use the activation page with the Installation ID shown in Praecheck and your Paddle purchase reference to obtain the signed offline .pcl licence.</p></details>
+        <details><summary>How is Praecheck distributed and activated?</summary><p>Download the signed APK from the official Praecheck download page and install it on Android. A valid signed .pcl licence file is required for full functionality. Direct web purchasing and purchase activation are temporarily unavailable while the payment process is being updated.</p></details>
       </div>
     </div>
   </section>
@@ -283,60 +282,6 @@
   </div>
 </footer>
 
-<script>
-(function () {
-  "use strict";
-  const CLIENT_TOKEN = "live_8b6e30a94cb658176a86d604b32";
-  const PERSONAL_PRICE_ID = "pri_01m26237724zsfkm95qz00wp7j";
-  const POWER_PRICE_ID = "pri_01m28ezaxpkh7n9nyh3azx8s2d";
-  const status = document.getElementById("checkout-status");
-  const buttons = Array.from(document.querySelectorAll(".buy-button"));
 
-  function setStatus(message, isError) {
-    if (!status) return;
-    status.textContent = message;
-    status.classList.toggle("checkout-error", !!isError);
-  }
-  function priceFor(plan) {
-    if (plan === "personal") return PERSONAL_PRICE_ID;
-    if (plan === "power") return POWER_PRICE_ID;
-    throw new Error("Unknown Praecheck licence tier.");
-  }
-  try {
-    Paddle.Initialize({
-      token: CLIENT_TOKEN,
-      eventCallback: function (event) {
-        if (!event || event.name !== "checkout.completed") return;
-        const transactionId = event.data && event.data.transaction_id;
-        if (!transactionId || !/^txn_[a-z0-9]+$/i.test(transactionId)) {
-          setStatus("Payment completed, but the transaction reference was unavailable. Please contact Praecheck support with your Paddle receipt.", true);
-          return;
-        }
-        setStatus("Payment completed. Opening Praecheck activation…", false);
-        window.location.assign("/activate/?purchaseReference=" + encodeURIComponent(transactionId));
-      }
-    });
-  } catch (error) {
-    console.error(error);
-    setStatus("Checkout could not be initialized. Please refresh the page or contact Praecheck support.", true);
-    buttons.forEach(function (button) { button.disabled = true; });
-    return;
-  }
-
-  buttons.forEach(function (button) {
-    button.addEventListener("click", function () {
-      const plan = button.dataset.plan;
-      let priceId;
-      try { priceId = priceFor(plan); }
-      catch (error) { setStatus(error.message, true); return; }
-      setStatus("Opening secure " + (plan === "power" ? "Power" : "Personal") + " checkout…", false);
-      Paddle.Checkout.open({
-        items: [{ priceId: priceId, quantity: 1 }],
-        settings: { displayMode: "overlay", theme: "light", variant: "one-page", locale: "en" }
-      });
-    });
-  });
-})();
-</script>
 </body>
 </html>

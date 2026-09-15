@@ -105,8 +105,9 @@
       <div class="kicker">Licence activation</div>
       <h1>Activate Praecheck</h1>
       <p class="lead">
-        Enter your Paddle purchase details and the installation code shown by
-        Praecheck to create your offline licence file.
+        Direct web purchase activation is temporarily unavailable while we update
+        Praecheck payment processing. Existing valid licence files continue to
+        operate offline.
       </p>
     </div>
   </section>
@@ -115,7 +116,12 @@
     <div class="container activation-wrap">
       <div class="activation-card">
 
-        <form id="activation-form">
+        <div class="note">
+          Purchase activation is temporarily unavailable. Please do not submit
+          purchase details on this page while the payment system is being updated.
+        </div>
+
+        <form id="activation-form" hidden aria-hidden="true">
           <div class="field">
             <label for="email">Purchase email</label>
             <input
@@ -125,11 +131,11 @@
               autocomplete="email"
               required
             >
-            <small>Use the email address used for your Paddle purchase.</small>
+            <small>Legacy purchase email.</small>
           </div>
 
           <div class="field">
-            <label for="purchaseReference">Paddle purchase reference</label>
+            <label for="purchaseReference">Legacy purchase reference</label>
             <input
               id="purchaseReference"
               name="purchaseReference"
@@ -138,7 +144,7 @@
               required
             >
             <small>
-              Enter your Paddle transaction ID (txn_...) or invoice number.
+              Legacy transaction or order reference.
             </small>
           </div>
 
@@ -165,7 +171,7 @@
         <div id="status" class="status" role="status" aria-live="polite"></div>
 
         <div class="note privacy-note">
-          Activation sends your purchase email, Paddle purchase reference and
+          When purchase activation is available, it sends the purchase email, purchase reference and
           Praecheck installation code to the Praecheck licensing service.
           Praecheck assessment results are not uploaded.
         </div>
