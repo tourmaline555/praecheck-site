@@ -4,12 +4,33 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Praecheck — Android data exposure assessment</title>
-  <meta name="description" content="Offline Android data exposure assessment with independent Core exposure, Data correlation exposure and Known software risks domains, plus local history and reassessment.">
+  <meta name="description" content="See beyond permissions with Praecheck: offline Android assessment of current exposure, data-correlation potential and known embedded software risks.">
   <meta name="theme-color" content="#111426">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
   <script defer src="site-config.js"></script>
   <script defer src="site.js"></script>
+
+<style id="praecheck-feature-icon-style">
+.feature-icon .feature-svg,
+.stat-icon .feature-svg,
+.metric-icon .feature-svg,
+.card-icon .feature-svg {
+  width: 30px;
+  height: 30px;
+  display: block;
+}
+</style>
+
+
+<style id="praecheck-trust-icon-style">
+.trust-svg {
+  width: 28px;
+  height: 28px;
+  display: block;
+}
+</style>
+
 </head>
 <body>
 <header class="site-header">
@@ -44,34 +65,62 @@
 
 <main>
   <section class="hero">
-    <div class="container hero-grid">
-      <div class="hero-copy">
-        <div class="eyebrow">Android data exposure assessment</div>
-        <h1>Assess Android <span>data exposure.</span> Track change over time.</h1>
-        <p class="lead">Praecheck performs a local assessment of Android configuration, granted permissions, connectivity and installed-app characteristics. Findings are prioritised with evidence context, and compatible assessments can be compared over time.</p>
-        <p class="hero-secondary">Praecheck keeps three assessment domains independent: Core exposure for observed/current Android state and granted access; Data correlation exposure for app/SDK capabilities and potential profiling or enrichment value; and Known software risks for exact embedded component versions matched against offline security advisories.</p>
-        <div class="actions hero-actions">
-          <a class="btn btn-primary" href="#features">Review assessment scope</a>
-          <a class="btn" href="#app-preview">Inspect interface</a>
-        </div>
-        <div class="hero-links"><a href="/download/">Download current release</a><span>·</span><a href="#pricing">Licence options</a></div>
-        <div class="trustline">Local processing · No INTERNET permission · Three independent domains · Evidence-aware · Version-aware</div>
-      </div>
+<div class="container hero-grid">
+<div class="hero-copy">
+<div class="eyebrow">Offline Android data-exposure assessment</div>
+<h1>See beyond <span>permissions.</span></h1>
+<p class="lead">A permission tells you what an app may access. It does not show the full picture: embedded components can operate within that access, separate signals can become more revealing when combined, and installed libraries may carry known software risks.</p>
+<p class="hero-secondary">Praecheck gives you three separate views: <strong>Core exposure</strong>, <strong>Data correlation exposure</strong> and <strong>Known software risks</strong> — locally, without uploading your installed-app inventory or assessment results.</p>
+<div class="actions hero-actions">
+<a class="btn btn-primary" href="#features">See what Praecheck checks</a>
+<a class="btn" href="#app-preview">Inspect interface</a>
+</div>
+<div class="hero-links"><a href="/download/">Download current release</a><span>·</span><a href="#pricing">Licence options</a></div>
+<div class="trustline">Local processing · No INTERNET permission · Evidence-aware · Offline advisory matching</div>
+</div>
+<div class="hero-product-shot" aria-label="Praecheck assessment interface">
+<div class="product-shot-frame">
+<img src="assets/praecheck-overview.webp" alt="Praecheck assessment overview showing separate Core exposure, Data correlation exposure and Known software risk results" width="680" height="1473" fetchpriority="high" decoding="async">
+</div>
+</div>
+</div>
+</section>
 
-      <div class="hero-product-shot" aria-label="Praecheck assessment interface">
-        <div class="product-shot-frame">
-          <img src="assets/praecheck-overview.webp" alt="Praecheck assessment snapshot showing device role, Core score and App correlation score" width="680" height="1473" fetchpriority="high" decoding="async">
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="app-preview" class="app-preview-section">
+  <section id="why-it-matters">
+<div class="container">
+<div class="section-head">
+<div class="kicker">Why this matters</div>
+<h2>A permission can reach further than it looks.</h2>
+<p>Modern Android apps are often made from a mixture of first-party code, third-party libraries, system services and device permissions. Looking at one permission at a time can miss how those pieces relate.</p>
+</div>
+<div class="grid-3">
+<article class="feature">
+<div class="feature-icon">01</div>
+<h3>Embedded components share the app's environment</h3>
+<p>Analytics, advertising, attribution and other SDKs run inside the host app. Where the app has access to a device capability, embedded code may be technically able to operate within that same environment.</p>
+</article>
+<article class="feature">
+<div class="feature-icon">02</div>
+<h3>Separate signals can become more revealing together</h3>
+<p>Location, identifiers, network information, app relationships and other signals may each appear limited in isolation. Combined, they can create a more useful basis for profiling, association or identity linkage.</p>
+</article>
+<article class="feature">
+<div class="feature-icon">03</div>
+<h3>Store disclosures cannot show every technical relationship</h3>
+<p>Privacy labels and policies are useful context, but they are summaries. They do not replace a technical view of what is installed, what access exists, and which embedded components are present on the device.</p>
+</article>
+</div>
+<div class="note" style="margin-top:18px">
+<strong>Important:</strong> Praecheck reports technical exposure and capability. It does not claim that a specific app collected, transmitted, sold or shared data unless there is evidence to support that conclusion.
+</div>
+</div>
+</section>
+<section id="app-preview" class="app-preview-section">
     <div class="container">
       <div class="section-head app-preview-head">
         <div class="kicker">Assessment interface</div>
-        <h2>Evidence, prioritisation and reassessment in one workflow.</h2>
-        <p>Praecheck is structured around the assessment lifecycle: establish current exposure, distinguish observed state from items requiring verification, review evidence and remediation, then compare later assessments under a compatible model.</p>
+        <h2>From finding to context — without collapsing everything into one score.</h2>
+<p>Praecheck keeps current device state, correlation potential and known software-risk matches separate. Findings explain what was observed, what it could mean, what you can do and the technical evidence behind it.</p>
       </div>
 
       <div class="screen-gallery" aria-label="Praecheck assessment interface screens">
@@ -92,14 +141,14 @@
           </div>
           <div class="screen-caption">
             <span class="screen-label">Finding evidence</span>
-            <h3>Evidence and remediation remain explicit.</h3>
-            <p>Finding detail records the rationale, evidence source, confidence and relevant remediation, including direct access to Android settings where supported.</p>
+            <h3>Plain-English meaning first. Technical evidence when you want it.</h3>
+            <p>Finding detail surfaces <strong>What this means for you</strong> and <strong>What you can do</strong>, with technical evidence and confidence available underneath and direct access to relevant Android settings where supported.</p>
           </div>
         </article>
 
         <article class="screen-showcase">
           <div class="screen-frame">
-            <img src="assets/praecheck-app-correlation.webp" alt="Praecheck screen showing App correlation exposure and the option to run deeper app correlation analysis" width="680" height="1473" loading="lazy" decoding="async">
+            <img src="assets/praecheck-app-correlation.webp" alt="Praecheck screen showing Data correlation exposure and the option to run deeper app correlation analysis" width="680" height="1473" loading="lazy" decoding="async">
           </div>
           <div class="screen-caption">
             <span class="screen-label">Data correlation exposure</span>
@@ -124,25 +173,23 @@
   </section>
 
   <section id="features">
-    <div class="container">
-      <div class="section-head">
-        <div class="kicker">What Praecheck checks</div>
-        <h2>A clearer view of what your phone exposes.</h2>
-        <p>Praecheck separates what it can observe from app declarations, inferred capability and checks Android restricts from ordinary apps.</p>
-      </div>
-      <div class="grid-3">
-        <article class="feature"><div class="feature-icon">01</div><h3>Apps & permissions</h3><p>Granted sensitive permissions, background location and combinations of access associated with higher exposure.</p></article>
-        <article class="feature"><div class="feature-icon">02</div><h3>Network & DNS</h3><p>Locally visible network state, active VPN state and Private DNS configuration relevant to the assessment.</p></article>
-        <article class="feature"><div class="feature-icon">03</div><h3>Bluetooth & nearby</h3><p>Nearby-device permissions and bonded-device relationships that contribute association and contextual exposure.</p></article>
-        <article class="feature"><div class="feature-icon">04</div><h3>Installed-app characteristics</h3><p>Locally available application metadata including target API levels, declarations and configuration signals.</p></article>
-        <article class="feature"><div class="feature-icon">05</div><h3>Data correlation exposure</h3><p>App and SDK capabilities, possible association, profiling and enrichment value, and potential commercial or bulk-dataset usefulness if relevant data were actually collected.</p></article>
-        <article class="feature"><div class="feature-icon">06</div><h3>Known software risks</h3><p>Exact embedded component versions matched against the bundled offline advisory catalogue, with reachability and exploitation not assumed from static package inspection alone.</p></article>
-<article class="feature"><div class="feature-icon">07</div><h3>Changes over time</h3><p>New, resolved, unchanged and returned findings across compatible assessments, with model-version context.</p></article>
-      </div>
-    </div>
-  </section>
-
-  <section class="band" id="how">
+<div class="container">
+<div class="section-head">
+<div class="kicker">What Praecheck checks</div>
+<h2>Six ways Praecheck looks beyond permissions.</h2>
+<p>Three assessment domains are supported by deeper app/access review, connectivity context and local history — without collapsing different kinds of evidence into a single claim.</p>
+</div>
+<div class="grid-3">
+<article class="feature"><div class="feature-icon"><svg class="feature-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.7"/></svg></div><h3>Core exposure</h3><p>Current, observable Android state and granted access — including permissions, special access, connectivity and device configuration relevant to exposure.</p></article>
+<article class="feature"><div class="feature-icon"><svg class="feature-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="12" r="2.2"/><circle cx="17.5" cy="6" r="2.2"/><circle cx="17.5" cy="18" r="2.2"/><path d="M8 11l7.4-4M8 13l7.4 4"/></svg></div><h3>Data correlation exposure</h3><p>Installed-app and SDK capabilities that could support profiling, identity linkage, attribution or enrichment if relevant signals are actually collected and associated.</p></article>
+<article class="feature"><div class="feature-icon"><svg class="feature-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.7 19 5.8v5.5c0 4.7-2.8 8.1-7 10-4.2-1.9-7-5.3-7-10V5.8L12 2.7Z"/><path d="M12 8v4.5"/><path d="M12 16h.01"/></svg></div><h3>Known software risks</h3><p>Exact embedded component versions matched against Praecheck's bundled offline advisory catalogue, with evidence, confidence and dataset-freshness context.</p></article>
+<article class="feature"><div class="feature-icon"><svg class="feature-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4" width="17" height="16" rx="3"/><path d="M8 9h8M8 13h5"/><path d="m15.5 16 1.5 1.5 3-3"/></svg></div><h3>Apps, permissions &amp; special access</h3><p>Review sensitive granted permissions, background access, app declarations and other locally visible characteristics worth checking.</p></article>
+<article class="feature"><div class="feature-icon"><svg class="feature-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4.4 9.5a11 11 0 0 1 15.2 0"/><path d="M7.6 12.8a6.5 6.5 0 0 1 8.8 0"/><path d="M10.7 16a2.1 2.1 0 0 1 2.6 0"/><circle cx="12" cy="19" r=".8" fill="currentColor" stroke="none"/></svg></div><h3>Connectivity &amp; relationships</h3><p>Review locally visible Wi-Fi, VPN, DNS, Bluetooth and nearby-device conditions that can add association or contextual exposure.</p></article>
+<article class="feature"><div class="feature-icon"><svg class="feature-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.3-5.7"/><path d="M4 4v5h5"/><path d="M12 8v5"/><path d="m9.8 11.2 2.2 2.2 2.2-2.2"/><path d="M9 17h6"/></svg></div><h3>History, freshness &amp; export</h3><p>Compare compatible assessments, identify returned or resolved findings, see advisory freshness and export detailed evidence to CSV.</p></article>
+</div>
+</div>
+</section>
+<section class="band" id="how">
     <div class="container">
       <div class="section-head">
         <div class="kicker">Method</div>
@@ -167,10 +214,10 @@
         <p>Compatible assessments can be compared locally to identify new, resolved, unchanged and returned findings. When the assessment model changes, Praecheck starts a new comparison baseline rather than attributing model changes to the device.</p>
       </div>
       <div class="grid-4 value-grid">
-        <article class="feature"><div class="feature-icon">Δ</div><h3>Compatible comparison</h3><p>Compare score movement and finding state only when assessments use a compatible model.</p></article>
-        <article class="feature"><div class="feature-icon">↻</div><h3>Regression detection</h3><p>Identify a finding that was previously resolved and later returns.</p></article>
-        <article class="feature"><div class="feature-icon">H</div><h3>Bounded local history</h3><p>Retain up to 50 assessments on-device with version and role context.</p></article>
-        <article class="feature"><div class="feature-icon">60</div><h3>Reassessment interval</h3><p>Record a local 30, 60 or 90-day recheck plan without background monitoring.</p></article>
+        <article class="feature"><div class="feature-icon"><svg class="feature-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="6.5" height="14" rx="1.5"/><rect x="14.5" y="5" width="6.5" height="14" rx="1.5"/><path d="M9.5 9.5h5M12.5 7l2 2.5-2 2.5M14.5 14.5h-5M11.5 12l-2 2.5 2 2.5"/></svg></div><h3>Compatible comparison</h3><p>Compare score movement and finding state only when assessments use a compatible model.</p></article>
+        <article class="feature"><div class="feature-icon"><svg class="feature-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10a8 8 0 1 1 1.8 7.2"/><path d="M4 5v5h5"/><path d="M12 8v5"/><path d="M12 17h.01"/></svg></div><h3>Regression detection</h3><p>Identify a finding that was previously resolved and later returns.</p></article>
+        <article class="feature"><div class="feature-icon"><svg class="feature-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.3-5.7"/><path d="M4 4v5h5"/><path d="M12 8v4.5l3 1.8"/></svg></div><h3>Bounded local history</h3><p>Retain up to 50 assessments on-device with version and role context.</p></article>
+        <article class="feature"><div class="feature-icon"><svg class="feature-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M7 3v4M17 3v4M3 10h18"/><circle cx="15.5" cy="15.5" r="3.2"/><path d="M15.5 13.8v1.9l1.3.8"/></svg></div><h3>Reassessment interval</h3><p>Record a local 30, 60 or 90-day recheck plan without background monitoring.</p></article>
       </div>
     </div>
   </section>
@@ -185,9 +232,12 @@
         <p class="privacy-clarifier">Praecheck is a data exposure assessment tool. It is not antivirus and does not claim to detect malware, spyware or compromise.</p>
       </div>
       <div class="privacy-cards">
-        <article><span>L</span><div><h3>Local processing</h3><p>Assessment logic executes on the handset against locally available Android state.</p></div></article>
-        <article><span>O</span><div><h3>Offline assessment</h3><p>The assessment does not depend on a cloud account, remote scan engine or network lookup.</p></div></article>
-        <article><span>I</span><div><h3>Independent criteria</h3><p>Assessment findings are not driven by advertising, affiliate placement or sponsored ranking.</p></div></article>
+        <article><span><svg class="trust-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"
+    fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2.8" width="14" height="18.4" rx="2.4"/><path d="M9 6.5h6M10 18h4"/><rect x="9" y="9" width="6" height="5.5" rx="1"/><path d="M7.5 10.2H9M7.5 13.3H9M15 10.2h1.5M15 13.3h1.5"/></svg></span><div><h3>Local processing</h3><p>Assessment logic executes on the handset against locally available Android state.</p></div></article>
+        <article><span><svg class="trust-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"
+    fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6.2 17.5h10.7a4.1 4.1 0 0 0 .7-8.1A6 6 0 0 0 6.3 7.9a4.8 4.8 0 0 0-.1 9.6Z"/><path d="m3.2 3.2 17.6 17.6"/></svg></span><div><h3>Offline assessment</h3><p>The assessment does not depend on a cloud account, remote scan engine or network lookup.</p></div></article>
+        <article><span><svg class="trust-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"
+    fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 6h14M5 12h14M5 18h14"/><circle cx="9" cy="6" r="1.7" fill="currentColor" stroke="none"/><circle cx="15" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="11" cy="18" r="1.7" fill="currentColor" stroke="none"/></svg></span><div><h3>Independent criteria</h3><p>Assessment findings are not driven by advertising, affiliate placement or sponsored ranking.</p></div></article>
       </div>
     </div>
   </section>
