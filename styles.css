@@ -224,3 +224,10 @@ h3{line-height:1.2}
 @media(max-width:680px){
   .hero-product-shot{padding-top:0}
 }
+
+/* Keep INTERNET permission together on narrow screens */
+@media (max-width: 620px) {
+  .privacy-proof-tail {
+    white-space: nowrap;
+  }
+}
