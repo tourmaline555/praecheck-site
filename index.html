@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Praecheck — Android data exposure assessment</title>
-  <meta name="description" content="See beyond permissions with Praecheck: offline Android assessment of current exposure, data-correlation potential and known embedded software risks.">
+  <meta name="description" content="See beyond permissions with Praecheck: offline Android assessment of current exposure, data-correlation potential and software exposure context.">
   <meta name="theme-color" content="#111426">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
@@ -69,8 +69,8 @@
 <div class="hero-copy">
 <div class="eyebrow">Offline Android data-exposure assessment</div>
 <h1>See beyond <span>permissions.</span></h1>
-<p class="lead">A permission tells you what an app may access. It does not show the full picture: embedded components can operate within that access, separate signals can become more revealing when combined, and installed libraries may carry known software risks.</p>
-<p class="hero-secondary">Praecheck gives you three separate views: <strong>Core exposure</strong>, <strong>Data correlation exposure</strong> and <strong>Known software risks</strong> — locally, without uploading your installed-app inventory or assessment results.</p>
+<p class="lead">A permission tells you what an app may access. It does not show the full picture: embedded components can operate within that access, separate signals can become more revealing when combined, and installed libraries can add conditional data-access paths or other software issues.</p>
+<p class="hero-secondary">Praecheck gives you three separate views: <strong>Core exposure</strong>, <strong>Data correlation exposure</strong> and <strong>Software exposure</strong> — locally, without uploading your installed-app inventory or assessment results.</p>
 <div class="actions hero-actions">
 <a class="btn btn-primary" href="#features">See what Praecheck checks</a>
 <a class="btn" href="#app-preview">Inspect interface</a>
@@ -80,7 +80,7 @@
 </div>
 <div class="hero-product-shot" aria-label="Praecheck assessment interface">
 <div class="product-shot-frame">
-<img src="assets/praecheck-overview.webp" alt="Praecheck assessment overview showing separate Core exposure, Data correlation exposure and Known software risk results" width="680" height="1473" fetchpriority="high" decoding="async">
+<img src="assets/praecheck-about.webp" alt="Praecheck 0.10.6 About screen showing local, offline and independent assessment design" width="680" height="1473" fetchpriority="high" decoding="async">
 </div>
 </div>
 </div>
@@ -120,51 +120,62 @@
       <div class="section-head app-preview-head">
         <div class="kicker">Assessment interface</div>
         <h2>From finding to context — without collapsing everything into one score.</h2>
-<p>Praecheck keeps current device state, correlation potential and known software-risk matches separate. Findings explain what was observed, what it could mean, what you can do and the technical evidence behind it.</p>
+<p>Praecheck keeps current device state, correlation potential and software exposure context separate. Findings explain what was observed, what it could mean, what you can do and the technical evidence behind it.</p>
       </div>
 
       <div class="screen-gallery" aria-label="Praecheck assessment interface screens">
         <article class="screen-showcase">
           <div class="screen-frame">
-            <img src="assets/praecheck-actions.webp" alt="Praecheck Actions screen showing the exposure queue and prioritised findings" width="680" height="1473" loading="lazy" decoding="async">
+            <img src="assets/praecheck-exposure.webp" alt="Praecheck Exposure screen showing compact per-app Data correlation findings and potential outcomes" width="680" height="1473" loading="lazy" decoding="async">
           </div>
           <div class="screen-caption">
-            <span class="screen-label">Prioritisation queue</span>
-            <h3>Exposure and verification are handled separately.</h3>
-            <p>The Actions view separates prioritised exposure findings from checks requiring user verification. Severity, score contribution and recommended action are presented together.</p>
+            <span class="screen-label">Exposure</span>
+            <h3>Risk first. App second. Reason third.</h3>
+            <p>Compact app findings show the contributing signals, potential outcome and score contribution, with deeper app exposure detail available on demand.</p>
           </div>
         </article>
 
         <article class="screen-showcase">
           <div class="screen-frame">
-            <img src="assets/praecheck-finding-detail.webp" alt="Praecheck finding detail showing recommended action, why the finding matters, evidence and confidence" width="680" height="1473" loading="lazy" decoding="async">
+            <img src="assets/praecheck-exposure-detail.webp" alt="Praecheck exposure detail showing declared capabilities, SDK indicators, evidence strength and interpretation limits" width="680" height="1473" loading="lazy" decoding="async">
           </div>
           <div class="screen-caption">
-            <span class="screen-label">Finding evidence</span>
-            <h3>Plain-English meaning first. Technical evidence when you want it.</h3>
-            <p>Finding detail surfaces <strong>What this means for you</strong> and <strong>What you can do</strong>, with technical evidence and confidence available underneath and direct access to relevant Android settings where supported.</p>
+            <span class="screen-label">Evidence on demand</span>
+            <h3>Capability is kept separate from proof of collection.</h3>
+            <p>Praecheck distinguishes granted access, declared capability and inferred SDK context, and states clearly when evidence does not establish collection, transmission, sale, sharing or commercial exposure.</p>
           </div>
         </article>
 
         <article class="screen-showcase">
           <div class="screen-frame">
-            <img src="assets/praecheck-app-correlation.webp" alt="Praecheck screen showing Data correlation exposure and the option to run deeper app correlation analysis" width="680" height="1473" loading="lazy" decoding="async">
+            <img src="assets/praecheck-verify.webp" alt="Praecheck Verify screen showing a guided user verification check and locally stored response controls" width="680" height="1473" loading="lazy" decoding="async">
           </div>
           <div class="screen-caption">
-            <span class="screen-label">Data correlation exposure</span>
-            <h3>Correlation potential is assessed independently.</h3>
-            <p>Static app and SDK analysis considers capabilities, possible association, profiling and enrichment value, including potential commercial or bulk-dataset usefulness if data were actually collected. It does not claim that a specific app collected, transmitted, sold or shared data without evidence.</p>
+            <span class="screen-label">Verify</span>
+            <h3>Checks Android cannot reliably expose are labelled for user verification.</h3>
+            <p>Guided checks keep user-supplied confirmation separate from machine-observed state. Verification responses remain local and are timestamped for later comparison.</p>
           </div>
         </article>
 
         <article class="screen-showcase">
           <div class="screen-frame">
-            <img src="assets/praecheck-history.webp" alt="Praecheck History screen showing dated assessments, device roles, Core scores and App correlation scores" width="680" height="1473" loading="lazy" decoding="async">
+            <img src="assets/praecheck-audit.webp" alt="Praecheck Technical audit showing verification filtering and user-supplied review state" width="680" height="1473" loading="lazy" decoding="async">
           </div>
           <div class="screen-caption">
-            <span class="screen-label">Longitudinal history</span>
-            <h3>Compatible assessments can be compared over time.</h3>
-            <p>Local history records device role, app and assessment-model versions, the independent assessment-domain results, and new, returned, resolved and unchanged findings.</p>
+            <span class="screen-label">Audit</span>
+            <h3>The complete evidence record remains available.</h3>
+            <p>Audit keeps observed risk, declared capability, verification, restricted coverage and pass records available without duplicating the main Verify workflow.</p>
+          </div>
+        </article>
+
+        <article class="screen-showcase">
+          <div class="screen-frame">
+            <img src="assets/praecheck-history.webp" alt="Praecheck 0.10.6 History screen showing Core, Data correlation and Software exposure results with assessment changes" width="680" height="1473" loading="lazy" decoding="async">
+          </div>
+          <div class="screen-caption">
+            <span class="screen-label">History</span>
+            <h3>Track what actually changed.</h3>
+            <p>Compatible local assessments show score movement, new, returned, resolved and unchanged findings, while incompatible assessment models start a new comparison baseline.</p>
           </div>
         </article>
       </div>
@@ -182,7 +193,7 @@
 <div class="grid-3">
 <article class="feature"><div class="feature-icon"><svg class="feature-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.7"/></svg></div><h3>Core exposure</h3><p>Current, observable Android state and granted access — including permissions, special access, connectivity and device configuration relevant to exposure.</p></article>
 <article class="feature"><div class="feature-icon"><svg class="feature-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="12" r="2.2"/><circle cx="17.5" cy="6" r="2.2"/><circle cx="17.5" cy="18" r="2.2"/><path d="M8 11l7.4-4M8 13l7.4 4"/></svg></div><h3>Data correlation exposure</h3><p>Installed-app and SDK capabilities that could support profiling, identity linkage, attribution or enrichment if relevant signals are actually collected and associated.</p></article>
-<article class="feature"><div class="feature-icon"><svg class="feature-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.7 19 5.8v5.5c0 4.7-2.8 8.1-7 10-4.2-1.9-7-5.3-7-10V5.8L12 2.7Z"/><path d="M12 8v4.5"/><path d="M12 16h.01"/></svg></div><h3>Known software risks</h3><p>Exact embedded component versions matched against Praecheck's bundled offline advisory catalogue, with evidence, confidence and dataset-freshness context.</p></article>
+<article class="feature"><div class="feature-icon"><svg class="feature-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.7 19 5.8v5.5c0 4.7-2.8 8.1-7 10-4.2-1.9-7-5.3-7-10V5.8L12 2.7Z"/><path d="M12 8v4.5"/><path d="M12 16h.01"/></svg></div><h3>Software exposure</h3><p>Exact embedded component versions are matched against Praecheck's bundled offline advisory catalogue, with conditional data-access paths kept separate from other software issues.</p></article>
 <article class="feature"><div class="feature-icon"><svg class="feature-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4" width="17" height="16" rx="3"/><path d="M8 9h8M8 13h5"/><path d="m15.5 16 1.5 1.5 3-3"/></svg></div><h3>Apps, permissions &amp; special access</h3><p>Review sensitive granted permissions, background access, app declarations and other locally visible characteristics worth checking.</p></article>
 <article class="feature"><div class="feature-icon"><svg class="feature-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4.4 9.5a11 11 0 0 1 15.2 0"/><path d="M7.6 12.8a6.5 6.5 0 0 1 8.8 0"/><path d="M10.7 16a2.1 2.1 0 0 1 2.6 0"/><circle cx="12" cy="19" r=".8" fill="currentColor" stroke="none"/></svg></div><h3>Connectivity &amp; relationships</h3><p>Review locally visible Wi-Fi, VPN, DNS, Bluetooth and nearby-device conditions that can add association or contextual exposure.</p></article>
 <article class="feature"><div class="feature-icon"><svg class="feature-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.3-5.7"/><path d="M4 4v5h5"/><path d="M12 8v5"/><path d="m9.8 11.2 2.2 2.2 2.2-2.2"/><path d="M9 17h6"/></svg></div><h3>History, freshness &amp; export</h3><p>Compare compatible assessments, identify returned or resolved findings, see advisory freshness and export detailed evidence to CSV.</p></article>
@@ -272,7 +283,7 @@
           <div class="plan-summary">For one primary Android device and one additional personal device.</div>
           <ul class="ticklist">
             <li>Full Android data exposure assessment</li>
-            <li>Core exposure, Data correlation exposure and Known software risks</li>
+            <li>Core exposure, Data correlation exposure and Software exposure</li>
             <li>Changes, history and regression detection</li>
             <li>30 / 60 / 90-day recheck planning</li>
             <li>Device roles and version-aware comparisons</li>
@@ -312,10 +323,10 @@
     <div class="container">
       <div class="section-head"><div class="kicker">Technical notes</div><h2>Scope, independent domains and licensing.</h2></div>
       <div class="faq">
-        <details><summary>What is the assessment scope?</summary><p>Praecheck evaluates three independent domains: Core exposure from observed/current Android state and granted access; Data correlation exposure from app/SDK capabilities and potential association, profiling or enrichment value; and Known software risks from exact embedded component versions matched against offline security advisories. Findings include evidence context and practical actions where appropriate.</p></details>
+        <details><summary>What is the assessment scope?</summary><p>Praecheck evaluates three independent domains: Core exposure from observed/current Android state and granted access; Data correlation exposure from app/SDK capabilities and potential association, profiling or enrichment value; and Software exposure from exact embedded component versions matched against the bundled offline advisory catalogue. Findings include evidence context and practical actions where appropriate.</p></details>
         <details><summary>Does the production app transmit assessment data?</summary><p>No. The production Android app is designed to perform its assessment locally and does not request Android's INTERNET permission. Assessment results and history are stored on the device.</p></details>
         <details><summary>Is Praecheck a malware, spyware or compromise detector?</summary><p>No. Praecheck is a data exposure assessment tool. It does not claim to detect malware, spyware, surveillance actors or compromise.</p></details>
-        <details><summary>What do the three assessment domains mean?</summary><p>Core exposure prioritises observed/current Android state and granted access. Data correlation exposure separately assesses app/SDK capabilities and the potential usefulness of data combinations for association, profiling or enrichment if the data were actually collected. Known software risks separately identifies exact embedded component versions that match the offline advisory catalogue. The domains are independent and are not evidence that a phone is compromised or that a specific app sold, shared or transmitted data.</p></details>
+        <details><summary>What do the three assessment domains mean?</summary><p>Core exposure prioritises observed/current Android state and granted access. Data correlation exposure separately assesses app/SDK capabilities and the potential usefulness of data combinations for association, profiling or enrichment if the data were actually collected. Software exposure separately identifies exact embedded component versions that match the offline advisory catalogue, while distinguishing conditional data-access paths from other software issues. The domains are independent and are not evidence that a phone is compromised or that a specific app sold, shared or transmitted data.</p></details>
         <details><summary>Why are repeated assessments useful?</summary><p>Your exposure profile can change when you install or remove apps, change permissions, update Android, travel, change networks or use the device differently. Praecheck can compare compatible local assessments to show what changed.</p></details>
         <details><summary>How is assessment history retained?</summary><p>Assessment history, device role and recheck preferences are stored locally on the Android device. Praecheck keeps a bounded history of up to 50 assessments.</p></details>
         <details><summary>How do Personal and Power licences differ?</summary><p>Both include the same Praecheck features. Personal allows activation on up to 2 personal devices; Power allows activation on up to 10 personal devices. Power does not add business, consultant or resale rights.</p></details>
