@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Activate Praecheck</title>
-  <meta name="description" content="Activate your Praecheck personal licence and download your offline licence file.">
+  <meta name="description" content="Activate your Praecheck Personal licence and download your offline licence file.">
   <meta name="theme-color" content="#111426">
 
   <link rel="icon" href="../favicon.svg" type="image/svg+xml">
@@ -44,6 +44,10 @@
       color: var(--ink);
     }
 
+    .field input[readonly] {
+      background: #f5f5f7;
+    }
+
     .field small {
       color: var(--muted);
     }
@@ -76,8 +80,24 @@
       color: #246c48;
     }
 
-    .privacy-note {
+    .privacy-note,
+    .aftercare {
       margin-top: 20px;
+    }
+
+    .purchase-ok {
+      margin-bottom: 20px;
+      padding: 13px 14px;
+      border-radius: 14px;
+      background: #eef9f3;
+      border: 1px solid #c9ead8;
+      color: #246c48;
+      font-weight: 700;
+      display: none;
+    }
+
+    .purchase-ok.show {
+      display: block;
     }
   </style>
 </head>
@@ -105,9 +125,9 @@
       <div class="kicker">Licence activation</div>
       <h1>Activate Praecheck</h1>
       <p class="lead">
-        Direct web purchase activation is temporarily unavailable while we update
-        Praecheck payment processing. Existing valid licence files continue to
-        operate offline.
+        Create the offline licence file for your Praecheck Personal purchase.
+        You will need the email address used at checkout and the installation code
+        shown by Praecheck on the device you want to activate.
       </p>
     </div>
   </section>
@@ -115,13 +135,12 @@
   <section style="padding-top:20px">
     <div class="container activation-wrap">
       <div class="activation-card">
-
-        <div class="note">
-          Purchase activation is temporarily unavailable. Please do not submit
-          purchase details on this page while the payment system is being updated.
+        <div id="purchase-ok" class="purchase-ok" role="status">
+          Payment reference received. Enter your purchase email and this device's
+          Praecheck installation code to create the licence file.
         </div>
 
-        <form id="activation-form" hidden aria-hidden="true">
+        <form id="activation-form">
           <div class="field">
             <label for="email">Purchase email</label>
             <input
@@ -131,20 +150,23 @@
               autocomplete="email"
               required
             >
-            <small>Legacy purchase email.</small>
+            <small>Use the same email address used for the Praecheck purchase.</small>
           </div>
 
-          <div class="field">
-            <label for="purchaseReference">Legacy purchase reference</label>
+          <div class="field" id="purchase-reference-field">
+            <label for="purchaseReference">Purchase reference</label>
             <input
               id="purchaseReference"
               name="purchaseReference"
               type="text"
               autocomplete="off"
+              spellcheck="false"
               required
             >
             <small>
-              Legacy transaction or order reference.
+              This is filled automatically after checkout. If you opened this page
+              separately, enter the Stripe Checkout Session ID beginning with
+              <strong>cs_live_</strong>.
             </small>
           </div>
 
@@ -155,11 +177,15 @@
               name="installationId"
               type="text"
               autocomplete="off"
+              autocapitalize="characters"
               spellcheck="false"
+              maxlength="36"
+              placeholder="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
               required
             >
             <small>
-              Enter the installation code displayed by Praecheck on this device.
+              In Praecheck, copy the installation code from the licence/activation screen
+              on this device.
             </small>
           </div>
 
@@ -170,8 +196,14 @@
 
         <div id="status" class="status" role="status" aria-live="polite"></div>
 
+        <div class="note aftercare">
+          After the <strong>.pcl</strong> file downloads, open Praecheck on the same
+          device and import the licence file. A Personal licence supports up to two
+          personal devices.
+        </div>
+
         <div class="note privacy-note">
-          When purchase activation is available, it sends the purchase email, purchase reference and
+          Activation sends your purchase email, Stripe purchase reference and
           Praecheck installation code to the Praecheck licensing service.
           Praecheck assessment results are not uploaded.
         </div>
@@ -200,17 +232,27 @@
 <script>
 (() => {
   const endpoint =
-    "https://praecheck-licensing.cool-sky-248d.workers.dev/activate";
+    "https://praecheck-licensing.cool-sky-248d.workers.dev/stripe-activate";
 
   const form = document.getElementById("activation-form");
   const button = document.getElementById("activate-button");
   const status = document.getElementById("status");
+  const purchaseReferenceInput =
+    document.getElementById("purchaseReference");
+  const purchaseReferenceField =
+    document.getElementById("purchase-reference-field");
+  const purchaseOk =
+    document.getElementById("purchase-ok");
 
   const params = new URLSearchParams(window.location.search);
-  const purchaseReference = params.get("purchaseReference");
+  const sessionId =
+    (params.get("session_id") || params.get("purchaseReference") || "").trim();
 
-  if (purchaseReference) {
-  document.getElementById("purchaseReference").value = purchaseReference;
+  if (sessionId) {
+    purchaseReferenceInput.value = sessionId;
+    purchaseReferenceInput.readOnly = true;
+    purchaseReferenceField.hidden = true;
+    purchaseOk.classList.add("show");
   }
 
   document.getElementById("year").textContent =
@@ -221,8 +263,43 @@
     status.className = "status show " + type;
   }
 
+  function normalizeInstallationId(value) {
+    return value.trim().toUpperCase();
+  }
+
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
+
+    const email =
+      document.getElementById("email").value.trim();
+
+    const purchaseReference =
+      purchaseReferenceInput.value.trim();
+
+    const installationId =
+      normalizeInstallationId(
+        document.getElementById("installationId").value
+      );
+
+    if (!/^cs_live_[A-Za-z0-9]+$/.test(purchaseReference)) {
+      showStatus(
+        "Enter a valid Praecheck purchase reference beginning with cs_live_.",
+        "error"
+      );
+      return;
+    }
+
+    if (
+      !/^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/.test(
+        installationId
+      )
+    ) {
+      showStatus(
+        "Enter the installation code exactly as shown by Praecheck.",
+        "error"
+      );
+      return;
+    }
 
     button.disabled = true;
     button.textContent = "Creating licence…";
@@ -231,11 +308,9 @@
 
     try {
       const payload = {
-        email: document.getElementById("email").value.trim(),
-        purchaseReference:
-          document.getElementById("purchaseReference").value.trim(),
-        installationId:
-          document.getElementById("installationId").value.trim()
+        email,
+        checkoutSessionId: purchaseReference,
+        installationCode: installationId
       };
 
       const response = await fetch(endpoint, {
@@ -250,7 +325,9 @@
       try {
         data = await response.json();
       } catch {
-        throw new Error("The licensing service returned an unreadable response.");
+        throw new Error(
+          "The licensing service returned an unreadable response."
+        );
       }
 
       if (!response.ok || !data.ok) {
@@ -270,23 +347,22 @@
         { type: "application/octet-stream" }
       );
 
-      const url = URL.createObjectURL(blob);
+      const downloadUrl = URL.createObjectURL(blob);
       const link = document.createElement("a");
 
-      link.href = url;
+      link.href = downloadUrl;
       link.download = data.filename;
 
       document.body.appendChild(link);
       link.click();
       link.remove();
 
-      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
 
       showStatus(
-        "Licence created successfully. Your .pcl file should now be downloading.",
+        "Licence created successfully. Your .pcl file should now be downloading. Import it into Praecheck on this device.",
         "success"
       );
-
     } catch (error) {
       showStatus(
         error.message || "The licence could not be created.",
