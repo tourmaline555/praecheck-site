@@ -38,95 +38,61 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
+  background:
+    radial-gradient(circle at 72% 40%, rgba(91, 116, 255, .10) 0%, rgba(91, 116, 255, 0) 34%),
+    linear-gradient(180deg, rgba(248, 249, 255, .98) 0%, rgba(243, 246, 255, .98) 100%);
 }
 
 #praecheck-data-network {
   position: absolute;
   inset: 0;
-  z-index: 2;
+  z-index: 1;
   width: 100%;
   height: 100%;
   pointer-events: none;
-  opacity: 1;
-  mix-blend-mode: normal;
-  filter: drop-shadow(0 0 5px rgba(82, 150, 255, .42));
-
-  /* Visible animated fallback underneath the canvas drawing */
-  background-image:
-    radial-gradient(circle at 12% 22%, rgba(111, 91, 255, .46) 0 2px, transparent 3px),
-    radial-gradient(circle at 34% 72%, rgba(55, 165, 255, .42) 0 2px, transparent 3px),
-    radial-gradient(circle at 61% 18%, rgba(111, 91, 255, .42) 0 2px, transparent 3px),
-    radial-gradient(circle at 77% 67%, rgba(55, 165, 255, .46) 0 2px, transparent 3px),
-    radial-gradient(circle at 91% 31%, rgba(111, 91, 255, .38) 0 2px, transparent 3px);
-  background-size:
-    260px 260px,
-    310px 310px,
-    360px 360px,
-    280px 280px,
-    340px 340px;
-  animation: praecheck-network-drift 22s linear infinite;
+  opacity: .95;
 }
 
 .hero > .container {
   position: relative;
-  z-index: 3;
+  z-index: 2;
 }
 
-/* Soft device/local-processing glow */
 .hero::after {
   content: "";
   position: absolute;
   z-index: 1;
-  width: min(52vw, 720px);
+  width: min(42vw, 560px);
   aspect-ratio: 1;
-  right: -8%;
-  top: 48%;
+  right: 6%;
+  top: 43%;
   transform: translateY(-50%);
   border-radius: 50%;
   background:
     radial-gradient(circle,
-      rgba(110, 88, 255, .32) 0%,
-      rgba(69, 160, 255, .20) 38%,
-      rgba(69, 160, 255, 0) 72%);
+      rgba(106, 97, 255, .16) 0%,
+      rgba(90, 164, 255, .10) 34%,
+      rgba(90, 164, 255, .04) 52%,
+      rgba(90, 164, 255, 0) 72%);
+  filter: blur(2px);
   pointer-events: none;
-}
-
-@keyframes praecheck-network-drift {
-  from {
-    background-position:
-      0 0,
-      0 0,
-      0 0,
-      0 0,
-      0 0;
-  }
-
-  to {
-    background-position:
-      90px 45px,
-      -75px 60px,
-      55px -70px,
-      -60px -40px,
-      75px 50px;
-  }
 }
 
 @media (max-width: 820px) {
   #praecheck-data-network {
-    opacity: 1;
+    opacity: .82;
   }
 
   .hero::after {
-    width: 125vw;
-    right: -62vw;
-    top: 38%;
+    width: 95vw;
+    right: -28vw;
+    top: 33%;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   #praecheck-data-network {
-    animation: none;
-    opacity: .65;
+    opacity: .72;
   }
 }
 /* PRAECHECK DATA NETWORK END */
@@ -431,24 +397,21 @@
   const ctx = canvas.getContext("2d", { alpha: true });
   if (!ctx) return;
 
-  const reducedMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)"
-  );
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
   let width = 0;
   let height = 0;
   let dpr = 1;
+
   let nodes = [];
+  let links = [];
   let pulses = [];
   let animationId = 0;
-  let lastFrame = 0;
+  let lastTime = 0;
   let running = false;
 
-  const palette = {
-    violet: [126, 104, 255],
-    cyan: [73, 177, 255],
-    pale: [187, 202, 255]
-  };
+  let focalX = 0;
+  let focalY = 0;
 
   const rand = (min, max) => min + Math.random() * (max - min);
 
@@ -462,193 +425,213 @@
     canvas.height = Math.round(height * dpr);
     canvas.style.width = width + "px";
     canvas.style.height = height + "px";
-
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    createNodes();
-    createPulses();
-    draw(0, true);
+    focalX = width < 820 ? width * 0.68 : width * 0.73;
+    focalY = height * 0.42;
+
+    buildScene();
+    drawStatic(0);
   }
 
-  function createNodes() {
-    const mobile = width < 720;
-    const count = mobile ? 26 : Math.min(52, Math.max(36, Math.floor(width / 30)));
-
-    nodes = Array.from({ length: count }, (_, i) => {
-      const biasRight = !mobile && i < Math.ceil(count * 0.58);
-      const x = biasRight ? rand(width * 0.48, width * 1.02) : rand(-20, width + 20);
-
-      return {
-        x,
-        y: rand(-10, height + 10),
-        vx: rand(-0.10, 0.10),
-        vy: rand(-0.08, 0.08),
-        r: rand(1.8, 3.4),
-        phase: rand(0, Math.PI * 2),
-        family: Math.random() < 0.58 ? "violet" : "cyan"
-      };
-    });
+  function makeNode(x, y, size = 2.2, alpha = 0.9, cluster = false) {
+    return { x, y, size, alpha, cluster };
   }
 
-  function createPulses() {
-    const count = width < 720 ? 7 : 12;
-    pulses = Array.from({ length: count }, () => ({
-      a: 0,
-      b: 1,
-      t: Math.random(),
-      speed: rand(0.0014, 0.0030),
-      alpha: rand(0.35, 0.72)
-    }));
-    retargetPulses();
-  }
+  function buildScene() {
+    nodes = [];
+    links = [];
+    pulses = [];
 
-  function retargetPulse(pulse) {
-    if (nodes.length < 2) return;
+    const mobile = width < 820;
 
-    for (let tries = 0; tries < 20; tries++) {
-      const a = Math.floor(Math.random() * nodes.length);
-      const b = Math.floor(Math.random() * nodes.length);
-      if (a === b) continue;
-
-      const na = nodes[a];
-      const nb = nodes[b];
-      const dx = na.x - nb.x;
-      const dy = na.y - nb.y;
-      const distance = Math.hypot(dx, dy);
-
-      if (distance < Math.min(210, width * 0.25)) {
-        pulse.a = a;
-        pulse.b = b;
-        pulse.t = 0;
-        return;
-      }
+    // Outer field: calm, distributed points
+    const outerCount = mobile ? 18 : 26;
+    for (let i = 0; i < outerCount; i++) {
+      const x = rand(width * 0.04, width * 0.96);
+      const y = rand(height * 0.10, height * 0.90);
+      nodes.push(makeNode(x, y, rand(1.4, 2.2), rand(0.45, 0.82), false));
     }
 
-    pulse.a = 0;
-    pulse.b = Math.min(1, nodes.length - 1);
-    pulse.t = 0;
-  }
-
-  function retargetPulses() {
-    pulses.forEach(retargetPulse);
-  }
-
-  function rgba(rgb, alpha) {
-    return `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
-  }
-
-  function moveNodes(dt) {
-    const scale = Math.min(2, dt / 16.667);
-
-    for (const n of nodes) {
-      n.x += n.vx * scale;
-      n.y += n.vy * scale;
-      n.phase += 0.008 * scale;
-
-      if (n.x < -30) n.x = width + 30;
-      if (n.x > width + 30) n.x = -30;
-      if (n.y < -30) n.y = height + 30;
-      if (n.y > height + 30) n.y = -30;
+    // Mid-band biased toward focal region
+    const midCount = mobile ? 10 : 16;
+    for (let i = 0; i < midCount; i++) {
+      const angle = rand(-2.2, 2.2);
+      const rx = mobile ? rand(90, 180) : rand(120, 260);
+      const ry = mobile ? rand(60, 120) : rand(70, 150);
+      const x = focalX + Math.cos(angle) * rx;
+      const y = focalY + Math.sin(angle) * ry;
+      nodes.push(makeNode(x, y, rand(1.8, 2.8), rand(0.55, 0.9), false));
     }
-  }
 
-  function drawConnections() {
-    const maxDistance = width < 720 ? 175 : 245;
+    // Inner convergence cluster
+    const clusterCount = mobile ? 8 : 12;
+    const clusterStart = nodes.length;
+    for (let i = 0; i < clusterCount; i++) {
+      const angle = rand(0, Math.PI * 2);
+      const r = mobile ? rand(14, 48) : rand(18, 60);
+      const x = focalX + Math.cos(angle) * r;
+      const y = focalY + Math.sin(angle) * r;
+      nodes.push(makeNode(x, y, rand(2.2, 3.6), rand(0.75, 1.0), true));
+    }
+
+    // Nearest-neighbour links
+    const maxDistance = mobile ? 180 : 240;
 
     for (let i = 0; i < nodes.length; i++) {
-      for (let j = i + 1; j < nodes.length; j++) {
-        const a = nodes[i];
-        const b = nodes[j];
-        const dx = a.x - b.x;
-        const dy = a.y - b.y;
-        const distance = Math.hypot(dx, dy);
+      const distances = [];
 
-        if (distance >= maxDistance) continue;
-
-        const strength = 1 - distance / maxDistance;
-        const rgb = a.family === b.family ? palette[a.family] : palette.pale;
-
-        ctx.beginPath();
-        ctx.moveTo(a.x, a.y);
-        ctx.lineTo(b.x, b.y);
-        ctx.lineWidth = 1.55;
-        ctx.strokeStyle = rgba(rgb, 0.52 * strength);
-        ctx.stroke();
+      for (let j = 0; j < nodes.length; j++) {
+        if (i === j) continue;
+        const dx = nodes[i].x - nodes[j].x;
+        const dy = nodes[i].y - nodes[j].y;
+        const d = Math.hypot(dx, dy);
+        if (d <= maxDistance) distances.push({ j, d });
       }
+
+      distances.sort((a, b) => a.d - b.d);
+
+      const limit = nodes[i].cluster ? 4 : 2;
+      for (const item of distances.slice(0, limit)) {
+        const a = i < item.j ? i : item.j;
+        const b = i < item.j ? item.j : i;
+        const key = `${a}-${b}`;
+        if (!links.some(l => l.key === key)) {
+          links.push({ a, b, d: item.d, key });
+        }
+      }
+    }
+
+    // Inward travelling pulses on links that move toward the cluster
+    const clusterIndices = [...Array(nodes.length).keys()].filter(i => nodes[i].cluster);
+    const pulseLinkPool = links.filter(l => {
+      const na = nodes[l.a];
+      const nb = nodes[l.b];
+      return na.cluster || nb.cluster || l.d < (mobile ? 120 : 150);
+    });
+
+    const pulseCount = mobile ? 5 : 8;
+
+    for (let i = 0; i < pulseCount; i++) {
+      const link = pulseLinkPool[Math.floor(Math.random() * pulseLinkPool.length)];
+      if (!link) continue;
+
+      let from = link.a;
+      let to = link.b;
+
+      const da = Math.hypot(nodes[link.a].x - focalX, nodes[link.a].y - focalY);
+      const db = Math.hypot(nodes[link.b].x - focalX, nodes[link.b].y - focalY);
+
+      // ensure movement goes inward, toward correlation point
+      if (da < db) {
+        from = link.b;
+        to = link.a;
+      }
+
+      pulses.push({
+        from,
+        to,
+        t: Math.random(),
+        speed: rand(0.00008, 0.00018),
+        radius: rand(2.0, 3.4),
+        alpha: rand(0.65, 0.95)
+      });
+    }
+  }
+
+  function drawBackgroundGlow() {
+    const grad = ctx.createRadialGradient(focalX, focalY, 0, focalX, focalY, Math.min(width, height) * 0.24);
+    grad.addColorStop(0, "rgba(94, 113, 255, 0.16)");
+    grad.addColorStop(0.35, "rgba(76, 154, 255, 0.08)");
+    grad.addColorStop(1, "rgba(76, 154, 255, 0)");
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(focalX, focalY, Math.min(width, height) * 0.24, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  function drawLinks() {
+    for (const link of links) {
+      const a = nodes[link.a];
+      const b = nodes[link.b];
+
+      const strength = 1 - Math.min(link.d / 260, 1);
+      const alpha = (a.cluster || b.cluster) ? 0.20 + strength * 0.18 : 0.08 + strength * 0.10;
+
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y);
+      ctx.lineTo(b.x, b.y);
+      ctx.lineWidth = (a.cluster || b.cluster) ? 1.15 : 0.85;
+      ctx.strokeStyle = `rgba(98, 130, 230, ${alpha.toFixed(3)})`;
+      ctx.stroke();
     }
   }
 
   function drawNodes(time) {
     for (const n of nodes) {
-      const pulse = 0.72 + Math.sin(time * 0.0012 + n.phase) * 0.18;
-      const rgb = palette[n.family];
+      const pulse = n.cluster ? (0.92 + Math.sin(time * 0.001 + n.x * 0.01) * 0.08) : 1;
+      const radius = n.size * pulse;
 
       ctx.beginPath();
-      ctx.arc(n.x, n.y, n.r + 2.5, 0, Math.PI * 2);
-      ctx.fillStyle = rgba(rgb, 0.24 * pulse);
+      ctx.arc(n.x, n.y, radius + (n.cluster ? 4 : 2), 0, Math.PI * 2);
+      ctx.fillStyle = n.cluster
+        ? `rgba(102, 126, 255, ${0.10 * n.alpha})`
+        : `rgba(97, 169, 255, ${0.05 * n.alpha})`;
       ctx.fill();
 
       ctx.beginPath();
-      ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
-      ctx.fillStyle = rgba(rgb, 1.0 * pulse);
+      ctx.arc(n.x, n.y, radius, 0, Math.PI * 2);
+      ctx.fillStyle = n.cluster
+        ? `rgba(91, 110, 255, ${0.82 * n.alpha})`
+        : `rgba(77, 159, 255, ${0.55 * n.alpha})`;
       ctx.fill();
     }
   }
 
-  function drawPulses(dt) {
+  function updateAndDrawPulses(dt) {
     for (const p of pulses) {
-      const a = nodes[p.a];
-      const b = nodes[p.b];
-      if (!a || !b) continue;
-
       p.t += p.speed * dt;
+      if (p.t >= 1) p.t = 0;
 
-      if (p.t >= 1) {
-        retargetPulse(p);
-        continue;
-      }
-
-      const x = a.x + (b.x - a.x) * p.t;
-      const y = a.y + (b.y - a.y) * p.t;
-
-      const edgeFade = Math.sin(Math.PI * p.t);
-      const rgb = palette.cyan;
+      const from = nodes[p.from];
+      const to = nodes[p.to];
+      const x = from.x + (to.x - from.x) * p.t;
+      const y = from.y + (to.y - from.y) * p.t;
+      const fade = Math.sin(Math.PI * p.t);
 
       ctx.beginPath();
-      ctx.arc(x, y, 10, 0, Math.PI * 2);
-      ctx.fillStyle = rgba(rgb, 0.30 * edgeFade * p.alpha);
+      ctx.arc(x, y, p.radius * 2.6, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(108, 191, 255, ${(0.10 * fade * p.alpha).toFixed(3)})`;
       ctx.fill();
 
       ctx.beginPath();
-      ctx.arc(x, y, 1.5, 0, Math.PI * 2);
-      ctx.fillStyle = rgba(rgb, 1.0 * edgeFade * p.alpha);
+      ctx.arc(x, y, p.radius, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(108, 191, 255, ${(0.88 * fade * p.alpha).toFixed(3)})`;
       ctx.fill();
     }
   }
 
-  function draw(time, staticOnly = false) {
+  function drawStatic(time) {
     ctx.clearRect(0, 0, width, height);
-    drawConnections();
+    drawBackgroundGlow();
+    drawLinks();
     drawNodes(time);
-
-    if (!staticOnly) {
-      drawPulses(16.667);
-    }
+    if (reducedMotion.matches) return;
+    updateAndDrawPulses(16);
   }
 
   function frame(time) {
     if (!running) return;
 
-    if (time - lastFrame >= 32) {
-      const dt = lastFrame ? time - lastFrame : 32;
-      lastFrame = time;
+    if (!lastTime) lastTime = time;
+    const dt = time - lastTime;
+    lastTime = time;
 
-      moveNodes(dt);
-      ctx.clearRect(0, 0, width, height);
-      drawConnections();
-      drawNodes(time);
-      drawPulses(dt);
-    }
+    ctx.clearRect(0, 0, width, height);
+    drawBackgroundGlow();
+    drawLinks();
+    drawNodes(time);
+    updateAndDrawPulses(dt);
 
     animationId = requestAnimationFrame(frame);
   }
@@ -661,21 +644,19 @@
 
   function start() {
     stop();
+    drawStatic(0);
 
-    if (reducedMotion.matches || document.hidden) {
-      draw(0, true);
-      return;
-    }
+    if (reducedMotion.matches || document.hidden) return;
 
     running = true;
-    lastFrame = 0;
+    lastTime = 0;
     animationId = requestAnimationFrame(frame);
   }
 
   let resizeTimer = 0;
   window.addEventListener("resize", () => {
-    window.clearTimeout(resizeTimer);
-    resizeTimer = window.setTimeout(() => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
       resize();
       start();
     }, 120);
