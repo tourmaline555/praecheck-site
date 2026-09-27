@@ -36,6 +36,7 @@
 
 
 
+
 <style id="praecheck-data-network-style">
 /* PRAECHECK DATA NETWORK START */
 .hero {
@@ -43,11 +44,11 @@
   isolation: isolate;
   overflow: hidden;
   background:
-    radial-gradient(circle at 76% 28%,
-      rgba(46, 59, 124, .10) 0%,
-      rgba(46, 59, 124, .025) 34%,
-      rgba(46, 59, 124, 0) 58%),
-    linear-gradient(180deg, #f2f4fa 0%, #e9edf7 100%);
+    radial-gradient(circle at 74% 22%,
+      rgba(48, 66, 142, .09) 0%,
+      rgba(48, 66, 142, .03) 30%,
+      rgba(48, 66, 142, 0) 58%),
+    linear-gradient(180deg, #f2f5fb 0%, #e9eef8 100%);
 }
 
 #praecheck-data-network {
@@ -58,7 +59,7 @@
   width: 100%;
   height: 100%;
   pointer-events: none;
-  opacity: .96;
+  opacity: .95;
 }
 
 .hero > .container {
@@ -83,6 +84,7 @@
 }
 /* PRAECHECK DATA NETWORK END */
 </style>
+
 
 
 
@@ -381,6 +383,7 @@
 
 
 
+
 <script>
 /* PRAECHECK DATA NETWORK SCRIPT START */
 (() => {
@@ -396,16 +399,17 @@
   let width = 1;
   let height = 1;
   let dpr = 1;
-  let nodes = [];
+  let points = [];
+  let cols = 0;
+  let rows = 0;
   let animationId = 0;
   let lastFrame = 0;
   let running = false;
 
   const palette = {
-    line: [39, 51, 105],
-    line2: [30, 83, 108],
-    node: [39, 50, 105],
-    pulse: [37, 100, 132]
+    primary: [36, 48, 102],
+    secondary: [42, 96, 126],
+    accent: [77, 88, 160]
   };
 
   const rand = (min, max) => min + Math.random() * (max - min);
@@ -419,17 +423,7 @@
     const newWidth = Math.max(1, Math.round(rect.width));
     const newHeight = Math.max(1, Math.round(rect.height));
 
-    /*
-     * Critical mobile-scroll fix:
-     * browser address-bar changes can fire viewport resize events while
-     * scrolling. We do not listen to window.resize at all, and we only
-     * rebuild when the hero element itself actually changes size.
-     */
-    if (
-      !force &&
-      Math.abs(newWidth - width) < 2 &&
-      Math.abs(newHeight - height) < 2
-    ) {
+    if (!force && Math.abs(newWidth - width) < 2 && Math.abs(newHeight - height) < 2) {
       return;
     }
 
@@ -441,179 +435,142 @@
     canvas.height = Math.round(height * dpr);
     canvas.style.width = width + "px";
     canvas.style.height = height + "px";
-
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    buildNodes();
+    buildMesh();
     draw(performance.now());
   }
 
-  function buildNodes() {
+  function buildMesh() {
     const mobile = width < 820;
-    const target = mobile ? 28 : 48;
+    cols = mobile ? 8 : 11;
+    rows = mobile ? 5 : 7;
 
-    /*
-     * Even spatial distribution gives one coherent web across the
-     * whole hero instead of little isolated clusters.
-     */
-    const aspect = Math.max(.70, width / height);
-    const cols = Math.max(4, Math.ceil(Math.sqrt(target * aspect)));
-    const rows = Math.max(3, Math.ceil(target / cols));
+    const stepX = width / (cols - 1);
+    const stepY = height / (rows - 1);
 
-    const cellW = width / cols;
-    const cellH = height / rows;
+    points = [];
 
-    nodes = [];
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const edgeX = c === 0 || c === cols - 1;
+        const edgeY = r === 0 || r === rows - 1;
 
-    for (let row = 0; row < rows && nodes.length < target; row++) {
-      for (let col = 0; col < cols && nodes.length < target; col++) {
-        const anchorX = col * cellW + rand(cellW * .20, cellW * .80);
-        const anchorY = row * cellH + rand(cellH * .20, cellH * .80);
-
-        /*
-         * Nodes never roam or wrap. They drift around stable anchors
-         * with independent sinusoidal movement, so nothing can jump.
-         */
-        nodes.push({
-          anchorX,
-          anchorY,
-          x: anchorX,
-          y: anchorY,
-          rx: rand(12, mobile ? 23 : 30),
-          ry: rand(10, mobile ? 21 : 27),
+        points.push({
+          row: r,
+          col: c,
+          baseX: c * stepX,
+          baseY: r * stepY,
+          x: c * stepX,
+          y: r * stepY,
+          ampX: edgeX ? rand(6, 12) : rand(12, mobile ? 20 : 28),
+          ampY: edgeY ? rand(6, 12) : rand(12, mobile ? 18 : 24),
           phaseX: rand(0, Math.PI * 2),
           phaseY: rand(0, Math.PI * 2),
-          speedX: rand(.000035, .000070),
-          speedY: rand(.000030, .000062),
-          radius: rand(1.35, 2.15),
-          tone: Math.random() < .28 ? "teal" : "navy"
+          speedX: rand(0.00009, 0.00018),
+          speedY: rand(0.00008, 0.00016),
+          tone: (r + c) % 3
         });
       }
     }
   }
 
-  function updateNodes(time) {
-    for (const n of nodes) {
-      n.x =
-        n.anchorX +
-        Math.sin(time * n.speedX + n.phaseX) * n.rx;
+  function indexOfPoint(r, c) {
+    return r * cols + c;
+  }
 
-      n.y =
-        n.anchorY +
-        Math.cos(time * n.speedY + n.phaseY) * n.ry;
+  function updatePoints(time) {
+    for (const p of points) {
+      p.x = p.baseX + Math.sin(time * p.speedX + p.phaseX) * p.ampX;
+      p.y = p.baseY + Math.cos(time * p.speedY + p.phaseY) * p.ampY;
     }
   }
 
-  function drawWeb(time) {
-    const mobile = width < 820;
-    const maxDistance = mobile ? 150 : 190;
-    const minVisible = maxDistance * .66;
+  function pointAt(r, c) {
+    return points[indexOfPoint(r, c)];
+  }
 
-    /*
-     * Distance-based alpha means lines fade gradually in and out.
-     * There is no sharp connection creation/destruction.
-     */
-    for (let i = 0; i < nodes.length; i++) {
-      const a = nodes[i];
+  function toneColor(tone) {
+    if (tone === 1) return palette.secondary;
+    if (tone === 2) return palette.accent;
+    return palette.primary;
+  }
 
-      for (let j = i + 1; j < nodes.length; j++) {
-        const b = nodes[j];
-        const dx = b.x - a.x;
-        const dy = b.y - a.y;
-        const distance = Math.hypot(dx, dy);
+  function drawSegment(a, b, strength = 1, curve = 0) {
+    const mx = (a.x + b.x) / 2;
+    const my = (a.y + b.y) / 2;
+    const dx = b.x - a.x;
+    const dy = b.y - a.y;
+    const len = Math.hypot(dx, dy) || 1;
 
-        if (distance >= maxDistance) continue;
+    const nx = -dy / len;
+    const ny = dx / len;
 
-        let alpha;
+    const tone = toneColor((a.tone + b.tone) % 3);
+    const alpha = 0.10 * strength;
 
-        if (distance <= minVisible) {
-          alpha = .115;
-        } else {
-          const fade =
-            1 - (distance - minVisible) / (maxDistance - minVisible);
-          alpha = .115 * fade * fade;
+    ctx.beginPath();
+    ctx.moveTo(a.x, a.y);
+    if (curve !== 0) {
+      ctx.quadraticCurveTo(mx + nx * curve, my + ny * curve, b.x, b.y);
+    } else {
+      ctx.lineTo(b.x, b.y);
+    }
+    ctx.lineWidth = 0.8 * strength;
+    ctx.strokeStyle = rgba(tone, alpha);
+    ctx.stroke();
+  }
+
+  function drawMesh() {
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const p = pointAt(r, c);
+
+        if (c < cols - 1) {
+          drawSegment(p, pointAt(r, c + 1), 1.0, 6);
         }
 
-        const mixed =
-          a.tone === "teal" || b.tone === "teal";
+        if (r < rows - 1) {
+          drawSegment(p, pointAt(r + 1, c), 0.95, -5);
+        }
 
-        ctx.beginPath();
-        ctx.moveTo(a.x, a.y);
-        ctx.lineTo(b.x, b.y);
-        ctx.lineWidth = .72;
-        ctx.strokeStyle = rgba(
-          mixed ? palette.line2 : palette.line,
-          alpha
-        );
-        ctx.stroke();
+        if (r < rows - 1 && c < cols - 1) {
+          drawSegment(p, pointAt(r + 1, c + 1), 0.55, 3);
+        }
 
-        /*
-         * A small number of subtle pulses travel along existing lines.
-         * They are derived from time only, so scroll/frame stalls cannot
-         * accumulate velocity or cause a fast-jump bug.
-         */
-        const pulseKey = (i * 31 + j * 17) % 19;
-
-        if (pulseKey === 0 && distance < minVisible * .95) {
-          const phase =
-            (time * .000018 + (i * .173 + j * .097)) % 1;
-
-          const edgeFade =
-            Math.sin(Math.PI * phase);
-
-          const px = a.x + dx * phase;
-          const py = a.y + dy * phase;
-
-          ctx.beginPath();
-          ctx.arc(px, py, 1.45, 0, Math.PI * 2);
-          ctx.fillStyle = rgba(
-            palette.pulse,
-            .36 * edgeFade
-          );
-          ctx.fill();
+        if (r < rows - 1 && c > 0) {
+          drawSegment(p, pointAt(r + 1, c - 1), 0.40, -2);
         }
       }
     }
   }
 
   function drawNodes(time) {
-    for (const n of nodes) {
-      const breathe =
-        .88 + Math.sin(time * .00024 + n.phaseX) * .12;
-
-      const rgb =
-        n.tone === "teal"
-          ? palette.line2
-          : palette.node;
+    /*
+     * Very subtle junction glow only, not visible "dots".
+     */
+    for (const p of points) {
+      const breathe = 0.85 + Math.sin(time * 0.00018 + p.phaseX) * 0.15;
+      const rgb = toneColor(p.tone);
 
       ctx.beginPath();
-      ctx.arc(n.x, n.y, n.radius + 2.6, 0, Math.PI * 2);
-      ctx.fillStyle = rgba(rgb, .035 * breathe);
-      ctx.fill();
-
-      ctx.beginPath();
-      ctx.arc(n.x, n.y, n.radius, 0, Math.PI * 2);
-      ctx.fillStyle = rgba(rgb, .52 * breathe);
+      ctx.arc(p.x, p.y, 1.2, 0, Math.PI * 2);
+      ctx.fillStyle = rgba(rgb, 0.10 * breathe);
       ctx.fill();
     }
   }
 
   function draw(time) {
     ctx.clearRect(0, 0, width, height);
-    updateNodes(time);
-    drawWeb(time);
+    updatePoints(time);
+    drawMesh();
     drawNodes(time);
   }
 
   function frame(time) {
     if (!running) return;
 
-    /*
-     * Keep visual motion smooth but inexpensive. Because all positions
-     * are functions of absolute time, no accumulated delta can explode
-     * after a scroll or browser pause.
-     */
-    if (!lastFrame || time - lastFrame >= 28) {
+    if (!lastFrame || time - lastFrame >= 30) {
       lastFrame = time;
       draw(time);
     }
@@ -623,7 +580,6 @@
 
   function stop() {
     running = false;
-
     if (animationId) {
       cancelAnimationFrame(animationId);
       animationId = 0;
@@ -635,33 +591,22 @@
     lastFrame = 0;
     draw(performance.now());
 
-    if (reducedMotion.matches || document.hidden) {
-      return;
-    }
+    if (reducedMotion.matches || document.hidden) return;
 
     running = true;
     animationId = requestAnimationFrame(frame);
   }
 
-  /*
-   * ResizeObserver watches the hero itself. Unlike window.resize,
-   * mobile browser chrome appearing/disappearing during scroll does not
-   * rebuild the scene unless this actual element changes dimensions.
-   */
   if ("ResizeObserver" in window) {
     const observer = new ResizeObserver(() => {
       measureAndBuild(false);
     });
-
     observer.observe(hero);
   }
 
   document.addEventListener("visibilitychange", () => {
-    if (document.hidden) {
-      stop();
-    } else {
-      start();
-    }
+    if (document.hidden) stop();
+    else start();
   });
 
   if (typeof reducedMotion.addEventListener === "function") {
@@ -673,6 +618,7 @@
 })();
 /* PRAECHECK DATA NETWORK SCRIPT END */
 </script>
+
 
 
 
