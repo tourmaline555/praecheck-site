@@ -35,6 +35,7 @@
 
 
 
+
 <style id="praecheck-data-network-style">
 /* PRAECHECK DATA NETWORK START */
 .hero {
@@ -42,21 +43,22 @@
   isolation: isolate;
   overflow: hidden;
   background:
-    radial-gradient(circle at 72% 44%,
-      rgba(40, 55, 116, .10) 0%,
-      rgba(40, 55, 116, .035) 30%,
-      rgba(40, 55, 116, 0) 54%),
-    linear-gradient(180deg, #f1f3f9 0%, #e9edf6 100%);
+    radial-gradient(circle at 76% 28%,
+      rgba(46, 59, 124, .10) 0%,
+      rgba(46, 59, 124, .025) 34%,
+      rgba(46, 59, 124, 0) 58%),
+    linear-gradient(180deg, #f2f4fa 0%, #e9edf7 100%);
 }
 
 #praecheck-data-network {
   position: absolute;
   inset: 0;
   z-index: 1;
+  display: block;
   width: 100%;
   height: 100%;
   pointer-events: none;
-  opacity: 1;
+  opacity: .96;
 }
 
 .hero > .container {
@@ -70,17 +72,18 @@
 
 @media (max-width: 820px) {
   #praecheck-data-network {
-    opacity: .93;
+    opacity: .90;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   #praecheck-data-network {
-    opacity: .68;
+    opacity: .72;
   }
 }
 /* PRAECHECK DATA NETWORK END */
 </style>
+
 
 
 
@@ -377,6 +380,7 @@
 
 
 
+
 <script>
 /* PRAECHECK DATA NETWORK SCRIPT START */
 (() => {
@@ -392,114 +396,45 @@
   let width = 1;
   let height = 1;
   let dpr = 1;
-  let lanes = [];
-  let packets = [];
+  let nodes = [];
   let animationId = 0;
-  let lastTime = 0;
+  let lastFrame = 0;
   let running = false;
 
   const palette = {
-    navy: [37, 48, 99],
-    teal: [27, 83, 103],
-    violet: [61, 52, 119]
+    line: [39, 51, 105],
+    line2: [30, 83, 108],
+    node: [39, 50, 105],
+    pulse: [37, 100, 132]
   };
 
-  const words = [
-    "0101", "1010", "0011", "1100",
-    "0110", "1001", "1110", "0001"
-  ];
+  const rand = (min, max) => min + Math.random() * (max - min);
 
   function rgba(rgb, alpha) {
     return `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
   }
 
-  function clamp(v, a, b) {
-    return Math.max(a, Math.min(b, v));
-  }
-
-  function pointOn(lane, t) {
-    const u = 1 - t;
-    return {
-      x:
-        u*u*u*lane.p0.x +
-        3*u*u*t*lane.p1.x +
-        3*u*t*t*lane.p2.x +
-        t*t*t*lane.p3.x,
-      y:
-        u*u*u*lane.p0.y +
-        3*u*u*t*lane.p1.y +
-        3*u*t*t*lane.p2.y +
-        t*t*t*lane.p3.y
-    };
-  }
-
-  function tangentOn(lane, t) {
-    const u = 1 - t;
-    const dx =
-      3*u*u*(lane.p1.x - lane.p0.x) +
-      6*u*t*(lane.p2.x - lane.p1.x) +
-      3*t*t*(lane.p3.x - lane.p2.x);
-
-    const dy =
-      3*u*u*(lane.p1.y - lane.p0.y) +
-      6*u*t*(lane.p2.y - lane.p1.y) +
-      3*t*t*(lane.p3.y - lane.p2.y);
-
-    return Math.atan2(dy, dx);
-  }
-
-  function lane(id, a, b, c, d, tone, alpha, widthPx, trunk = false) {
-    return {
-      id,
-      p0: { x: a[0] * width, y: a[1] * height },
-      p1: { x: b[0] * width, y: b[1] * height },
-      p2: { x: c[0] * width, y: c[1] * height },
-      p3: { x: d[0] * width, y: d[1] * height },
-      tone,
-      alpha,
-      widthPx,
-      trunk
-    };
-  }
-
-  function buildScene() {
-    /*
-     * Four feeder lanes from different parts of the hero converge
-     * into two broad trunk lanes. No dots, no particle web.
-     */
-    lanes = [
-      lane("f1", [-.18,.14], [.14,.10], [.38,.28], [.62,.42], "navy", .10, .9),
-      lane("f2", [-.16,.42], [.16,.38], [.38,.36], [.62,.42], "teal", .09, .85),
-      lane("f3", [.08,1.16], [.24,.84], [.42,.58], [.62,.42], "violet", .08, .8),
-      lane("f4", [1.14,.04], [.96,.16], [.82,.30], [.72,.52], "navy", .07, .8),
-
-      lane("m1", [.62,.42], [.70,.44], [.74,.49], [.72,.52], "violet", .11, 1.0, true),
-      lane("t1", [.72,.52], [.82,.51], [.93,.40], [1.16,.30], "navy", .16, 1.25, true),
-      lane("t2", [.72,.52], [.81,.60], [.93,.73], [1.16,.82], "teal", .15, 1.25, true)
-    ];
-
-    packets = [];
-
-    lanes.forEach((ln, laneIndex) => {
-      const count = ln.trunk ? 7 : 5;
-
-      for (let i = 0; i < count; i++) {
-        packets.push({
-          laneIndex,
-          t: (i / count + laneIndex * .083) % 1,
-          speed: ln.trunk ? .020 : .016,
-          text: words[(i + laneIndex) % words.length],
-          phase: laneIndex * .7 + i * 1.13
-        });
-      }
-    });
-  }
-
-  function resize() {
+  function measureAndBuild(force = false) {
     const rect = hero.getBoundingClientRect();
+    const newWidth = Math.max(1, Math.round(rect.width));
+    const newHeight = Math.max(1, Math.round(rect.height));
 
-    width = Math.max(1, Math.round(rect.width));
-    height = Math.max(1, Math.round(rect.height));
+    /*
+     * Critical mobile-scroll fix:
+     * browser address-bar changes can fire viewport resize events while
+     * scrolling. We do not listen to window.resize at all, and we only
+     * rebuild when the hero element itself actually changes size.
+     */
+    if (
+      !force &&
+      Math.abs(newWidth - width) < 2 &&
+      Math.abs(newHeight - height) < 2
+    ) {
+      return;
+    }
+
+    width = newWidth;
+    height = newHeight;
     dpr = Math.min(window.devicePixelRatio || 1, 2);
 
     canvas.width = Math.round(width * dpr);
@@ -509,140 +444,179 @@
 
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    buildScene();
-    draw(0);
+    buildNodes();
+    draw(performance.now());
   }
 
-  function drawLane(ln) {
-    ctx.beginPath();
-    ctx.moveTo(ln.p0.x, ln.p0.y);
-    ctx.bezierCurveTo(
-      ln.p1.x, ln.p1.y,
-      ln.p2.x, ln.p2.y,
-      ln.p3.x, ln.p3.y
-    );
-
-    ctx.lineWidth = ln.widthPx;
-    ctx.lineCap = "round";
-    ctx.strokeStyle = rgba(palette[ln.tone], ln.alpha);
-    ctx.stroke();
-  }
-
-  function fadeAtEnds(t) {
-    const a = clamp(t / .12, 0, 1);
-    const b = clamp((1 - t) / .12, 0, 1);
-    return Math.min(a, b);
-  }
-
-  function drawPacket(packet, time) {
-    const ln = lanes[packet.laneIndex];
-    const p = pointOn(ln, packet.t);
-    const angle = tangentOn(ln, packet.t);
-    const fade = fadeAtEnds(packet.t);
-
-    if (fade <= .01) return;
-
-    const pulse =
-      .88 +
-      Math.sin(time * .00042 + packet.phase) * .12;
-
+  function buildNodes() {
     const mobile = width < 820;
-    const size = ln.trunk
-      ? (mobile ? 12.5 : 15)
-      : (mobile ? 11 : 13.5);
-
-    const rgb = palette[ln.tone];
-    const alpha =
-      (ln.trunk ? .68 : .47) *
-      fade *
-      pulse;
-
-    ctx.save();
-    ctx.translate(p.x, p.y);
-    ctx.rotate(angle);
-
-    ctx.font =
-      `${ln.trunk ? 650 : 560} ${size}px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace`;
-
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-
-    ctx.shadowBlur = ln.trunk ? 7 : 4;
-    ctx.shadowColor = rgba(rgb, .15 * fade);
+    const target = mobile ? 28 : 48;
 
     /*
-     * A 4-bit packet is visibly binary, unlike single digits
-     * which looked like moving dots at normal viewing distance.
+     * Even spatial distribution gives one coherent web across the
+     * whole hero instead of little isolated clusters.
      */
-    ctx.fillStyle = rgba(rgb, alpha);
-    ctx.fillText(packet.text, 0, 0);
+    const aspect = Math.max(.70, width / height);
+    const cols = Math.max(4, Math.ceil(Math.sqrt(target * aspect)));
+    const rows = Math.max(3, Math.ceil(target / cols));
 
-    ctx.restore();
+    const cellW = width / cols;
+    const cellH = height / rows;
+
+    nodes = [];
+
+    for (let row = 0; row < rows && nodes.length < target; row++) {
+      for (let col = 0; col < cols && nodes.length < target; col++) {
+        const anchorX = col * cellW + rand(cellW * .20, cellW * .80);
+        const anchorY = row * cellH + rand(cellH * .20, cellH * .80);
+
+        /*
+         * Nodes never roam or wrap. They drift around stable anchors
+         * with independent sinusoidal movement, so nothing can jump.
+         */
+        nodes.push({
+          anchorX,
+          anchorY,
+          x: anchorX,
+          y: anchorY,
+          rx: rand(12, mobile ? 23 : 30),
+          ry: rand(10, mobile ? 21 : 27),
+          phaseX: rand(0, Math.PI * 2),
+          phaseY: rand(0, Math.PI * 2),
+          speedX: rand(.000035, .000070),
+          speedY: rand(.000030, .000062),
+          radius: rand(1.35, 2.15),
+          tone: Math.random() < .28 ? "teal" : "navy"
+        });
+      }
+    }
   }
 
-  function drawMergeMarker(x, y, time) {
+  function updateNodes(time) {
+    for (const n of nodes) {
+      n.x =
+        n.anchorX +
+        Math.sin(time * n.speedX + n.phaseX) * n.rx;
+
+      n.y =
+        n.anchorY +
+        Math.cos(time * n.speedY + n.phaseY) * n.ry;
+    }
+  }
+
+  function drawWeb(time) {
+    const mobile = width < 820;
+    const maxDistance = mobile ? 150 : 190;
+    const minVisible = maxDistance * .66;
+
     /*
-     * Thin correlation rings — no dot.
+     * Distance-based alpha means lines fade gradually in and out.
+     * There is no sharp connection creation/destruction.
      */
-    const pulse = .86 + Math.sin(time * .00036) * .14;
+    for (let i = 0; i < nodes.length; i++) {
+      const a = nodes[i];
 
-    ctx.beginPath();
-    ctx.arc(x, y, 11, 0, Math.PI * 2);
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = rgba(palette.violet, .13 * pulse);
-    ctx.stroke();
+      for (let j = i + 1; j < nodes.length; j++) {
+        const b = nodes[j];
+        const dx = b.x - a.x;
+        const dy = b.y - a.y;
+        const distance = Math.hypot(dx, dy);
 
-    ctx.beginPath();
-    ctx.arc(x, y, 17, 0, Math.PI * 2);
-    ctx.lineWidth = .7;
-    ctx.strokeStyle = rgba(palette.teal, .07 * pulse);
-    ctx.stroke();
+        if (distance >= maxDistance) continue;
+
+        let alpha;
+
+        if (distance <= minVisible) {
+          alpha = .115;
+        } else {
+          const fade =
+            1 - (distance - minVisible) / (maxDistance - minVisible);
+          alpha = .115 * fade * fade;
+        }
+
+        const mixed =
+          a.tone === "teal" || b.tone === "teal";
+
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(b.x, b.y);
+        ctx.lineWidth = .72;
+        ctx.strokeStyle = rgba(
+          mixed ? palette.line2 : palette.line,
+          alpha
+        );
+        ctx.stroke();
+
+        /*
+         * A small number of subtle pulses travel along existing lines.
+         * They are derived from time only, so scroll/frame stalls cannot
+         * accumulate velocity or cause a fast-jump bug.
+         */
+        const pulseKey = (i * 31 + j * 17) % 19;
+
+        if (pulseKey === 0 && distance < minVisible * .95) {
+          const phase =
+            (time * .000018 + (i * .173 + j * .097)) % 1;
+
+          const edgeFade =
+            Math.sin(Math.PI * phase);
+
+          const px = a.x + dx * phase;
+          const py = a.y + dy * phase;
+
+          ctx.beginPath();
+          ctx.arc(px, py, 1.45, 0, Math.PI * 2);
+          ctx.fillStyle = rgba(
+            palette.pulse,
+            .36 * edgeFade
+          );
+          ctx.fill();
+        }
+      }
+    }
+  }
+
+  function drawNodes(time) {
+    for (const n of nodes) {
+      const breathe =
+        .88 + Math.sin(time * .00024 + n.phaseX) * .12;
+
+      const rgb =
+        n.tone === "teal"
+          ? palette.line2
+          : palette.node;
+
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.radius + 2.6, 0, Math.PI * 2);
+      ctx.fillStyle = rgba(rgb, .035 * breathe);
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.radius, 0, Math.PI * 2);
+      ctx.fillStyle = rgba(rgb, .52 * breathe);
+      ctx.fill();
+    }
   }
 
   function draw(time) {
     ctx.clearRect(0, 0, width, height);
-
-    lanes.forEach(drawLane);
-
-    packets.forEach(packet => {
-      drawPacket(packet, time);
-    });
-
-    drawMergeMarker(.62 * width, .42 * height, time);
-    drawMergeMarker(.72 * width, .52 * height, time + 1300);
-  }
-
-  function update(dt) {
-    packets.forEach(packet => {
-      packet.t += packet.speed * dt;
-
-      if (packet.t >= 1) {
-        packet.t -= 1;
-
-        /*
-         * Change payload only after the packet is fully faded off-screen.
-         */
-        const current = words.indexOf(packet.text);
-        packet.text = words[(current + 3) % words.length];
-      }
-    });
+    updateNodes(time);
+    drawWeb(time);
+    drawNodes(time);
   }
 
   function frame(time) {
     if (!running) return;
 
-    if (!lastTime) lastTime = time;
-
-    let dt = (time - lastTime) / 1000;
-    lastTime = time;
-
     /*
-     * Prevent scroll/tab stalls from producing fast jumps.
+     * Keep visual motion smooth but inexpensive. Because all positions
+     * are functions of absolute time, no accumulated delta can explode
+     * after a scroll or browser pause.
      */
-    dt = clamp(dt, 0, .032);
-
-    update(dt);
-    draw(time);
+    if (!lastFrame || time - lastFrame >= 28) {
+      lastFrame = time;
+      draw(time);
+    }
 
     animationId = requestAnimationFrame(frame);
   }
@@ -658,8 +632,8 @@
 
   function start() {
     stop();
-    lastTime = 0;
-    draw(0);
+    lastFrame = 0;
+    draw(performance.now());
 
     if (reducedMotion.matches || document.hidden) {
       return;
@@ -669,35 +643,37 @@
     animationId = requestAnimationFrame(frame);
   }
 
-  let resizeTimer = 0;
+  /*
+   * ResizeObserver watches the hero itself. Unlike window.resize,
+   * mobile browser chrome appearing/disappearing during scroll does not
+   * rebuild the scene unless this actual element changes dimensions.
+   */
+  if ("ResizeObserver" in window) {
+    const observer = new ResizeObserver(() => {
+      measureAndBuild(false);
+    });
 
-  window.addEventListener(
-    "resize",
-    () => {
-      clearTimeout(resizeTimer);
+    observer.observe(hero);
+  }
 
-      resizeTimer = setTimeout(
-        () => {
-          resize();
-          start();
-        },
-        140
-      );
-    },
-    { passive: true }
-  );
-
-  document.addEventListener("visibilitychange", start);
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      stop();
+    } else {
+      start();
+    }
+  });
 
   if (typeof reducedMotion.addEventListener === "function") {
     reducedMotion.addEventListener("change", start);
   }
 
-  resize();
+  measureAndBuild(true);
   start();
 })();
 /* PRAECHECK DATA NETWORK SCRIPT END */
 </script>
+
 
 
 
