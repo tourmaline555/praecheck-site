@@ -235,46 +235,93 @@ h3{line-height:1.2}
 
 /* PRAECHECK MOBILE PRIVACY FIX START */
 @media (max-width: 768px) {
+
+  #privacy {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  #privacy .container {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+    box-sizing: border-box !important;
+  }
+
   #privacy .privacy-grid {
+    display: grid !important;
     grid-template-columns: minmax(0, 1fr) !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
     gap: 24px !important;
+    box-sizing: border-box !important;
   }
 
   #privacy .privacy-copy,
-  #privacy .privacy-cards,
-  #privacy .privacy-cards article,
-  #privacy .privacy-proof {
-    min-width: 0 !important;
-    max-width: 100% !important;
+  #privacy .privacy-cards {
     width: 100% !important;
-    box-sizing: border-box;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  #privacy .privacy-copy h2,
+  #privacy .privacy-copy p,
+  #privacy .privacy-proof,
+  #privacy .privacy-proof span,
+  #privacy .privacy-proof-tail {
+    width: auto !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+    word-break: normal !important;
+    box-sizing: border-box !important;
   }
 
   #privacy .privacy-copy h2 {
-    max-width: 100%;
-    font-size: clamp(2rem, 9vw, 3.2rem);
-    line-height: 1.05;
-    overflow-wrap: break-word;
+    font-size: clamp(2rem, 9vw, 3rem) !important;
+    line-height: 1.08 !important;
   }
 
   #privacy .privacy-proof {
-    white-space: normal !important;
-    overflow-wrap: break-word;
-  }
-
-  #privacy .privacy-proof span,
-  #privacy .privacy-proof-tail {
-    white-space: normal !important;
+    display: block !important;
+    padding: 20px !important;
   }
 
   #privacy .privacy-cards {
+    display: grid !important;
     grid-template-columns: minmax(0, 1fr) !important;
     gap: 16px !important;
   }
 
   #privacy .privacy-cards article {
-    overflow: hidden;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  #privacy .privacy-cards article > div {
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  #privacy .privacy-cards h3,
+  #privacy .privacy-cards p {
+    max-width: 100% !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
   }
 }
 /* PRAECHECK MOBILE PRIVACY FIX END */
+
 
