@@ -32,6 +32,7 @@
 </style>
 
 
+
 <style id="praecheck-data-network-style">
 /* PRAECHECK DATA NETWORK START */
 .hero {
@@ -39,10 +40,14 @@
   isolation: isolate;
   overflow: hidden;
   background:
-    radial-gradient(circle at 78% 32%,
-      rgba(42, 62, 125, .08) 0%,
-      rgba(42, 62, 125, 0) 38%),
-    linear-gradient(180deg, #f2f5fc 0%, #ebeff8 100%);
+    radial-gradient(circle at 78% 22%,
+      rgba(53, 66, 142, .12) 0%,
+      rgba(53, 66, 142, .045) 25%,
+      rgba(53, 66, 142, 0) 48%),
+    radial-gradient(circle at 18% 86%,
+      rgba(31, 113, 137, .075) 0%,
+      rgba(31, 113, 137, 0) 38%),
+    linear-gradient(180deg, #f1f3fa 0%, #e9edf7 100%);
 }
 
 #praecheck-data-network {
@@ -66,17 +71,18 @@
 
 @media (max-width: 820px) {
   #praecheck-data-network {
-    opacity: .94;
+    opacity: .92;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   #praecheck-data-network {
-    opacity: .72;
+    opacity: .68;
   }
 }
 /* PRAECHECK DATA NETWORK END */
 </style>
+
 
 </head>
 <body>
@@ -367,6 +373,7 @@
 
 
 
+
 <script>
 /* PRAECHECK DATA NETWORK SCRIPT START */
 (() => {
@@ -384,435 +391,243 @@
   let width = 1;
   let height = 1;
   let dpr = 1;
-
-  let nodes = [];
+  let particles = [];
   let animationId = 0;
   let lastTime = 0;
   let running = false;
 
-  const rand = (min, max) =>
-    min + Math.random() * (max - min);
+  const rand = (min, max) => min + Math.random() * (max - min);
+
+  const tones = [
+    { line: [44, 57, 119], glow: [71, 83, 165] },
+    { line: [28, 91, 119], glow: [49, 131, 157] },
+    { line: [63, 66, 128], glow: [91, 91, 169] }
+  ];
+
+  function rgba(rgb, alpha) {
+    return `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
+  }
 
   function resize() {
     const rect = hero.getBoundingClientRect();
 
     width = Math.max(1, Math.round(rect.width));
     height = Math.max(1, Math.round(rect.height));
-
     dpr = Math.min(window.devicePixelRatio || 1, 2);
 
     canvas.width = Math.round(width * dpr);
     canvas.height = Math.round(height * dpr);
-
     canvas.style.width = width + "px";
     canvas.style.height = height + "px";
 
-    ctx.setTransform(
-      dpr, 0,
-      0, dpr,
-      0, 0
-    );
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    buildUniformField();
-    drawScene(0);
+    buildParticles();
+    draw(0);
   }
 
-  function buildUniformField() {
+  function buildParticles() {
     const mobile = width < 820;
-    const targetCount = mobile ? 32 : 58;
+    const target = mobile ? 34 : 58;
 
-    const aspect = width / height;
-
-    const cols = Math.ceil(
-      Math.sqrt(targetCount * aspect)
-    );
-
-    const rows = Math.ceil(
-      targetCount / cols
-    );
-
+    const aspect = Math.max(.65, width / height);
+    const cols = Math.max(1, Math.ceil(Math.sqrt(target * aspect)));
+    const rows = Math.max(1, Math.ceil(target / cols));
     const cellW = width / cols;
     const cellH = height / rows;
 
-    nodes = [];
+    particles = [];
 
-    for (let row = 0; row < rows; row++) {
-      for (let col = 0; col < cols; col++) {
-        if (nodes.length >= targetCount) break;
+    for (let row = 0; row < rows && particles.length < target; row++) {
+      for (let col = 0; col < cols && particles.length < target; col++) {
+        const x = col * cellW + rand(cellW * .18, cellW * .82);
+        const y = row * cellH + rand(cellH * .18, cellH * .82);
+        const angle = rand(0, Math.PI * 2);
+        const speed = mobile ? rand(4.8, 8.0) : rand(5.2, 9.5);
 
-        /*
-         * Start from an even grid with controlled jitter.
-         * This prevents small random clusters.
-         */
-        const x =
-          col * cellW +
-          rand(cellW * .22, cellW * .78);
-
-        const y =
-          row * cellH +
-          rand(cellH * .22, cellH * .78);
-
-        nodes.push({
+        particles.push({
           x,
           y,
-
-          angle: rand(0, Math.PI * 2),
-
-          /*
-           * Deliberately slow movement.
-           * Values are pixels per second.
-           */
-          speed: mobile
-            ? rand(3.5, 7.0)
-            : rand(4.0, 8.5),
-
-          radius: rand(1.55, 2.75),
-
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          speed,
           phase: rand(0, Math.PI * 2),
-
-          turnStrength: rand(.018, .045),
-
-          tone:
-            Math.random() < .62
-              ? "navy"
-              : "teal"
+          fieldScale: rand(.82, 1.18),
+          lineWidth: rand(.72, 1.28),
+          head: rand(1.35, 2.25),
+          tone: tones[Math.floor(Math.random() * tones.length)],
+          history: Array.from({ length: 11 }, () => ({ x, y }))
         });
       }
     }
   }
 
-  function wrappedDelta(delta, span) {
-    if (delta > span / 2) {
-      return delta - span;
-    }
+  function fieldAt(p, time) {
+    const t = time * .000035;
 
-    if (delta < -span / 2) {
-      return delta + span;
-    }
+    const a =
+      Math.sin(p.y * .0062 + t + p.phase) * .78 +
+      Math.cos((p.x + p.y) * .0031 - t * .62 + p.phase * .7) * .42;
 
-    return delta;
+    const b =
+      Math.cos(p.x * .0052 - t * .82 + p.phase * 1.17) * .72 +
+      Math.sin((p.x - p.y) * .0028 + t * .54 - p.phase * .5) * .38;
+
+    const length = Math.hypot(a, b) || 1;
+
+    return {
+      x: (a / length) * p.speed * p.fieldScale,
+      y: (b / length) * p.speed * p.fieldScale
+    };
   }
 
-  function updateNodes(dt, time) {
-    for (const n of nodes) {
+  function edgeFade(x, y) {
+    const feather = Math.min(70, width * .10, height * .10);
+    if (feather <= 0) return 1;
 
-      /*
-       * Very gradual direction drift.
-       * No jumps and no random direction resets.
-       */
-      n.angle +=
-        Math.sin(
-          time * .00010 + n.phase
-        ) *
-        n.turnStrength *
-        dt;
+    const left = Math.min(1, x / feather);
+    const right = Math.min(1, (width - x) / feather);
+    const top = Math.min(1, y / feather);
+    const bottom = Math.min(1, (height - y) / feather);
 
-      n.x +=
-        Math.cos(n.angle) *
-        n.speed *
-        dt;
-
-      n.y +=
-        Math.sin(n.angle) *
-        n.speed *
-        dt;
-
-      /*
-       * Toroidal wrapping:
-       * mathematically continuous movement across boundaries.
-       */
-      n.x =
-        ((n.x % width) + width) % width;
-
-      n.y =
-        ((n.y % height) + height) % height;
-    }
+    return Math.max(0, Math.min(left, right, top, bottom));
   }
 
-  function pointColour(n, alpha) {
-    if (n.tone === "teal") {
-      return `rgba(34, 104, 128, ${alpha})`;
-    }
-
-    return `rgba(36, 49, 103, ${alpha})`;
+  function resetHistory(p) {
+    p.history = Array.from(
+      { length: 11 },
+      () => ({ x: p.x, y: p.y })
+    );
   }
 
-  function lineColour(alpha) {
-    return `rgba(39, 58, 111, ${alpha})`;
-  }
+  function update(dt, time) {
+    const response = 1 - Math.exp(-dt * .72);
+    const margin = 34;
 
-  function wrappedOffsets(n, margin) {
-    const xs = [0];
-    const ys = [0];
+    for (const p of particles) {
+      const desired = fieldAt(p, time);
 
-    /*
-     * Draw a duplicate at the opposite edge while a point
-     * crosses the boundary. This removes the visible
-     * disappear/reappear effect.
-     */
-    if (n.x < margin) {
-      xs.push(width);
-    } else if (n.x > width - margin) {
-      xs.push(-width);
-    }
+      p.vx += (desired.x - p.vx) * response;
+      p.vy += (desired.y - p.vy) * response;
 
-    if (n.y < margin) {
-      ys.push(height);
-    } else if (n.y > height - margin) {
-      ys.push(-height);
-    }
+      p.x += p.vx * dt;
+      p.y += p.vy * dt;
 
-    const offsets = [];
+      let wrapped = false;
 
-    for (const ox of xs) {
-      for (const oy of ys) {
-        offsets.push([ox, oy]);
+      if (p.x < -margin) {
+        p.x = width + margin;
+        wrapped = true;
+      } else if (p.x > width + margin) {
+        p.x = -margin;
+        wrapped = true;
       }
-    }
 
-    return offsets;
-  }
-
-  function drawNodes(time) {
-    for (const n of nodes) {
-      /*
-       * Extremely gentle breathing brightness.
-       * Position never changes abruptly.
-       */
-      const breathe =
-        .90 +
-        Math.sin(
-          time * .00038 + n.phase
-        ) * .10;
-
-      const offsets =
-        wrappedOffsets(n, 14);
-
-      for (const [ox, oy] of offsets) {
-        const x = n.x + ox;
-        const y = n.y + oy;
-
-        ctx.beginPath();
-        ctx.arc(
-          x,
-          y,
-          n.radius + 4.2,
-          0,
-          Math.PI * 2
-        );
-
-        ctx.fillStyle =
-          pointColour(
-            n,
-            .055 * breathe
-          );
-
-        ctx.fill();
-
-        ctx.beginPath();
-        ctx.arc(
-          x,
-          y,
-          n.radius,
-          0,
-          Math.PI * 2
-        );
-
-        ctx.fillStyle =
-          pointColour(
-            n,
-            .72 * breathe
-          );
-
-        ctx.fill();
+      if (p.y < -margin) {
+        p.y = height + margin;
+        wrapped = true;
+      } else if (p.y > height + margin) {
+        p.y = -margin;
+        wrapped = true;
       }
-    }
-  }
 
-  function drawWrappedLine(a, dx, dy, alpha) {
-    /*
-     * Draw copies of boundary-crossing connections too.
-     * This keeps the network continuous at all four edges.
-     */
-    const offsets = [
-      [0, 0],
-      [-width, 0],
-      [width, 0],
-      [0, -height],
-      [0, height],
-      [-width, -height],
-      [-width, height],
-      [width, -height],
-      [width, height]
-    ];
-
-    for (const [ox, oy] of offsets) {
-      const x1 = a.x + ox;
-      const y1 = a.y + oy;
-
-      const x2 = x1 + dx;
-      const y2 = y1 + dy;
-
-      if (
-        Math.max(x1, x2) < -8 ||
-        Math.min(x1, x2) > width + 8 ||
-        Math.max(y1, y2) < -8 ||
-        Math.min(y1, y2) > height + 8
-      ) {
+      if (wrapped) {
+        resetHistory(p);
         continue;
       }
 
+      p.history.pop();
+      p.history.unshift({ x: p.x, y: p.y });
+    }
+  }
+
+  function drawTrail(p, time) {
+    const points = p.history;
+    const fade = edgeFade(p.x, p.y);
+
+    if (fade <= .01) return;
+
+    for (let i = points.length - 1; i > 0; i--) {
+      const a = points[i];
+      const b = points[i - 1];
+
+      const life = 1 - i / points.length;
+      const alpha = (.025 + life * .19) * fade;
+
       ctx.beginPath();
-      ctx.moveTo(x1, y1);
-      ctx.lineTo(x2, y2);
-
-      ctx.lineWidth = .85;
-      ctx.strokeStyle =
-        lineColour(alpha);
-
+      ctx.moveTo(a.x, a.y);
+      ctx.lineTo(b.x, b.y);
+      ctx.lineCap = "round";
+      ctx.lineWidth = p.lineWidth * (.65 + life * .55);
+      ctx.strokeStyle = rgba(p.tone.line, alpha);
       ctx.stroke();
     }
-  }
 
-  function drawConnections() {
-    const mobile = width < 820;
+    const pulse =
+      .78 +
+      Math.sin(time * .00055 + p.phase) * .22;
 
-    const maxDistance =
-      mobile ? 145 : 175;
-
-    for (
-      let i = 0;
-      i < nodes.length;
-      i++
-    ) {
-      for (
-        let j = i + 1;
-        j < nodes.length;
-        j++
-      ) {
-        const a = nodes[i];
-        const b = nodes[j];
-
-        const dx =
-          wrappedDelta(
-            b.x - a.x,
-            width
-          );
-
-        const dy =
-          wrappedDelta(
-            b.y - a.y,
-            height
-          );
-
-        const distance =
-          Math.hypot(dx, dy);
-
-        if (distance >= maxDistance) {
-          continue;
-        }
-
-        /*
-         * Connection opacity approaches zero smoothly
-         * before the connection leaves range.
-         * No abrupt on/off lines.
-         */
-        const proximity =
-          1 - distance / maxDistance;
-
-        const alpha =
-          .020 +
-          Math.pow(
-            proximity,
-            2
-          ) * .15;
-
-        drawWrappedLine(
-          a,
-          dx,
-          dy,
-          alpha
-        );
-      }
-    }
-  }
-
-  function drawScene(time) {
-    ctx.clearRect(
-      0,
-      0,
-      width,
-      height
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.head * 3.2, 0, Math.PI * 2);
+    ctx.fillStyle = rgba(
+      p.tone.glow,
+      .055 * pulse * fade
     );
+    ctx.fill();
 
-    drawConnections();
-    drawNodes(time);
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.head, 0, Math.PI * 2);
+    ctx.fillStyle = rgba(
+      p.tone.line,
+      .67 * pulse * fade
+    );
+    ctx.fill();
+  }
+
+  function draw(time) {
+    ctx.clearRect(0, 0, width, height);
+
+    for (const p of particles) {
+      drawTrail(p, time);
+    }
   }
 
   function frame(time) {
     if (!running) return;
 
-    if (!lastTime) {
-      lastTime = time;
-    }
+    if (!lastTime) lastTime = time;
 
-    /*
-     * Seconds rather than milliseconds.
-     */
-    let dt =
-      (time - lastTime) / 1000;
-
+    let dt = (time - lastTime) / 1000;
     lastTime = time;
 
-    /*
-     * Prevent browser stalls, app switching or frame
-     * drops from ever causing a sudden movement jump.
-     */
-    dt = Math.min(
-      Math.max(dt, 0),
-      .035
-    );
+    dt = Math.max(0, Math.min(dt, .033));
 
-    updateNodes(
-      dt,
-      time
-    );
+    update(dt, time);
+    draw(time);
 
-    drawScene(time);
-
-    animationId =
-      requestAnimationFrame(frame);
+    animationId = requestAnimationFrame(frame);
   }
 
   function stop() {
     running = false;
 
     if (animationId) {
-      cancelAnimationFrame(
-        animationId
-      );
+      cancelAnimationFrame(animationId);
+      animationId = 0;
     }
-
-    animationId = 0;
   }
 
   function start() {
     stop();
-
     lastTime = 0;
-    drawScene(0);
+    draw(0);
 
-    if (
-      reducedMotion.matches ||
-      document.hidden
-    ) {
+    if (reducedMotion.matches || document.hidden) {
       return;
     }
 
     running = true;
-
-    animationId =
-      requestAnimationFrame(frame);
+    animationId = requestAnimationFrame(frame);
   }
 
   let resizeTimer = 0;
@@ -822,31 +637,21 @@
     () => {
       clearTimeout(resizeTimer);
 
-      resizeTimer =
-        setTimeout(
-          () => {
-            resize();
-            start();
-          },
-          140
-        );
+      resizeTimer = setTimeout(
+        () => {
+          resize();
+          start();
+        },
+        140
+      );
     },
     { passive: true }
   );
 
-  document.addEventListener(
-    "visibilitychange",
-    start
-  );
+  document.addEventListener("visibilitychange", start);
 
-  if (
-    typeof reducedMotion
-      .addEventListener === "function"
-  ) {
-    reducedMotion.addEventListener(
-      "change",
-      start
-    );
+  if (typeof reducedMotion.addEventListener === "function") {
+    reducedMotion.addEventListener("change", start);
   }
 
   resize();
@@ -854,6 +659,7 @@
 })();
 /* PRAECHECK DATA NETWORK SCRIPT END */
 </script>
+
 
 </body>
 </html>
