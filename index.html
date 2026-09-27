@@ -31,6 +31,68 @@
 }
 </style>
 
+
+<style id="praecheck-data-network-style">
+/* PRAECHECK DATA NETWORK START */
+.hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+#praecheck-data-network {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: .78;
+}
+
+.hero > .container {
+  position: relative;
+  z-index: 2;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  width: min(44vw, 620px);
+  aspect-ratio: 1;
+  right: -7%;
+  top: 50%;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle,
+      rgba(115, 95, 255, .13) 0%,
+      rgba(88, 147, 255, .07) 38%,
+      rgba(88, 147, 255, 0) 72%);
+  pointer-events: none;
+}
+
+@media (max-width: 820px) {
+  #praecheck-data-network {
+    opacity: .54;
+  }
+
+  .hero::after {
+    width: 115vw;
+    right: -55vw;
+    top: 38%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #praecheck-data-network {
+    opacity: .42;
+  }
+}
+/* PRAECHECK DATA NETWORK END */
+</style>
+
 </head>
 <body>
 <header class="site-header">
@@ -65,6 +127,8 @@
 
 <main>
   <section class="hero">
+<canvas id="praecheck-data-network" aria-hidden="true"></canvas>
+
 <div class="container hero-grid">
 <div class="hero-copy">
 <div class="eyebrow">See beyond permissions.</div>
@@ -316,6 +380,279 @@
   </div>
 </footer>
 
+
+
+<script>
+/* PRAECHECK DATA NETWORK SCRIPT START */
+(() => {
+  const canvas = document.getElementById("praecheck-data-network");
+  const hero = canvas?.closest(".hero");
+  if (!canvas || !hero) return;
+
+  const ctx = canvas.getContext("2d", { alpha: true });
+  if (!ctx) return;
+
+  const reducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  );
+
+  let width = 0;
+  let height = 0;
+  let dpr = 1;
+  let nodes = [];
+  let pulses = [];
+  let animationId = 0;
+  let lastFrame = 0;
+  let running = false;
+
+  const palette = {
+    violet: [126, 104, 255],
+    cyan: [73, 177, 255],
+    pale: [187, 202, 255]
+  };
+
+  const rand = (min, max) => min + Math.random() * (max - min);
+
+  function resize() {
+    const rect = hero.getBoundingClientRect();
+    width = Math.max(1, Math.round(rect.width));
+    height = Math.max(1, Math.round(rect.height));
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+    canvas.width = Math.round(width * dpr);
+    canvas.height = Math.round(height * dpr);
+    canvas.style.width = width + "px";
+    canvas.style.height = height + "px";
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    createNodes();
+    createPulses();
+    draw(0, true);
+  }
+
+  function createNodes() {
+    const mobile = width < 720;
+    const count = mobile ? 16 : Math.min(36, Math.max(24, Math.floor(width / 42)));
+
+    nodes = Array.from({ length: count }, (_, i) => {
+      const biasRight = !mobile && i < Math.ceil(count * 0.58);
+      const x = biasRight ? rand(width * 0.48, width * 1.02) : rand(-20, width + 20);
+
+      return {
+        x,
+        y: rand(-10, height + 10),
+        vx: rand(-0.10, 0.10),
+        vy: rand(-0.08, 0.08),
+        r: rand(1.15, 2.45),
+        phase: rand(0, Math.PI * 2),
+        family: Math.random() < 0.58 ? "violet" : "cyan"
+      };
+    });
+  }
+
+  function createPulses() {
+    const count = width < 720 ? 3 : 6;
+    pulses = Array.from({ length: count }, () => ({
+      a: 0,
+      b: 1,
+      t: Math.random(),
+      speed: rand(0.0014, 0.0030),
+      alpha: rand(0.35, 0.72)
+    }));
+    retargetPulses();
+  }
+
+  function retargetPulse(pulse) {
+    if (nodes.length < 2) return;
+
+    for (let tries = 0; tries < 20; tries++) {
+      const a = Math.floor(Math.random() * nodes.length);
+      const b = Math.floor(Math.random() * nodes.length);
+      if (a === b) continue;
+
+      const na = nodes[a];
+      const nb = nodes[b];
+      const dx = na.x - nb.x;
+      const dy = na.y - nb.y;
+      const distance = Math.hypot(dx, dy);
+
+      if (distance < Math.min(210, width * 0.25)) {
+        pulse.a = a;
+        pulse.b = b;
+        pulse.t = 0;
+        return;
+      }
+    }
+
+    pulse.a = 0;
+    pulse.b = Math.min(1, nodes.length - 1);
+    pulse.t = 0;
+  }
+
+  function retargetPulses() {
+    pulses.forEach(retargetPulse);
+  }
+
+  function rgba(rgb, alpha) {
+    return `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
+  }
+
+  function moveNodes(dt) {
+    const scale = Math.min(2, dt / 16.667);
+
+    for (const n of nodes) {
+      n.x += n.vx * scale;
+      n.y += n.vy * scale;
+      n.phase += 0.008 * scale;
+
+      if (n.x < -30) n.x = width + 30;
+      if (n.x > width + 30) n.x = -30;
+      if (n.y < -30) n.y = height + 30;
+      if (n.y > height + 30) n.y = -30;
+    }
+  }
+
+  function drawConnections() {
+    const maxDistance = width < 720 ? 118 : 170;
+
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const a = nodes[i];
+        const b = nodes[j];
+        const dx = a.x - b.x;
+        const dy = a.y - b.y;
+        const distance = Math.hypot(dx, dy);
+
+        if (distance >= maxDistance) continue;
+
+        const strength = 1 - distance / maxDistance;
+        const rgb = a.family === b.family ? palette[a.family] : palette.pale;
+
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(b.x, b.y);
+        ctx.lineWidth = 0.75;
+        ctx.strokeStyle = rgba(rgb, 0.10 * strength);
+        ctx.stroke();
+      }
+    }
+  }
+
+  function drawNodes(time) {
+    for (const n of nodes) {
+      const pulse = 0.72 + Math.sin(time * 0.0012 + n.phase) * 0.18;
+      const rgb = palette[n.family];
+
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r + 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = rgba(rgb, 0.035 * pulse);
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+      ctx.fillStyle = rgba(rgb, 0.38 * pulse);
+      ctx.fill();
+    }
+  }
+
+  function drawPulses(dt) {
+    for (const p of pulses) {
+      const a = nodes[p.a];
+      const b = nodes[p.b];
+      if (!a || !b) continue;
+
+      p.t += p.speed * dt;
+
+      if (p.t >= 1) {
+        retargetPulse(p);
+        continue;
+      }
+
+      const x = a.x + (b.x - a.x) * p.t;
+      const y = a.y + (b.y - a.y) * p.t;
+
+      const edgeFade = Math.sin(Math.PI * p.t);
+      const rgb = palette.cyan;
+
+      ctx.beginPath();
+      ctx.arc(x, y, 5.2, 0, Math.PI * 2);
+      ctx.fillStyle = rgba(rgb, 0.055 * edgeFade * p.alpha);
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(x, y, 1.5, 0, Math.PI * 2);
+      ctx.fillStyle = rgba(rgb, 0.76 * edgeFade * p.alpha);
+      ctx.fill();
+    }
+  }
+
+  function draw(time, staticOnly = false) {
+    ctx.clearRect(0, 0, width, height);
+    drawConnections();
+    drawNodes(time);
+
+    if (!staticOnly) {
+      drawPulses(16.667);
+    }
+  }
+
+  function frame(time) {
+    if (!running) return;
+
+    if (time - lastFrame >= 32) {
+      const dt = lastFrame ? time - lastFrame : 32;
+      lastFrame = time;
+
+      moveNodes(dt);
+      ctx.clearRect(0, 0, width, height);
+      drawConnections();
+      drawNodes(time);
+      drawPulses(dt);
+    }
+
+    animationId = requestAnimationFrame(frame);
+  }
+
+  function stop() {
+    running = false;
+    if (animationId) cancelAnimationFrame(animationId);
+    animationId = 0;
+  }
+
+  function start() {
+    stop();
+
+    if (reducedMotion.matches || document.hidden) {
+      draw(0, true);
+      return;
+    }
+
+    running = true;
+    lastFrame = 0;
+    animationId = requestAnimationFrame(frame);
+  }
+
+  let resizeTimer = 0;
+  window.addEventListener("resize", () => {
+    window.clearTimeout(resizeTimer);
+    resizeTimer = window.setTimeout(() => {
+      resize();
+      start();
+    }, 120);
+  }, { passive: true });
+
+  document.addEventListener("visibilitychange", start);
+
+  if (typeof reducedMotion.addEventListener === "function") {
+    reducedMotion.addEventListener("change", start);
+  }
+
+  resize();
+  start();
+})();
+/* PRAECHECK DATA NETWORK SCRIPT END */
+</script>
 
 </body>
 </html>
