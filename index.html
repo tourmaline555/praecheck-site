@@ -34,6 +34,7 @@
 
 
 
+
 <style id="praecheck-data-network-style">
 /* PRAECHECK DATA NETWORK START */
 .hero {
@@ -41,14 +42,11 @@
   isolation: isolate;
   overflow: hidden;
   background:
-    radial-gradient(circle at 72% 43%,
-      rgba(41, 57, 121, .10) 0%,
-      rgba(41, 57, 121, .03) 30%,
-      rgba(41, 57, 121, 0) 54%),
-    radial-gradient(circle at 86% 75%,
-      rgba(27, 94, 111, .07) 0%,
-      rgba(27, 94, 111, 0) 40%),
-    linear-gradient(180deg, #f2f4fa 0%, #e9edf7 100%);
+    radial-gradient(circle at 72% 44%,
+      rgba(40, 55, 116, .10) 0%,
+      rgba(40, 55, 116, .035) 30%,
+      rgba(40, 55, 116, 0) 54%),
+    linear-gradient(180deg, #f1f3f9 0%, #e9edf6 100%);
 }
 
 #praecheck-data-network {
@@ -72,17 +70,18 @@
 
 @media (max-width: 820px) {
   #praecheck-data-network {
-    opacity: .88;
+    opacity: .93;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   #praecheck-data-network {
-    opacity: .64;
+    opacity: .68;
   }
 }
 /* PRAECHECK DATA NETWORK END */
 </style>
+
 
 
 
@@ -377,6 +376,7 @@
 
 
 
+
 <script>
 /* PRAECHECK DATA NETWORK SCRIPT START */
 (() => {
@@ -387,52 +387,68 @@
   const ctx = canvas.getContext("2d", { alpha: true });
   if (!ctx) return;
 
-  const reducedMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)"
-  );
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
   let width = 1;
   let height = 1;
   let dpr = 1;
-  let routes = [];
+  let lanes = [];
   let packets = [];
   let animationId = 0;
   let lastTime = 0;
   let running = false;
 
   const palette = {
-    navy: [40, 51, 103],
-    teal: [31, 92, 111],
-    violet: [67, 58, 127]
+    navy: [37, 48, 99],
+    teal: [27, 83, 103],
+    violet: [61, 52, 119]
   };
+
+  const words = [
+    "0101", "1010", "0011", "1100",
+    "0110", "1001", "1110", "0001"
+  ];
 
   function rgba(rgb, alpha) {
     return `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
   }
 
-  function clamp(v, lo, hi) {
-    return Math.max(lo, Math.min(hi, v));
+  function clamp(v, a, b) {
+    return Math.max(a, Math.min(b, v));
   }
 
-  function bezierPoint(route, t) {
+  function pointOn(lane, t) {
     const u = 1 - t;
-
-    const x =
-      u * u * u * route.p0.x +
-      3 * u * u * t * route.p1.x +
-      3 * u * t * t * route.p2.x +
-      t * t * t * route.p3.x;
-
-    const y =
-      u * u * u * route.p0.y +
-      3 * u * u * t * route.p1.y +
-      3 * u * t * t * route.p2.y +
-      t * t * t * route.p3.y;
-
-    return { x, y };
+    return {
+      x:
+        u*u*u*lane.p0.x +
+        3*u*u*t*lane.p1.x +
+        3*u*t*t*lane.p2.x +
+        t*t*t*lane.p3.x,
+      y:
+        u*u*u*lane.p0.y +
+        3*u*u*t*lane.p1.y +
+        3*u*t*t*lane.p2.y +
+        t*t*t*lane.p3.y
+    };
   }
 
-  function makeRoute(id, a, b, c, d, tone, alpha, trunk = false) {
+  function tangentOn(lane, t) {
+    const u = 1 - t;
+    const dx =
+      3*u*u*(lane.p1.x - lane.p0.x) +
+      6*u*t*(lane.p2.x - lane.p1.x) +
+      3*t*t*(lane.p3.x - lane.p2.x);
+
+    const dy =
+      3*u*u*(lane.p1.y - lane.p0.y) +
+      6*u*t*(lane.p2.y - lane.p1.y) +
+      3*t*t*(lane.p3.y - lane.p2.y);
+
+    return Math.atan2(dy, dx);
+  }
+
+  function lane(id, a, b, c, d, tone, alpha, widthPx, trunk = false) {
     return {
       id,
       p0: { x: a[0] * width, y: a[1] * height },
@@ -441,53 +457,39 @@
       p3: { x: d[0] * width, y: d[1] * height },
       tone,
       alpha,
+      widthPx,
       trunk
     };
   }
 
   function buildScene() {
     /*
-     * Long, smooth signal paths.
-     * Feeder streams visibly converge into two correlation trunks.
-     * Endpoints sit outside the visible area so packets fade naturally.
+     * Four feeder lanes from different parts of the hero converge
+     * into two broad trunk lanes. No dots, no particle web.
      */
-    routes = [
-      makeRoute("a1", [-.10,.10], [.18,.10], [.42,.28], [.64,.40], "navy", .11),
-      makeRoute("a2", [-.10,.34], [.20,.30], [.43,.35], [.64,.40], "teal", .10),
-      makeRoute("a3", [.08,-.12], [.22,.12], [.46,.26], [.64,.40], "violet", .09),
-      makeRoute("a4", [.18,1.10], [.28,.74], [.48,.52], [.64,.40], "navy", .08),
+    lanes = [
+      lane("f1", [-.18,.14], [.14,.10], [.38,.28], [.62,.42], "navy", .10, .9),
+      lane("f2", [-.16,.42], [.16,.38], [.38,.36], [.62,.42], "teal", .09, .85),
+      lane("f3", [.08,1.16], [.24,.84], [.42,.58], [.62,.42], "violet", .08, .8),
+      lane("f4", [1.14,.04], [.96,.16], [.82,.30], [.72,.52], "navy", .07, .8),
 
-      makeRoute("b1", [-.08,.70], [.22,.68], [.48,.66], [.72,.66], "teal", .10),
-      makeRoute("b2", [.28,1.10], [.38,.86], [.58,.73], [.72,.66], "violet", .09),
-      makeRoute("b3", [1.08,.94], [.92,.82], [.82,.71], [.72,.66], "navy", .08),
-
-      makeRoute("t1", [.64,.40], [.77,.42], [.90,.34], [1.10,.25], "navy", .17, true),
-      makeRoute("t2", [.64,.40], [.73,.48], [.70,.57], [.72,.66], "violet", .12, true),
-      makeRoute("t3", [.72,.66], [.82,.65], [.94,.72], [1.10,.80], "teal", .17, true)
+      lane("m1", [.62,.42], [.70,.44], [.74,.49], [.72,.52], "violet", .11, 1.0, true),
+      lane("t1", [.72,.52], [.82,.51], [.93,.40], [1.16,.30], "navy", .16, 1.25, true),
+      lane("t2", [.72,.52], [.81,.60], [.93,.73], [1.16,.82], "teal", .15, 1.25, true)
     ];
 
     packets = [];
 
-    const mobile = width < 820;
-    const countPerFeeder = mobile ? 4 : 6;
-    const countPerTrunk = mobile ? 5 : 8;
-
-    routes.forEach((route, routeIndex) => {
-      const count = route.trunk ? countPerTrunk : countPerFeeder;
+    lanes.forEach((ln, laneIndex) => {
+      const count = ln.trunk ? 7 : 5;
 
       for (let i = 0; i < count; i++) {
-        const spacing = 1 / count;
-
         packets.push({
-          routeIndex,
-          t: (i * spacing + routeIndex * .071) % 1,
-          speed: route.trunk
-            ? .018 + (routeIndex % 3) * .0015
-            : .014 + (routeIndex % 4) * .0012,
-          glyph: ((i + routeIndex) % 2) ? "1" : "0",
-          phase: (i * 1.7 + routeIndex * .9),
-          size: mobile ? 10.5 : 12.5,
-          strong: route.trunk
+          laneIndex,
+          t: (i / count + laneIndex * .083) % 1,
+          speed: ln.trunk ? .020 : .016,
+          text: words[(i + laneIndex) % words.length],
+          phase: laneIndex * .7 + i * 1.13
         });
       }
     });
@@ -511,125 +513,119 @@
     draw(0);
   }
 
-  function drawRoute(route) {
+  function drawLane(ln) {
     ctx.beginPath();
-    ctx.moveTo(route.p0.x, route.p0.y);
+    ctx.moveTo(ln.p0.x, ln.p0.y);
     ctx.bezierCurveTo(
-      route.p1.x, route.p1.y,
-      route.p2.x, route.p2.y,
-      route.p3.x, route.p3.y
+      ln.p1.x, ln.p1.y,
+      ln.p2.x, ln.p2.y,
+      ln.p3.x, ln.p3.y
     );
 
+    ctx.lineWidth = ln.widthPx;
     ctx.lineCap = "round";
-    ctx.lineWidth = route.trunk ? 1.15 : .72;
-    ctx.strokeStyle = rgba(
-      palette[route.tone],
-      route.alpha
-    );
+    ctx.strokeStyle = rgba(palette[ln.tone], ln.alpha);
     ctx.stroke();
   }
 
-  function endpointFade(t) {
-    /*
-     * Fade at route endpoints rather than popping on wrap.
-     */
-    const inFade = clamp(t / .10, 0, 1);
-    const outFade = clamp((1 - t) / .10, 0, 1);
-    return Math.min(inFade, outFade);
+  function fadeAtEnds(t) {
+    const a = clamp(t / .12, 0, 1);
+    const b = clamp((1 - t) / .12, 0, 1);
+    return Math.min(a, b);
   }
 
   function drawPacket(packet, time) {
-    const route = routes[packet.routeIndex];
-    const p = bezierPoint(route, packet.t);
+    const ln = lanes[packet.laneIndex];
+    const p = pointOn(ln, packet.t);
+    const angle = tangentOn(ln, packet.t);
+    const fade = fadeAtEnds(packet.t);
 
-    const edge = endpointFade(packet.t);
-    if (edge <= .01) return;
+    if (fade <= .01) return;
 
-    /*
-     * Pulse affects brightness only; path speed stays constant.
-     */
     const pulse =
-      .82 +
-      Math.sin(time * .00045 + packet.phase) * .18;
+      .88 +
+      Math.sin(time * .00042 + packet.phase) * .12;
 
-    const rgb = palette[route.tone];
+    const mobile = width < 820;
+    const size = ln.trunk
+      ? (mobile ? 12.5 : 15)
+      : (mobile ? 11 : 13.5);
+
+    const rgb = palette[ln.tone];
     const alpha =
-      (packet.strong ? .66 : .46) *
-      edge *
+      (ln.trunk ? .68 : .47) *
+      fade *
       pulse;
 
     ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate(angle);
 
     ctx.font =
-      `${packet.strong ? 600 : 500} ${packet.size}px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace`;
+      `${ln.trunk ? 650 : 560} ${size}px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace`;
 
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
 
-    ctx.shadowBlur = packet.strong ? 8 : 5;
-    ctx.shadowColor = rgba(rgb, .20 * edge);
+    ctx.shadowBlur = ln.trunk ? 7 : 4;
+    ctx.shadowColor = rgba(rgb, .15 * fade);
 
+    /*
+     * A 4-bit packet is visibly binary, unlike single digits
+     * which looked like moving dots at normal viewing distance.
+     */
     ctx.fillStyle = rgba(rgb, alpha);
-    ctx.fillText(packet.glyph, p.x, p.y);
+    ctx.fillText(packet.text, 0, 0);
 
     ctx.restore();
   }
 
-  function drawMergeNode(x, y, time, rgb) {
-    const pulse = .86 + Math.sin(time * .00040) * .14;
+  function drawMergeMarker(x, y, time) {
+    /*
+     * Thin correlation rings — no dot.
+     */
+    const pulse = .86 + Math.sin(time * .00036) * .14;
 
     ctx.beginPath();
-    ctx.arc(x, y, 7.5, 0, Math.PI * 2);
-    ctx.fillStyle = rgba(rgb, .035 * pulse);
-    ctx.fill();
+    ctx.arc(x, y, 11, 0, Math.PI * 2);
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = rgba(palette.violet, .13 * pulse);
+    ctx.stroke();
 
     ctx.beginPath();
-    ctx.arc(x, y, 2.2, 0, Math.PI * 2);
-    ctx.fillStyle = rgba(rgb, .38 * pulse);
-    ctx.fill();
+    ctx.arc(x, y, 17, 0, Math.PI * 2);
+    ctx.lineWidth = .7;
+    ctx.strokeStyle = rgba(palette.teal, .07 * pulse);
+    ctx.stroke();
   }
 
   function draw(time) {
     ctx.clearRect(0, 0, width, height);
 
-    routes.forEach(drawRoute);
+    lanes.forEach(drawLane);
 
     packets.forEach(packet => {
       drawPacket(packet, time);
     });
 
-    /*
-     * Two understated merge points communicate correlation
-     * without turning the whole background into a web.
-     */
-    drawMergeNode(
-      .64 * width,
-      .40 * height,
-      time,
-      palette.violet
-    );
-
-    drawMergeNode(
-      .72 * width,
-      .66 * height,
-      time + 1800,
-      palette.teal
-    );
+    drawMergeMarker(.62 * width, .42 * height, time);
+    drawMergeMarker(.72 * width, .52 * height, time + 1300);
   }
 
   function update(dt) {
-    for (const packet of packets) {
+    packets.forEach(packet => {
       packet.t += packet.speed * dt;
 
       if (packet.t >= 1) {
-        /*
-         * Wrap beyond the endpoint fade zone.
-         * Because it is already invisible at t=1, there is no visual jump.
-         */
         packet.t -= 1;
-        packet.glyph = packet.glyph === "0" ? "1" : "0";
+
+        /*
+         * Change payload only after the packet is fully faded off-screen.
+         */
+        const current = words.indexOf(packet.text);
+        packet.text = words[(current + 3) % words.length];
       }
-    }
+    });
   }
 
   function frame(time) {
@@ -641,9 +637,9 @@
     lastTime = time;
 
     /*
-     * Clamp tab-stall / scroll-stall jumps.
+     * Prevent scroll/tab stalls from producing fast jumps.
      */
-    dt = clamp(dt, 0, .033);
+    dt = clamp(dt, 0, .032);
 
     update(dt);
     draw(time);
@@ -702,6 +698,7 @@
 })();
 /* PRAECHECK DATA NETWORK SCRIPT END */
 </script>
+
 
 
 
