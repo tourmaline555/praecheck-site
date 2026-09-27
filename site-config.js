@@ -4,7 +4,7 @@ window.PRAECHECK_SITE = {
   productName: "Praecheck",
   price: "£14.99",
   licenceLabel: "One-time personal licence",
-  checkoutUrl: "",
+  checkoutUrl: "https://praecheck-checkout-live.cool-sky-248d.workers.dev/",
   registeredOffice: "82A James Carter Road, Mildenhall, IP28 7DE",
   companyNumber: "16154950"
 };

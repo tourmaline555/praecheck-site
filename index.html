@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Praecheck — Android data exposure assessment</title>
-  <meta name="description" content="See beyond permissions with Praecheck: offline Android assessment of current exposure, data-correlation potential and software exposure context.">
+  <meta name="description" content="See what your Android exposes without uploading your assessment. Praecheck is an on-device Android privacy and data-exposure assessment with app attribution, verification and change history.">
   <meta name="theme-color" content="#111426">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
@@ -67,20 +67,20 @@
   <section class="hero">
 <div class="container hero-grid">
 <div class="hero-copy">
-<div class="eyebrow">Offline Android data-exposure assessment</div>
-<h1>See beyond <span>permissions.</span></h1>
-<p class="lead">A permission tells you what an app may access. It does not show the full picture: embedded components can operate within that access, separate signals can become more revealing when combined, and installed libraries can add conditional data-access paths or other software issues.</p>
-<p class="hero-secondary">Praecheck gives you three separate views: <strong>Core exposure</strong>, <strong>Data correlation exposure</strong> and <strong>Software exposure</strong> — locally, without uploading your installed-app inventory or assessment results.</p>
+<div class="eyebrow">See beyond permissions.</div>
+<h1>See what your Android exposes — <span>without uploading your assessment.</span></h1>
+<p class="lead">Praecheck is a specialist Android privacy and data-exposure assessment. It shows privacy-relevant findings on your device, links them to affected apps where the evidence supports attribution, flags settings you need to verify, and shows what changed between assessments.</p>
+<p class="hero-secondary">Assessment processing stays on the handset. The production app does not request Android's <strong>INTERNET</strong> permission, and installed-app context, findings, verification responses and assessment history are not uploaded as part of the assessment.</p>
 <div class="actions hero-actions">
-<a class="btn btn-primary" href="#features">See what Praecheck checks</a>
-<a class="btn" href="#app-preview">Inspect interface</a>
+<a class="btn btn-primary" href="https://praecheck-checkout-live.cool-sky-248d.workers.dev/">Buy Praecheck Personal — £14.99</a>
+<a class="btn" href="#app-preview">See an example assessment</a>
 </div>
-<div class="hero-links"><a href="/download/">Download current release</a><span>·</span><a href="#pricing">Licence options</a></div>
-<div class="trustline">Local processing · No INTERNET permission · Evidence-aware · Offline advisory matching</div>
+<div class="hero-links"><a href="/download/">Download the signed APK</a><span>·</span><a href="#pricing">View licence details</a></div>
+<div class="trustline">£14.99 one-off · Up to 2 personal devices · 12 months of updates · No subscription</div>
 </div>
 <div class="hero-product-shot" aria-label="Praecheck assessment interface">
 <div class="product-shot-frame">
-<img src="assets/praecheck-about.webp" alt="Praecheck 0.10.6 About screen showing local, offline and independent assessment design" width="680" height="1473" fetchpriority="high" decoding="async">
+<img src="assets/praecheck-exposure.webp" alt="Praecheck Exposure screen showing privacy-relevant findings, affected apps and reasons" width="680" height="1473" fetchpriority="high" decoding="async">
 </div>
 </div>
 </div>
@@ -89,30 +89,16 @@
   <section id="why-it-matters">
 <div class="container">
 <div class="section-head">
-<div class="kicker">Why this matters</div>
-<h2>A permission can reach further than it looks.</h2>
-<p>Modern Android apps are often made from a mixture of first-party code, third-party libraries, system services and device permissions. Looking at one permission at a time can miss how those pieces relate.</p>
+<div class="kicker">What Praecheck tells you</div>
+<h2>From exposure to evidence, action and change.</h2>
+<p>Praecheck turns locally available Android state into a review you can understand and revisit, without pretending that every privacy-relevant condition can be observed automatically.</p>
 </div>
 <div class="grid-3">
-<article class="feature">
-<div class="feature-icon">01</div>
-<h3>Embedded components share the app's environment</h3>
-<p>Analytics, advertising, attribution and other SDKs run inside the host app. Where the app has access to a device capability, embedded code may be technically able to operate within that same environment.</p>
-</article>
-<article class="feature">
-<div class="feature-icon">02</div>
-<h3>Separate signals can become more revealing together</h3>
-<p>Location, identifiers, network information, app relationships and other signals may each appear limited in isolation. Combined, they can create a more useful basis for profiling, association or identity linkage.</p>
-</article>
-<article class="feature">
-<div class="feature-icon">03</div>
-<h3>Store disclosures cannot show every technical relationship</h3>
-<p>Privacy labels and policies are useful context, but they are summaries. They do not replace a technical view of what is installed, what access exists, and which embedded components are present on the device.</p>
-</article>
+<article class="feature"><div class="feature-icon">01</div><h3>See the exposure and the apps involved</h3><p>Findings start with privacy-relevant exposure and identify affected apps where the available evidence supports attribution, so you can see what contributed and why.</p></article>
+<article class="feature"><div class="feature-icon">02</div><h3>Know what was observed — and what you need to verify</h3><p>Machine-observed state is kept separate from settings that Android requires you to confirm yourself. Praecheck labels verification items instead of guessing.</p></article>
+<article class="feature"><div class="feature-icon">03</div><h3>See what changed since last time</h3><p>Reassess after installing or removing apps, changing settings or updating Android. Compatible assessments distinguish new, returned, resolved and unchanged findings.</p></article>
 </div>
-<div class="note" style="margin-top:18px">
-<strong>Important:</strong> Praecheck reports technical exposure and capability. It does not claim that a specific app collected, transmitted, sold or shared data unless there is evidence to support that conclusion.
-</div>
+<div class="note" style="margin-top:18px"><strong>Evidence before conclusions:</strong> Praecheck reports technical exposure and capability. It does not claim that a specific app collected, transmitted, sold or shared data unless there is evidence to support that conclusion.</div>
 </div>
 </section>
 <section id="app-preview" class="app-preview-section">
@@ -220,9 +206,9 @@
   <section class="continuous-section">
     <div class="container">
       <div class="section-head">
-        <div class="kicker">Longitudinal assessment</div>
-        <h2>Change is treated as assessment data.</h2>
-        <p>Compatible assessments can be compared locally to identify new, resolved, unchanged and returned findings. When the assessment model changes, Praecheck starts a new comparison baseline rather than attributing model changes to the device.</p>
+        <div class="kicker">Reassess with context</div>
+        <h2>Your phone changes. Praecheck shows what changed with it.</h2>
+        <p>Apps are installed and removed, permissions and settings change, and Android updates. Compatible assessments distinguish new, returned, resolved and unchanged findings. If the assessment model itself changes, Praecheck starts a new comparison baseline rather than presenting a model change as a device change.</p>
       </div>
       <div class="grid-4 value-grid">
         <article class="feature"><div class="feature-icon"><svg class="feature-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="6.5" height="14" rx="1.5"/><rect x="14.5" y="5" width="6.5" height="14" rx="1.5"/><path d="M9.5 9.5h5M12.5 7l2 2.5-2 2.5M14.5 14.5h-5M11.5 12l-2 2.5 2 2.5"/></svg></div><h3>Compatible comparison</h3><p>Compare score movement and finding state only when assessments use a compatible model.</p></article>
@@ -237,10 +223,10 @@
     <div class="container privacy-grid">
       <div class="privacy-copy">
         <div class="kicker">Privacy architecture</div>
-        <h2>Assessment processing remains on the handset.</h2>
+        <h2>Assessment data stays on the handset.</h2>
         <div class="privacy-proof"><span>Production APK: no Android <span class="privacy-proof-tail"><strong>INTERNET</strong> permission</span></span></div>
-        <p>The production Android application performs its assessment locally and does not request Android's INTERNET permission. Assessment results, comparison history and role context are not uploaded to a Praecheck account or remote scanning service.</p>
-        <p class="privacy-clarifier">Praecheck is a data exposure assessment tool. It is not antivirus and does not claim to detect malware, spyware or compromise.</p>
+        <p>The production Android application performs its assessment locally. Installed-app context, assessment findings, verification responses, comparison history and role context are not uploaded as part of the assessment process.</p>
+        <p class="privacy-clarifier"><strong>Purchase and activation are separate:</strong> the website and licensing service process the order and installation details needed to issue a licence; they do not receive your Praecheck assessment results. Praecheck is a data exposure assessment tool, not antivirus, anti-malware or a spyware/compromise detector.</p>
       </div>
       <div class="privacy-cards">
         <article><span><svg class="trust-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"
@@ -273,49 +259,36 @@
     <div class="container">
       <div class="section-head pricing-intro">
         <div class="kicker">Licensing</div>
-        <h2>Personal-use licensing by device allowance.</h2>
-        <p>Personal and Power provide the same assessment capabilities. The distinction is the number of personal devices that can be activated under the licence.</p>
+        <h2>One simple Personal licence.</h2>
+        <p><strong>£14.99 one-off.</strong> Up to 2 personal Android devices, 12 months of Praecheck updates and no subscription.</p>
       </div>
-      <div class="pricing-plans">
+      <div class="pricing-plans" style="max-width:720px;margin:0 auto">
         <article class="plan-card personal">
-          <div class="plan-card-head"><div class="plan-title">Praecheck Personal</div><div class="plan-badge">1–2 devices</div></div>
+          <div class="plan-card-head"><div class="plan-title">Praecheck Personal</div><div class="plan-badge">Up to 2 devices</div></div>
           <div class="plan-price"><strong>£14.99</strong><span>one-time</span></div>
-          <div class="plan-summary">For one primary Android device and one additional personal device.</div>
+          <div class="plan-summary">The full Praecheck assessment for up to two personal Android devices.</div>
           <ul class="ticklist">
-            <li>Full Android data exposure assessment</li>
-            <li>Core exposure, Data correlation exposure and Software exposure</li>
-            <li>Changes, history and regression detection</li>
-            <li>30 / 60 / 90-day recheck planning</li>
-            <li>Device roles and version-aware comparisons</li>
+            <li>Full Android privacy and data-exposure assessment</li>
+            <li>App attribution where the evidence supports it</li>
+            <li>Observed findings kept separate from user-verification items</li>
+            <li>Evidence, interpretation limits and practical actions</li>
+            <li>History with new, returned, resolved and unchanged findings</li>
             <li>CSV export for your own records</li>
             <li>12 months of Praecheck updates</li>
+            <li>No subscription</li>
           </ul>
-          <a class="btn btn-primary" href="https://praecheck-checkout-live.cool-sky-248d.workers.dev/">Purchase Personal — £14.99</a>
-        </article>
-        <article class="plan-card power">
-          <div class="plan-card-head"><div class="plan-title">Praecheck Power</div><div class="plan-badge">Up to 10 devices</div></div>
-          <div class="plan-price"><strong>£29.99</strong><span>one-time</span></div>
-          <div class="plan-summary">For users maintaining several personal Android devices or role-specific handsets.</div>
-          <ul class="ticklist">
-            <li>Everything included in Praecheck Personal</li>
-            <li>Licence activation on up to 10 personal devices</li>
-            <li>Same local, offline assessment model</li>
-            <li>Same history, comparison and reassessment features</li>
-            <li>12 months of Praecheck updates</li>
-            <li>Personal-use licence</li>
-          </ul>
-          <button class="btn buy-button" type="button" data-plan="power" disabled>Purchase Power — temporarily unavailable</button>
+          <a class="btn btn-primary" href="https://praecheck-checkout-live.cool-sky-248d.workers.dev/">Buy Praecheck Personal — £14.99</a>
         </article>
       </div>
-      <div id="checkout-status" class="note plan-note" role="status" aria-live="polite"><strong>Praecheck Personal is available for direct web purchase.</strong> Checkout is processed securely by Stripe. After payment, you will be returned to Praecheck licence activation to create the signed <code>.pcl</code> licence file for your installation. Praecheck Power remains temporarily unavailable for direct purchase.</div>
+      <div id="checkout-status" class="note plan-note" role="status" aria-live="polite"><strong>Secure web purchase.</strong> Checkout is processed using Stripe Managed Payments. After payment, you return to Praecheck activation to create the signed <code>.pcl</code> licence file for your installation.</div>
     </div>
   </section>
 
   <section class="download-cta">
     <div class="container download-panel">
-      <div><div class="kicker">Distribution</div><h2>Signed Android release.</h2><p>Praecheck is distributed directly as a signed APK. A SHA-256 checksum is published separately, and licence validation is performed offline in the application.</p></div>
-      <div class="download-actions"><a class="btn btn-primary" href="/download/">Download current release</a><a class="btn" href="/download/#install">Installation and activation</a></div>
-      <div class="download-meta">Signed production APK · SHA-256 checksum available · Offline licence verification</div>
+      <div><div class="kicker">Praecheck Personal</div><h2>See what your Android exposes — on your device.</h2><p>£14.99 one-off for up to 2 personal devices, including 12 months of updates. Download the signed APK before or after purchase.</p></div>
+      <div class="download-actions"><a class="btn btn-primary" href="https://praecheck-checkout-live.cool-sky-248d.workers.dev/">Buy Praecheck Personal — £14.99</a><a class="btn" href="/download/">Download the signed APK</a></div>
+      <div class="download-meta">No subscription · On-device assessment · Signed offline licence verification</div>
     </div>
   </section>
 
@@ -329,7 +302,7 @@
         <details><summary>What do the three assessment domains mean?</summary><p>Core exposure prioritises observed/current Android state and granted access. Data correlation exposure separately assesses app/SDK capabilities and the potential usefulness of data combinations for association, profiling or enrichment if the data were actually collected. Software exposure separately identifies exact embedded component versions that match the offline advisory catalogue, while distinguishing conditional data-access paths from other software issues. The domains are independent and are not evidence that a phone is compromised or that a specific app sold, shared or transmitted data.</p></details>
         <details><summary>Why are repeated assessments useful?</summary><p>Your exposure profile can change when you install or remove apps, change permissions, update Android, travel, change networks or use the device differently. Praecheck can compare compatible local assessments to show what changed.</p></details>
         <details><summary>How is assessment history retained?</summary><p>Assessment history, device role and recheck preferences are stored locally on the Android device. Praecheck keeps a bounded history of up to 50 assessments.</p></details>
-        <details><summary>How do Personal and Power licences differ?</summary><p>Both include the same Praecheck features. Personal allows activation on up to 2 personal devices; Power allows activation on up to 10 personal devices. Power does not add business, consultant or resale rights.</p></details>
+        <details><summary>What does Praecheck Personal include?</summary><p>Praecheck Personal is a £14.99 one-off personal-use licence for up to 2 Android devices and includes 12 months of Praecheck updates. It includes the full assessment, verification, history, evidence and export capabilities shown on this site.</p></details>
         <details><summary>How is Praecheck distributed and activated?</summary><p>Download the signed APK from the official Praecheck download page and install it on Android. Praecheck Personal can be purchased directly through the website for £14.99 one-time. After payment, enter the purchase email and the Praecheck installation code for the device to create a signed .pcl licence file. Licence verification is performed offline in the Android application.</p></details>
       </div>
     </div>
