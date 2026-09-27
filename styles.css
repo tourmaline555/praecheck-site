@@ -235,86 +235,92 @@ h3{line-height:1.2}
 
 /* PRAECHECK MOBILE PRIVACY FIX START */
 @media (max-width: 768px) {
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
 
   #privacy {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    overflow: hidden !important;
-    box-sizing: border-box !important;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
   }
 
   #privacy .container {
     width: 100% !important;
     max-width: 100% !important;
     min-width: 0 !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
     padding-left: 24px !important;
     padding-right: 24px !important;
     box-sizing: border-box !important;
   }
 
   #privacy .privacy-grid {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) !important;
+    display: block !important;
     width: 100% !important;
     max-width: 100% !important;
     min-width: 0 !important;
-    gap: 24px !important;
-    box-sizing: border-box !important;
+  }
+
+  #privacy * {
+    min-width: 0 !important;
+    box-sizing: border-box;
   }
 
   #privacy .privacy-copy,
   #privacy .privacy-cards {
+    display: block !important;
     width: 100% !important;
     max-width: 100% !important;
-    min-width: 0 !important;
-    box-sizing: border-box !important;
-  }
-
-  #privacy .privacy-copy h2,
-  #privacy .privacy-copy p,
-  #privacy .privacy-proof,
-  #privacy .privacy-proof span,
-  #privacy .privacy-proof-tail {
-    width: auto !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    white-space: normal !important;
-    overflow-wrap: anywhere !important;
-    word-break: normal !important;
-    box-sizing: border-box !important;
   }
 
   #privacy .privacy-copy h2 {
+    width: 100% !important;
+    max-width: 100% !important;
     font-size: clamp(2rem, 9vw, 3rem) !important;
     line-height: 1.08 !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  #privacy .privacy-copy p {
+    width: 100% !important;
+    max-width: 100% !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
   }
 
   #privacy .privacy-proof {
     display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
     padding: 20px !important;
   }
 
+  #privacy .privacy-proof span,
+  #privacy .privacy-proof-tail {
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+  }
+
   #privacy .privacy-cards {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) !important;
-    gap: 16px !important;
+    margin-top: 24px !important;
   }
 
   #privacy .privacy-cards article {
     width: 100% !important;
     max-width: 100% !important;
-    min-width: 0 !important;
-    box-sizing: border-box !important;
+    margin-bottom: 16px !important;
   }
 
-  #privacy .privacy-cards article > div {
-    min-width: 0 !important;
-    max-width: 100% !important;
-  }
-
+  #privacy .privacy-cards article > div,
   #privacy .privacy-cards h3,
   #privacy .privacy-cards p {
     max-width: 100% !important;
