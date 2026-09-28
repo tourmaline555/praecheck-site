@@ -37,6 +37,8 @@
 
 
 
+
+
 <style id="praecheck-data-network-style">
 /* PRAECHECK DATA NETWORK START */
 .hero {
@@ -45,10 +47,11 @@
   overflow: hidden;
   background:
     radial-gradient(circle at 74% 22%,
-      rgba(48, 66, 142, .09) 0%,
-      rgba(48, 66, 142, .03) 30%,
-      rgba(48, 66, 142, 0) 58%),
-    linear-gradient(180deg, #f2f5fb 0%, #e9eef8 100%);
+      rgba(46, 66, 150, .14) 0%,
+      rgba(46, 66, 150, .06) 26%,
+      rgba(46, 66, 150, .015) 46%,
+      rgba(46, 66, 150, 0) 64%),
+    linear-gradient(180deg, #eef3fb 0%, #e4edf8 100%);
 }
 
 #praecheck-data-network {
@@ -59,7 +62,7 @@
   width: 100%;
   height: 100%;
   pointer-events: none;
-  opacity: .95;
+  opacity: 1;
 }
 
 .hero > .container {
@@ -73,17 +76,19 @@
 
 @media (max-width: 820px) {
   #praecheck-data-network {
-    opacity: .90;
+    opacity: .96;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   #praecheck-data-network {
-    opacity: .72;
+    opacity: .82;
   }
 }
 /* PRAECHECK DATA NETWORK END */
 </style>
+
+
 
 
 
@@ -384,6 +389,8 @@
 
 
 
+
+
 <script>
 /* PRAECHECK DATA NETWORK SCRIPT START */
 (() => {
@@ -396,39 +403,37 @@
 
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-  let width = 1;
-  let height = 1;
-  let dpr = 1;
-  let points = [];
-  let cols = 0;
-  let rows = 0;
-  let animationId = 0;
-  let lastFrame = 0;
-  let running = false;
-
   const palette = {
-    primary: [36, 48, 102],
-    secondary: [42, 96, 126],
-    accent: [77, 88, 160]
+    line: [35, 55, 119],
+    lineAlt: [40, 96, 124],
+    glow: [87, 94, 170]
   };
 
   const rand = (min, max) => min + Math.random() * (max - min);
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+  const rgba = (rgb, alpha) => `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
 
-  function rgba(rgb, alpha) {
-    return `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
-  }
+  let width = 1;
+  let height = 1;
+  let dpr = 1;
+  let animationId = 0;
+  let running = false;
+  let startTime = 0;
+  let lastFrame = 0;
+  let nodes = [];
+  let edges = [];
+  let cycleDuration = 0;
+  let observer = null;
 
-  function measureAndBuild(force = false) {
+  function measure(force = false) {
     const rect = hero.getBoundingClientRect();
-    const newWidth = Math.max(1, Math.round(rect.width));
-    const newHeight = Math.max(1, Math.round(rect.height));
+    const w = Math.max(1, Math.round(rect.width));
+    const h = Math.max(1, Math.round(rect.height));
 
-    if (!force && Math.abs(newWidth - width) < 2 && Math.abs(newHeight - height) < 2) {
-      return;
-    }
+    if (!force && Math.abs(w - width) < 2 && Math.abs(h - height) < 2) return false;
 
-    width = newWidth;
-    height = newHeight;
+    width = w;
+    height = h;
     dpr = Math.min(window.devicePixelRatio || 1, 2);
 
     canvas.width = Math.round(width * dpr);
@@ -436,141 +441,208 @@
     canvas.style.width = width + "px";
     canvas.style.height = height + "px";
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-    buildMesh();
-    draw(performance.now());
+    return true;
   }
 
-  function buildMesh() {
+  function distance(a, b) {
+    return Math.hypot(a.x - b.x, a.y - b.y);
+  }
+
+  function buildNetwork() {
     const mobile = width < 820;
-    cols = mobile ? 8 : 11;
-    rows = mobile ? 5 : 7;
+    const count = mobile ? 15 : 24;
+    const marginX = width * 0.09;
+    const marginY = height * 0.14;
+    const minGap = mobile ? 46 : 58;
+    const maxChildren = mobile ? 3 : 4;
 
-    const stepX = width / (cols - 1);
-    const stepY = height / (rows - 1);
+    nodes = [];
+    edges = [];
 
-    points = [];
+    const root = {
+      id: 0,
+      depth: 0,
+      parentId: null,
+      x: width * 0.58,
+      y: height * 0.44,
+      driftX: rand(10, 18),
+      driftY: rand(8, 16),
+      phaseX: rand(0, Math.PI * 2),
+      phaseY: rand(0, Math.PI * 2),
+      speedX: rand(0.00022, 0.00034),
+      speedY: rand(0.00018, 0.00030),
+      birth: 0,
+      tone: 0
+    };
+    nodes.push(root);
 
-    for (let r = 0; r < rows; r++) {
-      for (let c = 0; c < cols; c++) {
-        const edgeX = c === 0 || c === cols - 1;
-        const edgeY = r === 0 || r === rows - 1;
+    const childCountById = new Map();
+    childCountById.set(0, 0);
 
-        points.push({
-          row: r,
-          col: c,
-          baseX: c * stepX,
-          baseY: r * stepY,
-          x: c * stepX,
-          y: r * stepY,
-          ampX: edgeX ? rand(6, 12) : rand(12, mobile ? 20 : 28),
-          ampY: edgeY ? rand(6, 12) : rand(12, mobile ? 18 : 24),
-          phaseX: rand(0, Math.PI * 2),
-          phaseY: rand(0, Math.PI * 2),
-          speedX: rand(0.00009, 0.00018),
-          speedY: rand(0.00008, 0.00016),
-          tone: (r + c) % 3
-        });
-      }
+    let attempts = 0;
+
+    while (nodes.length < count && attempts < 5000) {
+      attempts += 1;
+
+      const parentPool = nodes.filter(n => (childCountById.get(n.id) || 0) < maxChildren);
+      if (!parentPool.length) break;
+
+      const parent = parentPool[Math.floor(Math.random() * parentPool.length)];
+      const baseRadius = parent.depth === 0 ? rand(84, 128) : rand(70, 120);
+      const angle = rand(0, Math.PI * 2);
+      const x = clamp(parent.x + Math.cos(angle) * baseRadius, marginX, width - marginX);
+      const y = clamp(parent.y + Math.sin(angle) * baseRadius, marginY, height - marginY);
+
+      const candidate = { x, y };
+      const tooClose = nodes.some(n => distance(candidate, n) < minGap);
+      if (tooClose) continue;
+
+      const id = nodes.length;
+      const node = {
+        id,
+        depth: parent.depth + 1,
+        parentId: parent.id,
+        x,
+        y,
+        driftX: rand(8, 18),
+        driftY: rand(8, 18),
+        phaseX: rand(0, Math.PI * 2),
+        phaseY: rand(0, Math.PI * 2),
+        speedX: rand(0.00018, 0.00032),
+        speedY: rand(0.00016, 0.00030),
+        birth: parent.birth + rand(480, 920),
+        tone: (parent.depth + id) % 3
+      };
+
+      nodes.push(node);
+      edges.push({
+        from: parent.id,
+        to: node.id,
+        start: Math.max(0, node.birth - 420),
+        end: node.birth + 260
+      });
+
+      childCountById.set(parent.id, (childCountById.get(parent.id) || 0) + 1);
+      childCountById.set(node.id, 0);
     }
+
+    cycleDuration = Math.max(12000, ...nodes.map(n => n.birth + 8000));
   }
 
-  function indexOfPoint(r, c) {
-    return r * cols + c;
+  function visibleProgress(elapsed, birth) {
+    if (elapsed <= birth) return 0;
+    return Math.min(1, (elapsed - birth) / 480);
   }
 
-  function updatePoints(time) {
-    for (const p of points) {
-      p.x = p.baseX + Math.sin(time * p.speedX + p.phaseX) * p.ampX;
-      p.y = p.baseY + Math.cos(time * p.speedY + p.phaseY) * p.ampY;
-    }
+  function currentPosition(node, t) {
+    const motionScale = node.id === 0 ? 1.05 : 1;
+    return {
+      x: node.x + Math.sin(t * node.speedX + node.phaseX) * node.driftX * motionScale,
+      y: node.y + Math.cos(t * node.speedY + node.phaseY) * node.driftY * motionScale
+    };
   }
 
-  function pointAt(r, c) {
-    return points[indexOfPoint(r, c)];
+  function nodeColor(node) {
+    if (node.tone === 1) return palette.lineAlt;
+    if (node.tone === 2) return palette.glow;
+    return palette.line;
   }
 
-  function toneColor(tone) {
-    if (tone === 1) return palette.secondary;
-    if (tone === 2) return palette.accent;
-    return palette.primary;
-  }
-
-  function drawSegment(a, b, strength = 1, curve = 0) {
-    const mx = (a.x + b.x) / 2;
-    const my = (a.y + b.y) / 2;
-    const dx = b.x - a.x;
-    const dy = b.y - a.y;
-    const len = Math.hypot(dx, dy) || 1;
-
-    const nx = -dy / len;
-    const ny = dx / len;
-
-    const tone = toneColor((a.tone + b.tone) % 3);
-    const alpha = 0.10 * strength;
-
+  function drawLine(ax, ay, bx, by, alpha, widthPx) {
     ctx.beginPath();
-    ctx.moveTo(a.x, a.y);
-    if (curve !== 0) {
-      ctx.quadraticCurveTo(mx + nx * curve, my + ny * curve, b.x, b.y);
-    } else {
-      ctx.lineTo(b.x, b.y);
-    }
-    ctx.lineWidth = 0.8 * strength;
-    ctx.strokeStyle = rgba(tone, alpha);
+    ctx.moveTo(ax, ay);
+    ctx.lineTo(bx, by);
+    ctx.lineWidth = widthPx;
+    ctx.strokeStyle = rgba(palette.line, alpha);
     ctx.stroke();
   }
 
-  function drawMesh() {
-    for (let r = 0; r < rows; r++) {
-      for (let c = 0; c < cols; c++) {
-        const p = pointAt(r, c);
+  function drawEdge(fromNode, toNode, elapsed, time) {
+    const p1 = currentPosition(fromNode, time);
+    const p2 = currentPosition(toNode, time);
 
-        if (c < cols - 1) {
-          drawSegment(p, pointAt(r, c + 1), 1.0, 6);
-        }
+    const edgeStart = edges.find(e => e.from === fromNode.id && e.to === toNode.id).start;
+    const edgeEnd = edges.find(e => e.from === fromNode.id && e.to === toNode.id).end;
 
-        if (r < rows - 1) {
-          drawSegment(p, pointAt(r + 1, c), 0.95, -5);
-        }
+    const growth = clamp((elapsed - edgeStart) / Math.max(1, edgeEnd - edgeStart), 0, 1);
+    const alpha = 0.12 + 0.06 * growth;
 
-        if (r < rows - 1 && c < cols - 1) {
-          drawSegment(p, pointAt(r + 1, c + 1), 0.55, 3);
-        }
+    const ex = p1.x + (p2.x - p1.x) * growth;
+    const ey = p1.y + (p2.y - p1.y) * growth;
 
-        if (r < rows - 1 && c > 0) {
-          drawSegment(p, pointAt(r + 1, c - 1), 0.40, -2);
-        }
-      }
-    }
-  }
+    drawLine(p1.x, p1.y, ex, ey, alpha, 1.15);
 
-  function drawNodes(time) {
-    /*
-     * Very subtle junction glow only, not visible "dots".
-     */
-    for (const p of points) {
-      const breathe = 0.85 + Math.sin(time * 0.00018 + p.phaseX) * 0.15;
-      const rgb = toneColor(p.tone);
-
+    if (growth >= 1) {
+      const pulse = 0.5 + 0.5 * Math.sin(time * 0.0012 + fromNode.id * 0.7 + toNode.id * 0.5);
       ctx.beginPath();
-      ctx.arc(p.x, p.y, 1.2, 0, Math.PI * 2);
-      ctx.fillStyle = rgba(rgb, 0.10 * breathe);
+      const px = p1.x + (p2.x - p1.x) * pulse;
+      const py = p1.y + (p2.y - p1.y) * pulse;
+      ctx.arc(px, py, 1.6, 0, Math.PI * 2);
+      ctx.fillStyle = rgba(palette.glow, 0.08);
       ctx.fill();
     }
   }
 
+  function drawNode(node, elapsed, time) {
+    const progress = visibleProgress(elapsed, node.birth);
+    if (progress <= 0) return;
+
+    const pos = currentPosition(node, time);
+    const rgb = nodeColor(node);
+
+    const outer = (node.id === 0 ? 5.8 : 4.8) * progress;
+    const inner = (node.id === 0 ? 2.6 : 2.0) * progress;
+    const breathe = 0.9 + Math.sin(time * 0.002 + node.phaseX) * 0.1;
+
+    ctx.beginPath();
+    ctx.arc(pos.x, pos.y, outer * breathe, 0, Math.PI * 2);
+    ctx.fillStyle = rgba(rgb, node.id === 0 ? 0.16 : 0.10);
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(pos.x, pos.y, inner * breathe, 0, Math.PI * 2);
+    ctx.fillStyle = rgba(rgb, node.id === 0 ? 0.48 : 0.26);
+    ctx.fill();
+  }
+
+  function drawBackgroundGlow(time) {
+    const pulse = 0.55 + Math.sin(time * 0.0006) * 0.08;
+    const radius = Math.min(width, height) * 0.44;
+
+    const g = ctx.createRadialGradient(
+      width * 0.70, height * 0.24, 0,
+      width * 0.70, height * 0.24, radius
+    );
+    g.addColorStop(0, rgba(palette.glow, 0.05 * pulse));
+    g.addColorStop(0.45, rgba(palette.glow, 0.018 * pulse));
+    g.addColorStop(1, rgba(palette.glow, 0));
+
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, width, height);
+  }
+
   function draw(time) {
+    const elapsed = reducedMotion.matches ? cycleDuration : (time - startTime);
     ctx.clearRect(0, 0, width, height);
-    updatePoints(time);
-    drawMesh();
-    drawNodes(time);
+    drawBackgroundGlow(time);
+
+    for (const edge of edges) {
+      const fromNode = nodes[edge.from];
+      const toNode = nodes[edge.to];
+      if (elapsed >= edge.start) {
+        drawEdge(fromNode, toNode, elapsed, time);
+      }
+    }
+
+    for (const node of nodes) {
+      drawNode(node, elapsed, time);
+    }
   }
 
   function frame(time) {
     if (!running) return;
 
-    if (!lastFrame || time - lastFrame >= 30) {
+    if (!lastFrame || time - lastFrame >= 26) {
       lastFrame = time;
       draw(time);
     }
@@ -580,16 +652,20 @@
 
   function stop() {
     running = false;
-    if (animationId) {
-      cancelAnimationFrame(animationId);
-      animationId = 0;
-    }
+    if (animationId) cancelAnimationFrame(animationId);
+    animationId = 0;
   }
 
-  function start() {
+  function start(rebuild = false) {
     stop();
+
+    if (measure(rebuild) || rebuild || !nodes.length) {
+      buildNetwork();
+    }
+
+    startTime = performance.now();
     lastFrame = 0;
-    draw(performance.now());
+    draw(startTime);
 
     if (reducedMotion.matches || document.hidden) return;
 
@@ -598,26 +674,27 @@
   }
 
   if ("ResizeObserver" in window) {
-    const observer = new ResizeObserver(() => {
-      measureAndBuild(false);
+    observer = new ResizeObserver(() => {
+      if (measure(false)) start(true);
     });
     observer.observe(hero);
   }
 
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) stop();
-    else start();
+    else start(false);
   });
 
   if (typeof reducedMotion.addEventListener === "function") {
-    reducedMotion.addEventListener("change", start);
+    reducedMotion.addEventListener("change", () => start(false));
   }
 
-  measureAndBuild(true);
-  start();
+  start(true);
 })();
 /* PRAECHECK DATA NETWORK SCRIPT END */
 </script>
+
+
 
 
 
