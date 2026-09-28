@@ -39,6 +39,7 @@
 
 
 
+
 <style id="praecheck-data-network-style">
 /* PRAECHECK DATA NETWORK START */
 .hero {
@@ -46,12 +47,11 @@
   isolation: isolate;
   overflow: hidden;
   background:
-    radial-gradient(circle at 74% 22%,
-      rgba(46, 66, 150, .14) 0%,
-      rgba(46, 66, 150, .06) 26%,
-      rgba(46, 66, 150, .015) 46%,
-      rgba(46, 66, 150, 0) 64%),
-    linear-gradient(180deg, #eef3fb 0%, #e4edf8 100%);
+    radial-gradient(circle at 76% 24%,
+      rgba(62, 76, 166, .15) 0%,
+      rgba(62, 76, 166, .055) 28%,
+      rgba(62, 76, 166, 0) 58%),
+    linear-gradient(180deg, #eef3fb 0%, #e5edf8 100%);
 }
 
 #praecheck-data-network {
@@ -75,18 +75,15 @@
 }
 
 @media (max-width: 820px) {
-  #praecheck-data-network {
-    opacity: .96;
-  }
+  #praecheck-data-network { opacity: .97; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #praecheck-data-network {
-    opacity: .82;
-  }
+  #praecheck-data-network { opacity: .78; }
 }
 /* PRAECHECK DATA NETWORK END */
 </style>
+
 
 
 
@@ -391,6 +388,7 @@
 
 
 
+
 <script>
 /* PRAECHECK DATA NETWORK SCRIPT START */
 (() => {
@@ -402,38 +400,35 @@
   if (!ctx) return;
 
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const rand = (a, b) => a + Math.random() * (b - a);
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
-  const palette = {
-    line: [35, 55, 119],
-    lineAlt: [40, 96, 124],
-    glow: [87, 94, 170]
-  };
+  const colours = [
+    [45, 56, 130],
+    [28, 96, 118],
+    [87, 70, 165]
+  ];
 
-  const rand = (min, max) => min + Math.random() * (max - min);
-  const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
-  const rgba = (rgb, alpha) => `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
+  const rgba = (rgb, a) =>
+    `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${a})`;
 
   let width = 1;
   let height = 1;
   let dpr = 1;
-  let animationId = 0;
-  let running = false;
-  let startTime = 0;
-  let lastFrame = 0;
   let nodes = [];
-  let edges = [];
-  let cycleDuration = 0;
-  let observer = null;
+  let links = [];
+  let nextId = 1;
+  let running = false;
+  let animationId = 0;
+  let lastTime = 0;
 
-  function measure(force = false) {
-    const rect = hero.getBoundingClientRect();
-    const w = Math.max(1, Math.round(rect.width));
-    const h = Math.max(1, Math.round(rect.height));
+  const isMobile = () => width < 820;
+  const maxNodes = () => isMobile() ? 9 : 14;
 
-    if (!force && Math.abs(w - width) < 2 && Math.abs(h - height) < 2) return false;
-
-    width = w;
-    height = h;
+  function sizeCanvas() {
+    const r = hero.getBoundingClientRect();
+    width = Math.max(1, Math.round(r.width));
+    height = Math.max(1, Math.round(r.height));
     dpr = Math.min(window.devicePixelRatio || 1, 2);
 
     canvas.width = Math.round(width * dpr);
@@ -441,212 +436,238 @@
     canvas.style.width = width + "px";
     canvas.style.height = height + "px";
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    return true;
   }
 
-  function distance(a, b) {
-    return Math.hypot(a.x - b.x, a.y - b.y);
-  }
+  function makeNode(x, y, parentId, generation, now) {
+    const angle = rand(0, Math.PI * 2);
+    const speed = rand(4.5, 7.5);
 
-  function buildNetwork() {
-    const mobile = width < 820;
-    const count = mobile ? 15 : 24;
-    const marginX = width * 0.09;
-    const marginY = height * 0.14;
-    const minGap = mobile ? 46 : 58;
-    const maxChildren = mobile ? 3 : 4;
-
-    nodes = [];
-    edges = [];
-
-    const root = {
-      id: 0,
-      depth: 0,
-      parentId: null,
-      x: width * 0.58,
-      y: height * 0.44,
-      driftX: rand(10, 18),
-      driftY: rand(8, 16),
-      phaseX: rand(0, Math.PI * 2),
-      phaseY: rand(0, Math.PI * 2),
-      speedX: rand(0.00022, 0.00034),
-      speedY: rand(0.00018, 0.00030),
-      birth: 0,
-      tone: 0
+    return {
+      id: nextId++,
+      parentId,
+      generation,
+      x, y,
+      targetX: x,
+      targetY: y,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed,
+      angle,
+      turnIn: rand(1.6, 3.3),
+      born: now,
+      branchAt: now + rand(3500, 6200),
+      retireAt: now + rand(17000, 23000),
+      opacity: 0,
+      tone: generation % colours.length,
+      radius: generation === 0 ? 2.9 : rand(2.1, 2.7)
     };
+  }
+
+  function resetScene(now) {
+    nodes = [];
+    links = [];
+    nextId = 1;
+
+    const root = makeNode(
+      width * (isMobile() ? .64 : .69),
+      height * .42,
+      null,
+      0,
+      now
+    );
+
+    root.opacity = 1;
+    root.branchAt = now + 1200;
+    root.retireAt = Infinity;
     nodes.push(root);
+  }
 
-    const childCountById = new Map();
-    childCountById.set(0, 0);
+  function spawn(parent, now) {
+    if (nodes.length >= maxNodes()) return;
 
-    let attempts = 0;
+    const angle = rand(0, Math.PI * 2);
+    const distance = rand(isMobile() ? 40 : 48, isMobile() ? 72 : 92);
 
-    while (nodes.length < count && attempts < 5000) {
-      attempts += 1;
+    const tx = clamp(parent.x + Math.cos(angle) * distance, 28, width - 28);
+    const ty = clamp(parent.y + Math.sin(angle) * distance, 28, height - 28);
 
-      const parentPool = nodes.filter(n => (childCountById.get(n.id) || 0) < maxChildren);
-      if (!parentPool.length) break;
+    const child = makeNode(parent.x, parent.y, parent.id, parent.generation + 1, now);
+    child.targetX = tx;
+    child.targetY = ty;
 
-      const parent = parentPool[Math.floor(Math.random() * parentPool.length)];
-      const baseRadius = parent.depth === 0 ? rand(84, 128) : rand(70, 120);
-      const angle = rand(0, Math.PI * 2);
-      const x = clamp(parent.x + Math.cos(angle) * baseRadius, marginX, width - marginX);
-      const y = clamp(parent.y + Math.sin(angle) * baseRadius, marginY, height - marginY);
+    const launch = Math.atan2(ty - parent.y, tx - parent.x);
+    child.vx = Math.cos(launch) * rand(9, 13);
+    child.vy = Math.sin(launch) * rand(9, 13);
 
-      const candidate = { x, y };
-      const tooClose = nodes.some(n => distance(candidate, n) < minGap);
-      if (tooClose) continue;
+    nodes.push(child);
+    links.push({
+      parentId: parent.id,
+      childId: child.id,
+      born: now,
+      fadeStart: now + rand(3800, 5200),
+      dead: now + rand(7000, 9000)
+    });
 
-      const id = nodes.length;
-      const node = {
-        id,
-        depth: parent.depth + 1,
-        parentId: parent.id,
-        x,
-        y,
-        driftX: rand(8, 18),
-        driftY: rand(8, 18),
-        phaseX: rand(0, Math.PI * 2),
-        phaseY: rand(0, Math.PI * 2),
-        speedX: rand(0.00018, 0.00032),
-        speedY: rand(0.00016, 0.00030),
-        birth: parent.birth + rand(480, 920),
-        tone: (parent.depth + id) % 3
-      };
+    parent.branchAt = now + rand(4300, 7200);
+  }
 
-      nodes.push(node);
-      edges.push({
-        from: parent.id,
-        to: node.id,
-        start: Math.max(0, node.birth - 420),
-        end: node.birth + 260
-      });
+  function maybeBranch(now) {
+    if (nodes.length >= maxNodes()) return;
 
-      childCountById.set(parent.id, (childCountById.get(parent.id) || 0) + 1);
-      childCountById.set(node.id, 0);
+    const eligible = nodes
+      .filter(n => n.opacity > .7 && now >= n.branchAt && now < n.retireAt - 3000)
+      .sort((a, b) => a.branchAt - b.branchAt);
+
+    if (eligible.length) spawn(eligible[0], now);
+  }
+
+  function updateNode(n, dt, now) {
+    const age = now - n.born;
+    n.opacity = clamp(age / 650, 0, 1);
+
+    if (Number.isFinite(n.retireAt) && now > n.retireAt) {
+      n.opacity = clamp(1 - (now - n.retireAt) / 2600, 0, 1);
     }
 
-    cycleDuration = Math.max(12000, ...nodes.map(n => n.birth + 8000));
+    n.turnIn -= dt;
+    if (n.turnIn <= 0) {
+      n.turnIn = rand(1.8, 3.8);
+      n.angle += rand(-.8, .8);
+    }
+
+    const speed = rand(4.2, 7.0);
+    const tvx = Math.cos(n.angle) * speed;
+    const tvy = Math.sin(n.angle) * speed;
+    const ease = 1 - Math.exp(-dt * .6);
+
+    n.vx += (tvx - n.vx) * ease;
+    n.vy += (tvy - n.vy) * ease;
+
+    const pull = .018;
+    n.vx += (n.targetX - n.x) * pull * dt;
+    n.vy += (n.targetY - n.y) * pull * dt;
+
+    n.x += n.vx * dt;
+    n.y += n.vy * dt;
+
+    const pad = 20;
+
+    if (n.x < pad || n.x > width - pad) {
+      n.x = clamp(n.x, pad, width - pad);
+      n.vx *= -1;
+      n.angle = Math.atan2(n.vy, n.vx);
+    }
+
+    if (n.y < pad || n.y > height - pad) {
+      n.y = clamp(n.y, pad, height - pad);
+      n.vy *= -1;
+      n.angle = Math.atan2(n.vy, n.vx);
+    }
   }
 
-  function visibleProgress(elapsed, birth) {
-    if (elapsed <= birth) return 0;
-    return Math.min(1, (elapsed - birth) / 480);
+  function update(dt, now) {
+    maybeBranch(now);
+
+    nodes.forEach(n => updateNode(n, dt, now));
+
+    links = links.filter(l => now < l.dead);
+
+    const liveIds = new Set();
+    links.forEach(l => {
+      liveIds.add(l.parentId);
+      liveIds.add(l.childId);
+    });
+
+    nodes = nodes.filter(n =>
+      n.parentId === null || n.opacity > 0 || liveIds.has(n.id)
+    );
   }
 
-  function currentPosition(node, t) {
-    const motionScale = node.id === 0 ? 1.05 : 1;
-    return {
-      x: node.x + Math.sin(t * node.speedX + node.phaseX) * node.driftX * motionScale,
-      y: node.y + Math.cos(t * node.speedY + node.phaseY) * node.driftY * motionScale
-    };
+  function byId(id) {
+    return nodes.find(n => n.id === id);
   }
 
-  function nodeColor(node) {
-    if (node.tone === 1) return palette.lineAlt;
-    if (node.tone === 2) return palette.glow;
-    return palette.line;
-  }
+  function drawLink(link, now) {
+    const a = byId(link.parentId);
+    const b = byId(link.childId);
+    if (!a || !b) return;
 
-  function drawLine(ax, ay, bx, by, alpha, widthPx) {
+    let alpha = .25;
+
+    if (now > link.fadeStart) {
+      alpha *= clamp(
+        1 - (now - link.fadeStart) / (link.dead - link.fadeStart),
+        0,
+        1
+      );
+    }
+
+    alpha *= Math.min(a.opacity, b.opacity);
+
+    const dx = b.x - a.x;
+    const dy = b.y - a.y;
+    const d = Math.hypot(dx, dy);
+
+    /*
+     * Parent-child links only. Long tethers disappear, which prevents
+     * the composition turning into another page-wide web.
+     */
+    alpha *= clamp(1 - Math.max(0, d - 78) / 70, 0, 1);
+    if (alpha < .008) return;
+
+    const mx = (a.x + b.x) / 2;
+    const my = (a.y + b.y) / 2;
+    const nx = d ? -dy / d : 0;
+    const ny = d ? dx / d : 0;
+    const curve = Math.sin((a.id + b.id) * 1.4) * 5;
+
     ctx.beginPath();
-    ctx.moveTo(ax, ay);
-    ctx.lineTo(bx, by);
-    ctx.lineWidth = widthPx;
-    ctx.strokeStyle = rgba(palette.line, alpha);
+    ctx.moveTo(a.x, a.y);
+    ctx.quadraticCurveTo(mx + nx * curve, my + ny * curve, b.x, b.y);
+    ctx.lineWidth = 1.25;
+    ctx.lineCap = "round";
+    ctx.strokeStyle = rgba(colours[a.tone], alpha);
     ctx.stroke();
   }
 
-  function drawEdge(fromNode, toNode, elapsed, time) {
-    const p1 = currentPosition(fromNode, time);
-    const p2 = currentPosition(toNode, time);
+  function drawNode(n, now) {
+    if (n.opacity <= .005) return;
 
-    const edgeStart = edges.find(e => e.from === fromNode.id && e.to === toNode.id).start;
-    const edgeEnd = edges.find(e => e.from === fromNode.id && e.to === toNode.id).end;
-
-    const growth = clamp((elapsed - edgeStart) / Math.max(1, edgeEnd - edgeStart), 0, 1);
-    const alpha = 0.12 + 0.06 * growth;
-
-    const ex = p1.x + (p2.x - p1.x) * growth;
-    const ey = p1.y + (p2.y - p1.y) * growth;
-
-    drawLine(p1.x, p1.y, ex, ey, alpha, 1.15);
-
-    if (growth >= 1) {
-      const pulse = 0.5 + 0.5 * Math.sin(time * 0.0012 + fromNode.id * 0.7 + toNode.id * 0.5);
-      ctx.beginPath();
-      const px = p1.x + (p2.x - p1.x) * pulse;
-      const py = p1.y + (p2.y - p1.y) * pulse;
-      ctx.arc(px, py, 1.6, 0, Math.PI * 2);
-      ctx.fillStyle = rgba(palette.glow, 0.08);
-      ctx.fill();
-    }
-  }
-
-  function drawNode(node, elapsed, time) {
-    const progress = visibleProgress(elapsed, node.birth);
-    if (progress <= 0) return;
-
-    const pos = currentPosition(node, time);
-    const rgb = nodeColor(node);
-
-    const outer = (node.id === 0 ? 5.8 : 4.8) * progress;
-    const inner = (node.id === 0 ? 2.6 : 2.0) * progress;
-    const breathe = 0.9 + Math.sin(time * 0.002 + node.phaseX) * 0.1;
+    const rgb = colours[n.tone];
+    const breathe = .90 + Math.sin(now * .001 + n.id) * .10;
+    const r = n.radius * breathe;
 
     ctx.beginPath();
-    ctx.arc(pos.x, pos.y, outer * breathe, 0, Math.PI * 2);
-    ctx.fillStyle = rgba(rgb, node.id === 0 ? 0.16 : 0.10);
+    ctx.arc(n.x, n.y, r * 3.6, 0, Math.PI * 2);
+    ctx.fillStyle = rgba(rgb, .065 * n.opacity);
     ctx.fill();
 
     ctx.beginPath();
-    ctx.arc(pos.x, pos.y, inner * breathe, 0, Math.PI * 2);
-    ctx.fillStyle = rgba(rgb, node.id === 0 ? 0.48 : 0.26);
+    ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+    ctx.fillStyle = rgba(rgb, .72 * n.opacity);
     ctx.fill();
   }
 
-  function drawBackgroundGlow(time) {
-    const pulse = 0.55 + Math.sin(time * 0.0006) * 0.08;
-    const radius = Math.min(width, height) * 0.44;
-
-    const g = ctx.createRadialGradient(
-      width * 0.70, height * 0.24, 0,
-      width * 0.70, height * 0.24, radius
-    );
-    g.addColorStop(0, rgba(palette.glow, 0.05 * pulse));
-    g.addColorStop(0.45, rgba(palette.glow, 0.018 * pulse));
-    g.addColorStop(1, rgba(palette.glow, 0));
-
-    ctx.fillStyle = g;
-    ctx.fillRect(0, 0, width, height);
-  }
-
-  function draw(time) {
-    const elapsed = reducedMotion.matches ? cycleDuration : (time - startTime);
+  function draw(now) {
     ctx.clearRect(0, 0, width, height);
-    drawBackgroundGlow(time);
-
-    for (const edge of edges) {
-      const fromNode = nodes[edge.from];
-      const toNode = nodes[edge.to];
-      if (elapsed >= edge.start) {
-        drawEdge(fromNode, toNode, elapsed, time);
-      }
-    }
-
-    for (const node of nodes) {
-      drawNode(node, elapsed, time);
-    }
+    links.forEach(l => drawLink(l, now));
+    nodes.forEach(n => drawNode(n, now));
   }
 
-  function frame(time) {
+  function frame(now) {
     if (!running) return;
 
-    if (!lastFrame || time - lastFrame >= 26) {
-      lastFrame = time;
-      draw(time);
-    }
+    if (!lastTime) lastTime = now;
 
+    let dt = (now - lastTime) / 1000;
+    lastTime = now;
+
+    /*
+     * Scroll/browser stalls never become movement jumps.
+     */
+    dt = clamp(dt, 0, .032);
+
+    update(dt, now);
+    draw(now);
     animationId = requestAnimationFrame(frame);
   }
 
@@ -656,16 +677,10 @@
     animationId = 0;
   }
 
-  function start(rebuild = false) {
+  function start() {
     stop();
-
-    if (measure(rebuild) || rebuild || !nodes.length) {
-      buildNetwork();
-    }
-
-    startTime = performance.now();
-    lastFrame = 0;
-    draw(startTime);
+    lastTime = 0;
+    draw(performance.now());
 
     if (reducedMotion.matches || document.hidden) return;
 
@@ -673,26 +688,38 @@
     animationId = requestAnimationFrame(frame);
   }
 
-  if ("ResizeObserver" in window) {
-    observer = new ResizeObserver(() => {
-      if (measure(false)) start(true);
-    });
-    observer.observe(hero);
-  }
+  sizeCanvas();
+  resetScene(performance.now());
+
+  /*
+   * Intentionally no window resize listener and no ResizeObserver.
+   * Mobile browser chrome changing during scroll therefore cannot
+   * regenerate or jump the animation.
+   * Orientation change is the only rebuild.
+   */
+  window.addEventListener("orientationchange", () => {
+    stop();
+    setTimeout(() => {
+      sizeCanvas();
+      resetScene(performance.now());
+      start();
+    }, 250);
+  });
 
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) stop();
-    else start(false);
+    else start();
   });
 
   if (typeof reducedMotion.addEventListener === "function") {
-    reducedMotion.addEventListener("change", () => start(false));
+    reducedMotion.addEventListener("change", start);
   }
 
-  start(true);
+  start();
 })();
 /* PRAECHECK DATA NETWORK SCRIPT END */
 </script>
+
 
 
 
