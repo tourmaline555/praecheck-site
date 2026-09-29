@@ -100,6 +100,31 @@
       display: block;
     }
   </style>
+
+<style id="praecheck-device-activation-ux">
+/* PRAECHECK DEVICE ACTIVATION UX STYLE START */
+.device-activation-callout {
+  margin: 20px 0 8px;
+  padding: 18px 20px;
+  border: 1px solid rgba(105, 74, 205, .22);
+  border-radius: 18px;
+  background: rgba(105, 74, 205, .07);
+}
+.device-activation-callout strong { color: var(--ink); }
+.device-activation-steps {
+  margin: 0 0 22px;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: rgba(255,255,255,.72);
+}
+.device-activation-steps h2 { margin: 0 0 10px; font-size: 1.05rem; }
+.device-activation-steps ol { margin: 0; padding-left: 1.25rem; }
+.device-activation-steps li + li { margin-top: 8px; }
+.device-activation-warning { margin-top: 14px; font-weight: 700; }
+/* PRAECHECK DEVICE ACTIVATION UX STYLE END */
+</style>
+
 </head>
 
 <body>
@@ -124,6 +149,16 @@
     <div class="container activation-wrap">
       <div class="kicker">Licence activation</div>
       <h1>Activate Praecheck</h1>
+      <!-- PRAECHECK DEVICE ACTIVATION CALLOUT START -->
+      <div class="device-activation-callout">
+        <strong>Praecheck Personal covers up to 2 devices.</strong><br>
+        Each device needs its <strong>own signed .pcl licence file</strong>.
+        If you already activated your first phone, use the
+        <strong>same purchase email and purchase reference</strong> here with
+        the <strong>installation code shown on your second phone</strong>.
+        Do not copy the first phone's .pcl file to the second phone.
+      </div>
+      <!-- PRAECHECK DEVICE ACTIVATION CALLOUT END -->
       <p class="lead">
         Create the offline licence file for your Praecheck Personal purchase.
         You will need the email address used at checkout and the installation code
@@ -140,7 +175,21 @@
           Praecheck installation code to create the licence file.
         </div>
 
-        <form id="activation-form">
+        
+        <!-- PRAECHECK DEVICE ACTIVATION STEPS START -->
+        <div class="device-activation-steps">
+          <h2>Activate this device</h2>
+          <ol>
+            <li>Open Praecheck on the device you want to activate and copy its installation code.</li>
+            <li>Enter the same purchase email and purchase reference from your original Personal purchase.</li>
+            <li>Create and download the new .pcl file, then import that file on this device.</li>
+          </ol>
+          <div class="device-activation-warning">
+            Activating device 2 does not replace device 1. It uses the second seat included with Praecheck Personal.
+          </div>
+        </div>
+        <!-- PRAECHECK DEVICE ACTIVATION STEPS END -->
+<form id="activation-form">
           <div class="field">
             <label for="email">Purchase email</label>
             <input
@@ -163,11 +212,7 @@
               spellcheck="false"
               required
             >
-            <small>
-              This is filled automatically after checkout. If you opened this page
-              separately, enter the Stripe Checkout Session ID beginning with
-              <strong>cs_live_</strong>.
-            </small>
+            <small>Use the purchase reference from your original Praecheck Personal order. Use the same reference again when activating your second device.</small>
           </div>
 
           <div class="field">
@@ -183,10 +228,7 @@
               placeholder="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
               required
             >
-            <small>
-              In Praecheck, copy the installation code from the licence/activation screen
-              on this device.
-            </small>
+            <small>Use the installation code shown by Praecheck on the device you are activating. Each device has a different installation code.</small>
           </div>
 
           <button class="btn btn-primary" id="activate-button" type="submit">
