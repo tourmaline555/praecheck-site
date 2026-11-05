@@ -1,0 +1,24 @@
+
+/* Praescius portfolio additions — scoped, does not override PraeCheck site components. */
+.praescius-product-bar{background:#101727;color:#f4f5fb;border-bottom:1px solid rgba(255,255,255,.12);font-size:.84rem}
+.praescius-product-bar-inner{min-height:44px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+.praescius-company-link{color:#fff;font-weight:850;text-decoration:none;letter-spacing:.095em;font-size:.74rem}
+.praescius-company-link:hover{color:#d6ccff;text-decoration:none}
+.praescius-bar-divider{color:#9a9ca8;padding:0 .3rem}
+.praescius-product-switch{display:flex;align-items:center;gap:8px}
+.praescius-product-switch a,.praescius-current{padding:6px 11px;border-radius:999px;font-size:.8rem;font-weight:700;text-decoration:none}
+.praescius-product-switch a{color:#d4e9ff;border:1px solid rgba(255,255,255,.18)}
+.praescius-product-switch a:hover{background:#283850;color:#fff;text-decoration:none}
+.praescius-current{color:#111426;background:#fff}
+.praescius-cross-sell{padding:76px 0;background:linear-gradient(130deg,#edf0fb,#f7f7fc);border-top:1px solid #e3e6f2}
+.praescius-cross-sell-inner{display:grid;grid-template-columns:1.3fr .7fr;gap:50px;align-items:center}
+.praescius-cross-sell h2{margin:10px 0 18px}
+.praescius-cross-sell p{color:#52596d;max-width:660px;font-size:1.04rem}
+.praescius-cross-actions{display:flex;gap:17px;align-items:center;flex-wrap:wrap;margin-top:25px}
+.praescius-cross-actions>a:not(.btn){font-weight:750;color:#4d338f}
+.praescius-cross-brand{display:flex;align-items:center;justify-content:center;gap:18px;background:#071b2a;border:1px solid #1b475a;border-radius:27px;padding:25px 24px;min-height:225px;box-shadow:0 24px 60px rgba(5,29,44,.17)}
+.praescius-cross-brand img{width:108px;height:108px;object-fit:contain;border-radius:25px}
+.praescius-cross-brand span{color:#fff;font-size:1.6rem;font-weight:850;line-height:1.18}
+.praescius-cross-brand small{display:block;font-size:.68rem;color:#79d9d6;letter-spacing:.1em;font-weight:600;margin-top:8px}
+@media(max-width:800px){.praescius-cross-sell-inner{grid-template-columns:1fr}.praescius-cross-brand{justify-content:flex-start;min-height:150px}}
+@media(max-width:520px){.praescius-product-bar-inner{flex-wrap:wrap;padding:8px 0}.praescius-product-switch{width:100%}.praescius-cross-sell{padding:48px 0}.praescius-cross-brand span{font-size:1.25rem}}
