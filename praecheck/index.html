@@ -95,8 +95,28 @@
 
 
   <link rel="stylesheet" href="/assets/praescius-portfolio.css?v=1">
+<link rel="stylesheet" href="/assets/praescius-navigation.css?v=2">
 </head>
-<body>
+<body class="ps-unified ps-praecheck">
+<header class="ps-global-header" role="banner">
+  <div class="ps-shell ps-header-layout">
+    <a class="ps-brand" href="/" aria-label="Praescius home"><span class="ps-brand-monogram" aria-hidden="true">P</span><span>PRAESCIUS</span></a>
+    <nav class="ps-global-links" aria-label="Site navigation">
+      <a class="ps-home-link" href="/"><svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7"/><path d="M5 9.5V21h14V9.5"/><path d="M9.5 21v-7h5v7"/></svg><span>Home</span></a>
+      <details class="ps-products-menu">
+        <summary>Products <span aria-hidden="true" class="ps-chevron">⌄</span></summary>
+        <div class="ps-products-dropdown">
+          <a href="/products/">All products</a>
+          <a href="/praecheck/" aria-current="page">Praecheck</a>
+          <a href="/praeguard/">PraeGuard</a>
+        </div>
+      </details>
+      <a class="ps-contact-link" href="/contact.html">Contact</a>
+    </nav>
+  </div>
+</header>
+<div class="ps-subbar"><div class="ps-shell ps-subbar-inner"><span class="ps-page-label">Praecheck</span><nav aria-label="Praecheck navigation"><a href="/praecheck/" aria-current="page">Overview</a><a href="/praecheck/#features">Assessment</a><a href="/praecheck/#privacy">Privacy architecture</a><a href="/privacy.html">Privacy policy</a><a href="/terms.html">Terms</a><a href="/refunds.html">Refunds</a><a href="/praecheck/#pricing">Licensing</a><a href="/activate/">Activate</a><a href="/download/">Download</a></nav></div></div>
+
 <div class="praescius-product-bar" role="navigation" aria-label="Praescius products">
   <div class="container praescius-product-bar-inner">
     <a class="praescius-company-link" href="/products/" aria-label="Explore Praescius products">PRAESCIUS <span class="praescius-bar-divider" aria-hidden="true">/</span> PRODUCTS</a>
@@ -138,7 +158,7 @@
   </nav>
 </header>
 
-<main>
+<main id="main">
   <section class="hero">
 <canvas id="praecheck-data-network" aria-hidden="true"></canvas>
 
@@ -405,10 +425,17 @@
     <div>
       <div class="kicker">More from Praescius</div>
       <h2 id="praescius-other-products">Meet PraeGuard.</h2>
-      <p>Praecheck helps you understand data exposure on your Android phone. PraeGuard is a separate app designed to help you review sound, phone handling and activity evidence in spaces you're authorised to monitor.</p>
+      <p>Praecheck assesses privacy and data exposure on your Android phone. PraeGuard does something different: leave an Android phone in a hotel room, parked vehicle or other authorised space, arm monitoring, and later review notable sounds or handling of the phone. Optional Pro Gmail alerts can notify you about selected events when you're connected.</p>
+      <p class="ps-cross-usecase"><strong>Travel example:</strong> Concerned about unexpected access to your room while you are out? PraeGuard helps you keep a local record to review, subject to hotel and recording rules. It does not prove entry or identify a person.</p>
       <div class="praescius-cross-actions"><a class="btn btn-dark" href="/praeguard/">Explore PraeGuard</a><a href="/products/">See both products →</a></div>
     </div>
     <div class="praescius-cross-brand"><img src="/praeguard/assets/praeguard-icon.png" alt="PraeGuard shield and doorway logo" width="160" height="160" loading="lazy"><span>PraeGuard<small>by Praescius</small></span></div>
+  </div>
+</section>
+<section class="ps-praecheck-policies" aria-labelledby="ps-policies-heading">
+  <div class="ps-shell ps-policy-layout">
+    <div><h2 id="ps-policies-heading">Praecheck policies</h2><p>Privacy, purchasing terms and refund information for Praecheck customers.</p></div>
+    <nav aria-label="Praecheck legal policies"><a href="/privacy.html">Privacy policy</a><a href="/terms.html">Terms of use</a><a href="/refunds.html">Refunds policy</a></nav>
   </div>
 </section>
 </main>
@@ -772,5 +799,14 @@
 
 
 
+
+<footer class="ps-global-footer" aria-label="Praescius site footer">
+  <div class="ps-shell ps-footer-layout">
+    <div class="ps-footer-brand"><strong>PRAESCIUS</strong><small>Security · Privacy · Risk mitigation<br>© 2026 Praescius Ltd.</small></div>
+    <div class="ps-footer-column"><strong>Explore</strong><nav aria-label="Site footer navigation"><a href="/">Home</a><a href="/products/">Products</a><a href="/praecheck/">Praecheck</a><a href="/praeguard/">PraeGuard</a><a href="/contact.html">Contact</a></nav></div>
+    <div class="ps-footer-column"><strong>Praecheck policies</strong><nav aria-label="Praecheck policies"><a href="/privacy.html">Privacy policy</a><a href="/terms.html">Terms of use</a><a href="/refunds.html">Refunds policy</a></nav></div>
+    <div class="ps-footer-column"><strong>PraeGuard information</strong><nav aria-label="PraeGuard information"><a href="/praeguard/support/">Support</a><a href="/praeguard/privacy/">Privacy notice</a><a href="/praeguard/terms/">Terms of use</a><a href="/praeguard/data-deletion/">Data deletion</a></nav></div>
+  </div>
+</footer>
 </body>
 </html>
