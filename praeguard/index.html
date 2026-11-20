@@ -1,13 +1,33 @@
 <!doctype html>
 <html lang="en-GB"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#061728"><meta name="description" content="PraeGuard is an Android app for authorised room-activity monitoring. Review offline sound and device handling events, photos and optional Gmail evidence alerts.">
+<meta name="theme-color" content="#061728"><meta name="description" content="Leave an Android phone in an authorised room or vehicle and review sound and device-handling activity while you are away. Optional Pro Gmail alerts.">
 <link rel="canonical" href="https://www.praescius.org.uk/praeguard/">
-<meta property="og:title" content="PraeGuard — Room activity evidence by Praescius"><meta property="og:description" content="PraeGuard is an Android app for authorised room-activity monitoring. Review offline sound and device handling events, photos and optional Gmail evidence alerts."><meta property="og:type" content="website">
+<meta property="og:title" content="PraeGuard — Room activity evidence by Praescius"><meta property="og:description" content="Leave an Android phone in an authorised room or vehicle and review sound and device-handling activity while you are away. Optional Pro Gmail alerts."><meta property="og:type" content="website">
 <link rel="icon" href="/praeguard/assets/praeguard-icon.png" type="image/png">
 <link rel="stylesheet" href="/praeguard/assets/site.css?v=2">
 <title>PraeGuard — Room activity evidence by Praescius</title>
-</head><body>
+<link rel="stylesheet" href="/assets/praescius-navigation.css?v=2">
+</head><body class="ps-unified ps-praeguard">
+<header class="ps-global-header" role="banner">
+  <div class="ps-shell ps-header-layout">
+    <a class="ps-brand" href="/" aria-label="Praescius home"><span class="ps-brand-monogram" aria-hidden="true">P</span><span>PRAESCIUS</span></a>
+    <nav class="ps-global-links" aria-label="Site navigation">
+      <a class="ps-home-link" href="/"><svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7"/><path d="M5 9.5V21h14V9.5"/><path d="M9.5 21v-7h5v7"/></svg><span>Home</span></a>
+      <details class="ps-products-menu">
+        <summary>Products <span aria-hidden="true" class="ps-chevron">⌄</span></summary>
+        <div class="ps-products-dropdown">
+          <a href="/products/">All products</a>
+          <a href="/praecheck/">Praecheck</a>
+          <a href="/praeguard/" aria-current="page">PraeGuard</a>
+        </div>
+      </details>
+      <a class="ps-contact-link" href="/contact.html">Contact</a>
+    </nav>
+  </div>
+</header>
+<div class="ps-subbar"><div class="ps-shell ps-subbar-inner"><span class="ps-page-label">PraeGuard</span><nav aria-label="PraeGuard navigation"><a href="/praeguard/" aria-current="page">Overview</a><a href="/praeguard/support/">Support</a><a href="/praeguard/privacy/">Privacy</a><a href="/praeguard/data-deletion/">Data deletion</a><a href="/praeguard/terms/">Terms</a></nav></div></div>
+
 <a class="skip" href="#main">Skip to content</a>
 <div class="pg-brand-strip"><div class="container pg-brand-strip-inner"><a href="/products/">PRAESCIUS <span> / PRODUCTS</span></a><div><a href="/praecheck/">Praecheck</a><span class="pg-active-product">PraeGuard</span></div></div></div>
 <header class="site-header"><div class="container header-row">
@@ -17,12 +37,13 @@
 <main id="main">
 <section class="pg-hero"><div class="container pg-hero-grid">
 <div class="pg-hero-copy">
-<div class="eyebrow">ANDROID ACTIVITY MONITORING · BY PRAESCIUS</div>
-<h1>Know what happened <span class="accent">while you were away.</span></h1>
-<p class="pg-lead">Understand sound and phone-handling activity in a space you're authorised to monitor — without relying on a remote monitoring server.</p>
-<p class="pg-supporting">PraeGuard analyses events on your Android phone, creates a readable timeline, and lets you review the evidence. Optional Pro features add photographic capture, Gmail alerts and detailed exports.</p>
-<div class="actions"><a class="btn" href="#features">Explore features <span aria-hidden="true">→</span></a><a class="btn secondary" href="#pricing">Free vs Pro</a></div>
-<p class="pg-launch-note"><span aria-hidden="true">●</span> Now on Google Play internal testing · Public availability pending</p>
+<div class="eyebrow">ANDROID MONITORING FOR ROOMS &amp; SPACES · BY PRAESCIUS</div>
+<h1>Know what happened <span class="accent">while you were out.</span></h1>
+<p class="pg-lead">Leave an Android phone in a hotel room, parked vehicle or other space you're authorised to monitor. Arm PraeGuard before you leave, then review notable sounds and any handling of the phone while you're away.</p>
+<p class="pg-supporting">PraeGuard works locally to build a timestamped activity and evidence timeline. Optional Pro features include photographs when Android permits, Gmail incident alerts when connected, and richer exports.</p>
+<p class="ps-hero-clarifier">Concerned about unexpected access or someone handling your belongings? PraeGuard can provide clues to review — it cannot identify a visitor or establish that an intrusion occurred.</p>
+<div class="actions"><a class="btn" href="#use-cases">See a real-world example <span aria-hidden="true">→</span></a><a class="btn secondary" href="#how">How it works</a></div>
+<p class="pg-launch-note"><span aria-hidden="true">●</span> Google Play internal testing · <a class="ps-launch-link" href="https://play.google.com/store/apps/details?id=dev.roomguard.app" target="_blank" rel="noopener noreferrer">Open listing (enrolled testers only)</a></p>
 </div>
 <div class="pg-hero-visual" aria-label="PraeGuard brand and interface">
 <div class="pg-glow"></div>
@@ -30,9 +51,43 @@
 <div class="pg-preview-panel"><span>EXAMPLE INCIDENT</span><strong>Phone moved and screen activated</strong><p>The phone registered movement while its screen became active.</p><div class="pg-preview-tags"><span>◉ Audio</span><span>▣ Photo</span><span>▤ Timeline</span></div></div>
 <p class="pg-visual-caption">Illustrative interface summary, not a live monitoring result.</p>
 </div></div></section>
+
+<section class="section ps-scenario-section" id="use-cases" aria-labelledby="ps-scenario-heading">
+  <div class="container">
+    <div class="kicker">Why you might use it</div>
+    <h2 id="ps-scenario-heading">You can't always be there. <span class="accent">Your phone can keep a record.</span></h2>
+    <p class="section-intro">Turn an Android phone you control into a local activity monitor. A useful option when you want to check what happened in a space while you were absent, without installing a permanent security system.</p>
+    <div class="ps-scenario-grid">
+      <article class="ps-scenario-feature">
+        <span class="ps-scenario-label">HOTEL ROOM / TRAVEL</span>
+        <h3>You're out for dinner. What happened in your room?</h3>
+        <p>You're travelling and concerned about unexpected access to your hotel room while you're away. Where hotel rules and recording laws permit, you can leave a spare Android phone in the room and arm PraeGuard before heading out.</p>
+        <ol class="ps-scenario-steps">
+          <li><strong>Place it:</strong> Check permissions and power, position your phone, and select the monitoring options you need.</li>
+          <li><strong>Arm and leave:</strong> PraeGuard runs locally and can register relevant sounds and handling of the device. With Pro enabled, selected events may trigger Gmail alerts when online.</li>
+          <li><strong>Review:</strong> On your return, disarm the app, inspect the incident timeline, play available evidence and choose which events to retain.</li>
+        </ol>
+        <p>Potentially relevant observations are evidence to consider, not a verdict that someone entered or snooped.</p>
+      </article>
+      <div class="ps-scenario-side">
+        <article>
+          <span class="ps-scenario-label">PARKED VEHICLE</span>
+          <h3>Keep a record while your vehicle is unattended.</h3>
+          <p>Place your phone securely in a parked vehicle you control to review notable sounds or movement of the phone. Use only where recording is permitted, and take care with battery life and temperature.</p>
+        </article>
+        <article>
+          <span class="ps-scenario-label">OTHER AUTHORISED SPACES</span>
+          <h3>Check activity while a space is empty.</h3>
+          <p>Use it in an unoccupied room, workspace or storage area you have authority to monitor. Review the app's observations later, or use optional Pro alerts for selected events.</p>
+        </article>
+      </div>
+    </div>
+    <p class="ps-scenario-fine"><strong>Important:</strong> PraeGuard analyses sounds in the phone's surroundings and events affecting the handset; it does not detect silent movement throughout a room, identify people, prove entry or prevent access. Use only with appropriate authorisation, notice and consent, and check local recording rules.</p>
+  </div>
+</section>
 <section class="section pg-benefit-band" id="features"><div class="container">
 <div class="kicker">What PraeGuard does</div><h2>Evidence you can follow. <span class="accent">Not just sensor readings.</span></h2>
-<p class="section-intro">A simple workflow connects audio classification, device activity and available photographs, with plain-English summaries and the underlying files ready for review.</p>
+<p class="section-intro">PraeGuard analyses nearby sounds and events affecting the phone itself, then organises relevant observations into an incident timeline. Camera evidence is optional and depends on Android device permissions and background restrictions.</p>
 <div class="features">
 <article class="feature"><span class="symbol" aria-hidden="true">◉</span><h3>Offline sound analysis</h3><p>Recognises potentially relevant sound patterns locally and associates saved recordings with detected activity.</p></article>
 <article class="feature"><span class="symbol" aria-hidden="true">▤</span><h3>Phone handling</h3><p>Tracks movement, rotation and screen or connection events that Android makes available.</p></article>
@@ -53,7 +108,7 @@
 </div>
 <div class="pg-screenshot-wrap"><span class="pg-real-shot-label">ACTUAL PRAEGUARD APP SCREEN</span><img src="/praeguard/assets/praeguard-evidence-real.webp" width="560" height="1045" loading="lazy" alt="Actual PraeGuard Android evidence screen showing two incidents, timestamps, recording and photo counts"><span class="pg-shot-note">Screenshot from a development build; final screens may differ.</span></div>
 </div></section>
-<section class="section" id="how"><div class="container"><div class="kicker">Simple workflow</div><h2>Place. Arm. Review.</h2><div class="steps">
+<section class="section" id="how"><div class="container"><div class="kicker">Simple workflow</div><h2>Place the phone. Arm the app. Review activity.</h2><div class="steps">
 <article><span class="num">1</span><h3>Choose your monitoring options</h3><p>Use a phone you control, in an authorised location. Select whether photo capture or remote alerts are needed.</p></article>
 <article><span class="num">2</span><h3>Arm PraeGuard</h3><p>Leave the phone in position during the exit countdown and environmental baseline period.</p></article>
 <article><span class="num">3</span><h3>Review and export</h3><p>Disarm, check the evidence timeline, and decide which incidents belong in your report.</p></article>
@@ -72,8 +127,18 @@
 <details><summary>Does PraeGuard upload recordings to Praescius?</summary><p>No Praescius evidence-upload service is included in the current architecture. Monitoring and sound classification run on the device. Optional Gmail alerts transfer chosen files through your authorised Google account to your chosen recipient.</p></details>
 <details><summary>Will it work without internet?</summary><p>Local detection and evidence review work offline. Remote Gmail alerts and purchase verification require a connection. Queued alerts depend on Android and Google account availability.</p></details>
 <details><summary>Can I exclude my own return to the room?</summary><p>Yes. Mark an incident as yours or ignored. That removes it from the reviewed export while leaving the original local evidence available for reclassification.</p></details>
+<details><summary>Will PraeGuard tell me if somebody entered my hotel room?</summary><p>Not with certainty. It can record relevant sounds and phone-handling events for you to review, but cannot detect silent room movement, identify people or prove entry. Optional Pro Gmail alerts depend on network access, your Google account and Android background behaviour.</p></details>
 <details><summary>Is this a hidden surveillance app?</summary><p>No. PraeGuard is intended for transparent, user-initiated monitoring of spaces where recording is authorised. Android privacy indicators and monitoring notifications are not concealed.</p></details>
 </div><div class="actions"><a class="btn secondary" href="/praeguard/support/">Support and setup</a><a class="btn secondary" href="/praeguard/privacy/">Privacy and data handling</a></div></div></section>
 </main>
 <footer class="foot"><div class="container footgrid"><div><strong>PraeGuard</strong> by <a href="/products/">Praescius Ltd</a><br><span class="muted small">For authorised monitoring only · Android microphone and camera notices remain visible</span></div><nav aria-label="Footer navigation"><a href="/praeguard/">PraeGuard</a><a href="/praeguard/support/">Support</a><a href="/praeguard/privacy/">Privacy</a><a href="/praeguard/terms/">Terms</a><a href="/contact.html">Contact</a></nav></div></footer>
+
+<footer class="ps-global-footer" aria-label="Praescius site footer">
+  <div class="ps-shell ps-footer-layout">
+    <div class="ps-footer-brand"><strong>PRAESCIUS</strong><small>Security · Privacy · Risk mitigation<br>© 2026 Praescius Ltd.</small></div>
+    <div class="ps-footer-column"><strong>Explore</strong><nav aria-label="Site footer navigation"><a href="/">Home</a><a href="/products/">Products</a><a href="/praecheck/">Praecheck</a><a href="/praeguard/">PraeGuard</a><a href="/contact.html">Contact</a></nav></div>
+    <div class="ps-footer-column"><strong>Praecheck policies</strong><nav aria-label="Praecheck policies"><a href="/privacy.html">Privacy policy</a><a href="/terms.html">Terms of use</a><a href="/refunds.html">Refunds policy</a></nav></div>
+    <div class="ps-footer-column"><strong>PraeGuard information</strong><nav aria-label="PraeGuard information"><a href="/praeguard/support/">Support</a><a href="/praeguard/privacy/">Privacy notice</a><a href="/praeguard/terms/">Terms of use</a><a href="/praeguard/data-deletion/">Data deletion</a></nav></div>
+  </div>
+</footer>
 </body></html>

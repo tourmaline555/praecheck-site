@@ -1,0 +1,251 @@
+/* Praescius shared navigation and catalogue, 2026. Scope: .ps- classes and explicit page variants. */
+:root { --ps-bg:#0e0f11; --ps-surface:#16181b; --ps-panel:#1d1f23; --ps-line:#35383d; --ps-text:#efeff0; --ps-muted:#a6a9af; }
+.ps-unified .ps-global-header,.ps-unified .ps-subbar,.ps-unified .ps-global-footer { font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,Arial,sans-serif; letter-spacing:normal; }
+.ps-unified .ps-global-header *,.ps-unified .ps-subbar *,.ps-unified .ps-global-footer *,.ps-unified.ps-products .ps-products-main * { box-sizing:border-box; }
+.ps-unified .ps-shell { width:min(1120px, calc(100% - 48px)); margin-inline:auto; }
+.ps-unified .ps-global-header { display:block; position:relative; z-index:100; background:#101113; color:var(--ps-text); border-bottom:1px solid var(--ps-line); }
+.ps-unified .ps-header-layout { display:flex; align-items:center; justify-content:space-between; min-height:76px; gap:24px; }
+.ps-unified .ps-global-header a,.ps-unified .ps-global-header summary,.ps-unified .ps-subbar a,.ps-unified .ps-global-footer a { color:#d2d4d8; text-decoration:none; }
+.ps-unified .ps-brand { display:flex; align-items:center; gap:11px; color:#fafafa!important; font-size:17px; font-weight:730; letter-spacing:.15em; white-space:nowrap; }
+.ps-unified .ps-brand-monogram { display:grid; place-items:center; width:32px; height:32px; border:1px solid #a9acb2; font-size:16px; letter-spacing:0; }
+.ps-unified .ps-global-links { display:flex; gap:12px; align-items:center; margin-left:auto; font-size:14px; }
+.ps-unified .ps-global-links>a { display:flex; min-height:40px; align-items:center; padding:6px 12px; gap:8px; border-radius:5px; font-size:14px; font-weight:550; }
+.ps-unified .ps-products-menu { position:relative; }
+.ps-unified .ps-products-menu summary { display:flex; align-items:center; gap:10px; min-height:40px; cursor:pointer; padding:6px 13px; font-size:14px; border-radius:5px; list-style:none; }
+.ps-unified .ps-products-menu summary::-webkit-details-marker { display:none; }
+.ps-unified .ps-products-menu .ps-chevron { font-size:18px; line-height:1; }
+.ps-unified .ps-products-dropdown { position:absolute; right:0; top:calc(100% + 5px); min-width:195px; padding:7px; border:1px solid #42454b; background:#202227; border-radius:7px; box-shadow:0 14px 32px #0008; display:flex; flex-direction:column; gap:2px; z-index:110; }
+.ps-unified .ps-products-dropdown a { display:block; border-radius:4px; padding:11px 12px; font-size:14px; }
+.ps-unified .ps-global-links a:hover,.ps-unified .ps-global-links summary:hover,.ps-unified .ps-global-links [aria-current="page"],.ps-unified .ps-products-dropdown a:hover { background:#303238; color:white; }
+.ps-unified .ps-subbar { display:block; background:#1a1b1f; color:#c4c6ca; border-bottom:1px solid #303238; }
+.ps-unified .ps-subbar-inner { display:flex; align-items:center; gap:27px; min-height:51px; }
+.ps-unified .ps-page-label { font-size:12px; font-weight:750; letter-spacing:.08em; color:#f0f0f2; white-space:nowrap; }
+.ps-unified .ps-subbar nav { display:flex; flex-wrap:wrap; gap:8px 21px; }
+.ps-unified .ps-subbar a { color:#bec1c7; font-size:12px; padding:7px 0; border-bottom:2px solid transparent; }
+.ps-unified .ps-subbar a:hover,.ps-unified .ps-subbar a[aria-current="page"] { border-color:#c6c9cd; color:#fff; }
+.ps-unified .ps-global-footer { display:block; border-top:1px solid #303238; padding:38px 0 44px; background:#101113; color:#c9cbcf; }
+.ps-unified .ps-footer-layout { display:flex; align-items:start; justify-content:space-between; gap:28px; }
+.ps-unified .ps-global-footer strong { display:block; color:#efeff0; font-size:16px; letter-spacing:.15em; margin-bottom:13px; }
+.ps-unified .ps-global-footer small { display:block; color:#9c9fa5; font-size:12px; line-height:1.8; }
+.ps-unified .ps-global-footer nav { display:flex; align-items:center; flex-wrap:wrap; gap:14px 22px; }
+.ps-unified .ps-global-footer nav a { font-size:12px; color:#bfc2c7; }
+.ps-unified .ps-global-footer nav a:hover { color:#fff; }
+.ps-unified .ps-global-header a:focus-visible,.ps-unified .ps-global-header summary:focus-visible,.ps-unified .ps-global-footer a:focus-visible,.ps-unified .ps-subbar a:focus-visible { outline:2px solid #e5e5e5; outline-offset:3px; }
+/* Replace conflicting legacy navigation visually; do not remove existing scripts, menus or checkout content. */
+body.ps-unified.ps-home > .site-header,body.ps-unified.ps-home > .site-footer { display:none!important; }
+body.ps-unified.ps-praecheck > .site-header,body.ps-unified.ps-praecheck > .praescius-product-bar,body.ps-unified.ps-praecheck > .site-footer { display:none!important; }
+body.ps-unified.ps-praeguard > .pg-brand-strip,body.ps-unified.ps-praeguard > .site-header,body.ps-unified.ps-praeguard > .foot { display:none!important; }
+/* Neutralise PraeGuard's surrounding web palette while preserving original product UI, text and functional links. */
+body.ps-unified.ps-praeguard { --bg:#101114; --deep:#0d0e10; --card:#1e2024; --stroke:#41444a; --ink:#eceef0; --muted:#b9bdc3; --aqua:#d1d3d7; --aqua-dim:#e0e1e4; background:#101114; color:#eceef0; }
+body.ps-unified.ps-praeguard .pg-hero,body.ps-unified.ps-praeguard .pg-benefit-band,body.ps-unified.ps-praeguard .pg-evidence-spotlight,body.ps-unified.ps-praeguard .pg-pricing-section,body.ps-unified.ps-praeguard .pg-faq-section { background:#151619; }
+body.ps-unified.ps-praeguard .pg-hero:before,body.ps-unified.ps-praeguard .pg-glow { display:none; }
+body.ps-unified.ps-praeguard .feature,body.ps-unified.ps-praeguard .price,body.ps-unified.ps-praeguard .steps article,body.ps-unified.ps-praeguard .note,body.ps-unified.ps-praeguard .faq details,body.ps-unified.ps-praeguard .pg-preview-panel { background:#222429; border-color:#41444a; box-shadow:none; }
+body.ps-unified.ps-praeguard .pg-preview-panel>span,body.ps-unified.ps-praeguard .pg-real-shot-label,body.ps-unified.ps-praeguard .pg-timeline-item .pg-time { color:#d0d2d6; }
+body.ps-unified.ps-praeguard .pg-preview-tags span,body.ps-unified.ps-praeguard .badge { background:#383b41; color:#e9eaec; }
+body.ps-unified.ps-praeguard .btn { background:#d6d7d9; color:#151619; border-color:#d6d7d9; }
+body.ps-unified.ps-praeguard .btn.secondary { background:transparent; color:#eceef0; border-color:#777b82; }
+body.ps-unified.ps-praeguard .pg-lead,body.ps-unified.ps-praeguard .pg-supporting,body.ps-unified.ps-praeguard .prose p,body.ps-unified.ps-praeguard .prose li { color:#c0c3c7; }
+body.ps-unified.ps-praeguard .pg-timeline { border-left-color:#74787e; }
+body.ps-unified.ps-praeguard .pg-timeline-item:before { background:#d6d8db; border-color:#151619; }
+body.ps-unified.ps-praeguard .notice { background:#292b30; color:#e2e3e5; border-left-color:#b6b8bd; }
+/* Products overview: same typography, spacing and greys as the parent Praescius homepage. */
+body.ps-unified.ps-products { margin:0; background:#0e0f11; color:#efeff0; font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,Arial,sans-serif; }
+body.ps-unified.ps-products a { color:inherit; }
+body.ps-unified .ps-main-skip { position:absolute; left:16px; top:-100px; padding:10px; background:#eee; color:#111!important; }
+body.ps-unified .ps-main-skip:focus { top:5px; z-index:1000; }
+.ps-unified .ps-products-main { background:linear-gradient(110deg,#121316,#1d1f23); min-height:60vh; padding:80px 0 120px; }
+.ps-unified .ps-overline { color:#a7aab0; font-size:12px; letter-spacing:.15em; font-weight:650; }
+.ps-unified .ps-products-main h1 { margin:12px 0 14px; font-weight:560; font-size:clamp(42px,6vw,68px); letter-spacing:-.045em; line-height:1.13; }
+.ps-unified .ps-products-intro { color:#babdc2; font-size:17px; margin-bottom:62px; max-width:610px; line-height:1.55; }
+.ps-unified .ps-products-list { border-top:1px solid #484a50; }
+.ps-unified .ps-product-item { display:grid; grid-template-columns:1fr auto; gap:24px; align-items:center; padding:33px 0; border-bottom:1px solid #484a50; }
+.ps-unified .ps-product-item h2 { font-size:clamp(26px,3.2vw,34px); margin:0 0 10px; font-weight:560; letter-spacing:-.035em; }
+.ps-unified .ps-product-item p { margin:0; color:#bec1c6; font-size:14px; line-height:1.5; }
+.ps-unified .ps-product-item small { display:block; margin-top:10px; color:#92969c; font-size:12px; }
+.ps-unified .ps-product-actions { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:12px 25px; }
+.ps-unified .ps-product-actions a { color:#e4e5e7; font-size:13px; text-decoration:none; border-bottom:1px solid #a6a8ad; padding-bottom:6px; }
+.ps-unified .ps-product-actions a:hover { color:#fff; border-bottom-color:#fff; }
+@media(max-width:750px) { .ps-unified .ps-shell { width:min(100% - 32px,1120px); } .ps-unified .ps-header-layout { align-items:flex-start; flex-direction:column; padding:15px 0; min-height:0; gap:10px; } .ps-unified .ps-global-links { margin:0; width:100%; justify-content:space-between; gap:5px; } .ps-unified .ps-global-links>a,.ps-unified .ps-products-menu summary { padding:7px 8px; font-size:13px; } .ps-unified .ps-subbar-inner { display:block; padding:12px 0; } .ps-unified .ps-page-label { display:block; margin-bottom:6px; } .ps-unified .ps-subbar nav { gap:4px 15px; } .ps-unified .ps-footer-layout { flex-direction:column; } .ps-unified .ps-product-item { grid-template-columns:1fr; } .ps-unified .ps-product-actions { justify-content:flex-start; } .ps-unified .ps-products-main { padding:58px 0 80px; } .ps-unified .ps-products-intro { margin-bottom:40px; } }
+@media(prefers-reduced-motion:reduce) { .ps-unified .ps-global-links * { scroll-behavior:auto; } }
+
+/* Praecheck Products menu consistency fix */
+body.ps-unified.ps-praecheck .ps-global-header .ps-products-menu {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  width: auto !important;
+}
+
+body.ps-unified.ps-praecheck .ps-global-header .ps-products-menu > summary {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  width: auto !important;
+  min-height: 40px !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 6px 13px !important;
+  background: transparent !important;
+  color: #d2d4d8 !important;
+  border: 0 !important;
+  border-radius: 5px !important;
+  box-shadow: none !important;
+  font-size: 14px !important;
+  font-weight: 550 !important;
+  line-height: 1.4 !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+  cursor: pointer !important;
+}
+
+body.ps-unified.ps-praecheck .ps-global-header .ps-products-menu > summary::before,
+body.ps-unified.ps-praecheck .ps-global-header .ps-products-menu > summary::after {
+  content: none !important;
+  display: none !important;
+}
+
+body.ps-unified.ps-praecheck .ps-global-header .ps-products-menu > summary:hover,
+body.ps-unified.ps-praecheck .ps-global-header .ps-products-menu[open] > summary {
+  background: #303238 !important;
+  color: #fff !important;
+}
+
+@media (max-width: 750px) {
+  body.ps-unified.ps-praecheck .ps-global-header .ps-products-menu > summary {
+    font-size: 13px !important;
+    padding: 7px 8px !important;
+  }
+}
+
+/* PRAESCIUS-CLARITY-REFRESH-V1 */
+/* Praescius clarity update — aligned navigation, clear product positioning.
+   Append after original shared nav CSS; scoped to .ps-unified pages. */
+
+/* Protect the Products control against Praecheck's older generic button, details and summary rules. */
+body.ps-unified .ps-global-header .ps-products-menu {
+  display:block!important;position:relative!important;flex:none!important;
+  margin:0!important;padding:0!important;border:0!important;
+  background:transparent!important;box-shadow:none!important;
+  width:auto!important;min-width:0!important;max-width:none!important;
+}
+body.ps-unified .ps-global-header .ps-products-menu > summary {
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  gap:8px!important;width:auto!important;min-height:40px!important;height:auto!important;
+  margin:0!important;padding:6px 13px!important;
+  color:#d2d4d8!important;background:transparent!important;
+  border:0!important;border-radius:5px!important;box-shadow:none!important;
+  text-align:left!important;text-transform:none!important;text-decoration:none!important;
+  letter-spacing:normal!important;font-size:14px!important;font-weight:550!important;
+  line-height:1.4!important;cursor:pointer!important;list-style:none!important;
+}
+body.ps-unified .ps-global-header .ps-products-menu > summary::before,
+body.ps-unified .ps-global-header .ps-products-menu > summary::after {
+  content:none!important;display:none!important;
+}
+body.ps-unified .ps-global-header .ps-products-menu > summary::-webkit-details-marker { display:none!important; }
+body.ps-unified .ps-global-header .ps-products-menu > summary:hover,
+body.ps-unified .ps-global-header .ps-products-menu[open] > summary {
+  background:#303238!important;color:#fff!important;
+}
+body.ps-unified .ps-global-header .ps-products-dropdown {
+  position:absolute!important;top:calc(100% + 5px)!important;right:0!important;left:auto!important;
+  width:max-content!important;min-width:195px!important;max-width:min(92vw,300px)!important;
+  padding:7px!important;margin:0!important;background:#202227!important;
+  color:#e9e9ea!important;border:1px solid #42454b!important;
+  box-shadow:0 14px 32px #0008!important;border-radius:7px!important;
+  flex-direction:column!important;gap:2px!important;z-index:120!important;
+}
+body.ps-unified .ps-global-header .ps-products-dropdown a {
+  display:block!important;width:auto!important;padding:10px 12px!important;
+  font-size:14px!important;font-weight:500!important;line-height:1.4!important;
+  color:#e4e5e7!important;background:transparent!important;
+  border:0!important;text-decoration:none!important;box-shadow:none!important;
+}
+body.ps-unified .ps-global-header .ps-products-dropdown a:hover,
+body.ps-unified .ps-global-header .ps-products-dropdown a[aria-current="page"] {
+  color:#fff!important;background:#303238!important;
+}
+body.ps-unified .ps-global-header .ps-products-menu:not([open]) > .ps-products-dropdown { display:none!important; }
+
+/* Clear, reusable 4-column footer with easy-to-find product policies. */
+body.ps-unified .ps-footer-layout { display:grid;grid-template-columns:minmax(180px,1.4fr) repeat(3,minmax(130px,1fr));gap:28px 36px;align-items:start; }
+body.ps-unified .ps-global-footer .ps-footer-column strong { font-size:12px;letter-spacing:.035em;line-height:1.35;margin:1px 0 14px;color:#e5e6e8; }
+body.ps-unified .ps-global-footer .ps-footer-column nav { display:flex;flex-direction:column;align-items:flex-start;gap:10px; }
+body.ps-unified .ps-global-footer .ps-footer-column nav a { font-size:12px;line-height:1.4; }
+body.ps-unified .ps-global-footer .ps-footer-brand strong { font-size:16px;letter-spacing:.15em; }
+
+/* Keep the company landing page sparse: one short definition beneath each product name. */
+body.ps-unified.ps-home .ps-home-product-heading p { color:#aeb1b7;font-size:13px;line-height:1.5;margin:9px 0 0;max-width:330px; }
+
+/* Product catalogue: consistent background and typography with the corporate homepage. */
+body.ps-unified.ps-products .ps-products-main { background:linear-gradient(115deg,#111214,#1b1d21);padding:82px 0 115px; }
+body.ps-unified.ps-products .ps-products-intro { max-width:730px;margin-bottom:53px; }
+body.ps-unified.ps-products .ps-products-main h1 { max-width:920px; }
+body.ps-unified.ps-products .ps-catalogue { display:grid;gap:1px;background:#383b41;border-top:1px solid #383b41;border-bottom:1px solid #383b41; }
+body.ps-unified.ps-products .ps-catalogue article { background:#181a1e;padding:33px 32px;display:grid;grid-template-columns:minmax(0,1fr) minmax(210px,auto);align-items:center;gap:24px; }
+body.ps-unified.ps-products .ps-catalogue h2 { margin:5px 0 13px;font-size:clamp(29px,3.5vw,38px);font-weight:560; }
+body.ps-unified.ps-products .ps-catalogue p { max-width:625px;font-size:15px;line-height:1.65;color:#c4c6cb;margin:0 0 10px; }
+body.ps-unified.ps-products .ps-catalogue .ps-product-context { font-size:13px;color:#aeb1b8; }
+body.ps-unified.ps-products .ps-catalogue .ps-availability { margin-top:10px;font-size:12px;color:#a9acb2; }
+body.ps-unified.ps-products .ps-overline { font-size:11px; }
+body.ps-unified.ps-products .ps-catalogue-actions { display:flex;flex-direction:column;align-items:flex-start;gap:12px; }
+body.ps-unified.ps-products .ps-catalogue-actions a { min-width:180px;display:inline-flex;justify-content:space-between;gap:20px;text-decoration:none;font-size:13px;font-weight:600;padding:12px 16px;border:1px solid #64686f;background:#24262b;color:#f0f0f1; }
+body.ps-unified.ps-products .ps-catalogue-actions a:hover { background:#35383d;border-color:#b6b8bb; }
+body.ps-unified.ps-products .ps-catalogue-actions a:first-child { background:#e1e2e4;color:#151619;border-color:#e1e2e4; }
+body.ps-unified.ps-products .ps-catalogue-actions a:first-child:hover { background:#fff; }
+body.ps-unified.ps-products .ps-catalogue-tip { color:#aeb1b6;font-size:13px;line-height:1.7;margin:26px 0 0;max-width:730px; }
+
+/* Praecheck: make original policy documents visible regardless of hidden legacy footer. */
+body.ps-unified.ps-praecheck .ps-praecheck-policies { background:#1b1d22;color:#ebedef;padding:35px 0 43px;border-top:1px solid #494b52; }
+body.ps-unified.ps-praecheck .ps-policy-layout { display:flex;align-items:center;justify-content:space-between;gap:25px;flex-wrap:wrap; }
+body.ps-unified.ps-praecheck .ps-praecheck-policies h2 { color:#f2f3f4;font-size:21px;line-height:1.3;margin:0 0 7px;font-weight:620; }
+body.ps-unified.ps-praecheck .ps-praecheck-policies p { color:#b7bac0;font-size:13px;line-height:1.5;margin:0;max-width:535px; }
+body.ps-unified.ps-praecheck .ps-praecheck-policies nav { display:flex;flex-wrap:wrap;gap:10px; }
+body.ps-unified.ps-praecheck .ps-praecheck-policies a { color:#f1f1f2;font-size:13px;display:inline-block;text-decoration:none;padding:9px 12px;background:#303238;border:1px solid #54575e;border-radius:5px; }
+body.ps-unified.ps-praecheck .ps-praecheck-policies a:hover { background:#42454a; }
+body.ps-unified.ps-praecheck .praescius-cross-sell { background:linear-gradient(120deg,#eeeef0,#f8f8fa); }
+body.ps-unified.ps-praecheck .praescius-cross-sell .ps-cross-usecase { font-size:14px;color:#50545e;max-width:680px; }
+body.ps-unified.ps-praecheck .praescius-cross-brand { background:#25272b;border-color:#45474d;box-shadow:none; }
+body.ps-unified.ps-praecheck .praescius-cross-brand small { color:#d5d7da; }
+
+/* PraeGuard: lead with real-world use cases; retain the product's original evidence preview. */
+body.ps-unified.ps-praeguard .ps-scenario-section { background:#1b1d21;border-top:1px solid #36393f; }
+body.ps-unified.ps-praeguard .ps-scenario-section .section-intro { max-width:830px;font-size:16px;line-height:1.65; }
+body.ps-unified.ps-praeguard .ps-scenario-grid { display:grid;grid-template-columns:minmax(0,1.32fr) minmax(270px,.8fr);gap:15px;margin-top:30px; }
+body.ps-unified.ps-praeguard .ps-scenario-feature,
+body.ps-unified.ps-praeguard .ps-scenario-side article { background:#26282d;border:1px solid #46494f;border-radius:12px;padding:29px;box-shadow:none; }
+body.ps-unified.ps-praeguard .ps-scenario-feature h3 { margin:10px 0 17px;font-size:clamp(23px,2.5vw,31px);line-height:1.22; }
+body.ps-unified.ps-praeguard .ps-scenario-feature p,
+body.ps-unified.ps-praeguard .ps-scenario-side p { font-size:14px;color:#c5c7cc;line-height:1.7; }
+body.ps-unified.ps-praeguard .ps-scenario-side { display:grid;gap:15px; }
+body.ps-unified.ps-praeguard .ps-scenario-side h3 { font-size:19px;margin:7px 0 10px; }
+body.ps-unified.ps-praeguard .ps-scenario-label { color:#b5b8be;font-size:11px;letter-spacing:.15em;font-weight:700; }
+body.ps-unified.ps-praeguard .ps-scenario-steps { padding-left:22px;margin:17px 0 0; }
+body.ps-unified.ps-praeguard .ps-scenario-steps li { color:#e0e1e3;font-size:14px;padding-left:3px;margin-bottom:11px;line-height:1.55; }
+body.ps-unified.ps-praeguard .ps-scenario-fine { margin:22px 0 0;font-size:12px;line-height:1.7;color:#b8bbc1;max-width:900px; }
+body.ps-unified.ps-praeguard .pg-hero .ps-hero-clarifier { max-width:700px;font-size:14px;color:#bbc0c7;line-height:1.65; }
+body.ps-unified.ps-praeguard .pg-hero .ps-launch-link { color:#eff0f2;text-underline-offset:3px; }
+body.ps-unified.ps-praeguard .pg-hero .pg-launch-note { color:#bec0c5!important; }
+
+@media(max-width:970px) {
+  body.ps-unified .ps-footer-layout { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  body.ps-unified.ps-praeguard .ps-scenario-grid { grid-template-columns:1fr; }
+  body.ps-unified.ps-praeguard .ps-scenario-side { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@media(max-width:750px) {
+  body.ps-unified .ps-global-header .ps-products-menu > summary { padding:7px 8px!important;font-size:13px!important; }
+  body.ps-unified .ps-footer-layout { grid-template-columns:repeat(2,minmax(0,1fr));gap:27px 20px; }
+  body.ps-unified.ps-products .ps-catalogue article { grid-template-columns:1fr;padding:25px 21px; }
+  body.ps-unified.ps-products .ps-catalogue-actions { flex-direction:row;flex-wrap:wrap; }
+  body.ps-unified.ps-products .ps-catalogue-actions a { min-width:0; }
+  body.ps-unified.ps-praeguard .ps-scenario-side { grid-template-columns:1fr; }
+}
+@media(max-width:460px) {
+  body.ps-unified .ps-footer-layout { grid-template-columns:1fr 1fr; }
+  body.ps-unified .ps-footer-brand { grid-column:1/-1; }
+  body.ps-unified .ps-global-footer .ps-footer-column strong { margin-bottom:9px; }
+  body.ps-unified.ps-praeguard .ps-scenario-feature,
+  body.ps-unified.ps-praeguard .ps-scenario-side article { padding:22px; }
+}
